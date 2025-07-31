@@ -15,8 +15,12 @@ html, body {
 }
 
 @layer components {
+  header{
+    @apply flex justify-between items-center 
+  }
+
   section{
-    @apply w-full h-auto my-1 p-1 mb-[1rem]
+    @apply w-full h-auto
   }
 
   nav {
@@ -24,69 +28,83 @@ html, body {
   }
 
   ul {
-    @apply flex justify-between items-center w-[100%] gap-2
+    @apply flex justify-between items-center w-full gap-2
   }
 
   li {
-    @apply flex justify-center items-center font-nunito tracking-wide text-[clamp(1rem,2vw,2rem)] font-bold cursor-pointer w-full
+    @apply flex justify-center items-center font-nunito tracking-wide text-[clamp(1rem,2vw,1.50rem)] font-extrabold cursor-pointer w-full;
+    font-variant: small-caps;
   }
 
   label {
-    @apply block w-full h-auto p-1 mb-1 font-nunito tracking-wide text-[clamp(0.80rem,2vw,2rem)] font-semibold
+    @apply block w-full h-auto p-1 mb-1 font-nunito tracking-wide text-[clamp(0.85rem,2vw,1.05rem)] font-semibold
   }
 
   input, 
   textarea {
-    @apply w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#8c6244] focus:border-[#8c6244] font-nunito tracking-wide text-[clamp(0.80rem,2vw,2rem)]
+    @apply w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#8c6244] focus:border-[#8c6244] font-nunito tracking-wide text-[clamp(0.78rem,2vw,1rem)] resize-none
   }
 
   a{
-    @apply font-nunito tracking-wide text-[clamp(0.80rem,2vw,2rem)] font-semibold
+    @apply font-nunito tracking-wide text-[clamp(0.85rem,2vw,1.05rem)] font-semibold
   }
 
+  h1{
+    font-variant: small-caps;
+  }
 
   .left {
-    @apply flex justify-start items-center w-auto m-1 p-2 font-nunito tracking-wide gap-[1%];
+    @apply flex justify-start items-center w-auto m-1 p-[clamp(0.50rem,2vw,0.95rem)] font-nunito tracking-wide gap-[1%];
+    font-variant: small-caps;
   }
 
   .right {
-    @apply flex justify-end items-center w-auto m-1 p-2 relative
+    @apply flex justify-end items-center w-auto m-1 p-[clamp(0.50rem,2vw,0.95rem)] relative
   }
 
+  .container {
+    @apply bg-[#f9f5f1] border border-[#8c6244] rounded-xl shadow-md
+  }
 
   .text-hover-coffee {
     @apply hover:text-[#6F4E37] transition-colors duration-300 ease-in-out;
   }
 
   .coffee-benefits-list {
-    @apply flex justify-start items-center text-[clamp(0.80rem,2vw,2rem)] font-semibold
+    @apply flex justify-start items-center font-semibold text-[clamp(0.78rem,2vw,1.10rem)]
   }
 
   .storytelling {
-    @apply flex justify-center items-center flex-col m-1 p-1 font-nunito tracking-wide text-[clamp(0.80rem,2vw,2rem)] text-start font-semibold 
+    @apply flex justify-center items-center flex-col m-1 p-2 font-nunito tracking-wide text-[clamp(0.78rem,2vw,1.10rem)] text-start font-semibold
+    w-full
   }
 
   .socialLink {
-    @apply flex items-center w-auto  gap-1 p-1 
+    @apply flex items-center w-auto gap-1 p-1 
   }
 
   .footerDetails {
-    @apply w-full px-0 py-2 text-white font-nunito tracking-wide text-[clamp(0.70rem,2vw,2rem)] font-semibold 
+    @apply w-auto px-0 py-2 text-white font-nunito tracking-wide text-[clamp(0.78rem,2vw,1rem)] font-semibold
   }
 
-  .cotactInfo{
-    @apply flex justify-start items-center gap-0 w-full h-auto p-0 text-[clamp(0.50rem,2vw,2rem)]
+  .cotactInfo {
+    @apply flex justify-start items-center gap-0 w-full h-auto p-0 text-[clamp(0.78rem,2vw,1rem)]
   }
 
-  .Notification{
-    @apply text-[clamp(1rem,2vw,2rem)] font-nunito tracking-wide font-extrabold
+  .Notification {
+    @apply flex justify-center items-center w-full text-[1rem] font-nunito tracking-wide font-extrabold
+  }
+
+  .loader {
+    clip-path: inset(0 3ch 0 0);
+    animation: l4 1s steps(4) infinite;
+  }
+
+  @keyframes l4 {
+    to {
+      clip-path: inset(0 -1ch 0 0);
+    }
   }
 
 }
 
-
-
-.testing{
-  border: 1px solid red;
-  flex-direction: column;
-}

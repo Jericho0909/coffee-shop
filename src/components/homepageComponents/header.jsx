@@ -1,8 +1,9 @@
 import { useContext, useState, useEffect, useRef } from "react";
 import { Bars3Icon } from "@heroicons/react/24/outline";
-import MediaQueryContext from "../../context/mediaquery";
+import MediaQueryContext from "../../context/mediaqueryContext";
 import Navbar from "../navbar";
 import SectionContext from "../../context/sectionContext";
+import  CoffeeIcon from "../../assets/icons/coffee-icon.png" 
 const Header = () => {
     const { isMobile } = useContext(MediaQueryContext)
     const { activeSection } = useContext(SectionContext)
@@ -28,14 +29,18 @@ const Header = () => {
 
     return (
         <header 
-            className="flex justify-between items-center bg-[#8c6244] w-full gap-2 py-1 px-3 fixed top-0 border border-black z-10"
+            className="bg-[#8c6244] w-full h-[5.20rem] p-[clamp(0.20rem,1vw,0.30rem)] fixed top-0 border border-black z-10"
         >
-            <div className="left text-xs">
-                <div className="w-[11%] h-auto">
-                    <img src="/icons/coffee-icon.png" alt="Coffee-Shop" />
+            <div className="left">
+                <div className="w-[4.90rem] sm:w-[5.30rem] md:w-[5.90rem] lg:w-[6rem] xl:w-[6.20rem] h-auto">
+                    <img 
+                        className="w-full h-full"
+                        src={CoffeeIcon} 
+                        alt="Coffee-Shop" 
+                    />
                 </div>
-                <div className="m-1 p-1 text-[clamp(1rem,2vw,2rem)] text-white font-bold">
-                    Kape Shop
+                <div className="w-full m-1 p-1 text-[clamp(1rem,2vw,1.50rem)] text-white font-bold">
+                    kape shop
                 </div>
             </div>
             <div className="right">
@@ -49,7 +54,7 @@ const Header = () => {
                             <Bars3Icon className="w-6 h-6 text-gray-700" />
                         </button>
                         {isOpen && (
-                        <div className="absolute top-full right-0 mt-2 w-40 bg-white border rounded shadow ">
+                        <div className="absolute top-full right-0 mt-2 w-40 bg-[#8c6244] border rounded shadow ">
                             <Navbar activeSection={activeSection}/>
                         </div>
                         )}

@@ -1,0 +1,12 @@
+{
+  "admins": [
+    {
+      "id": "1",
+      "username": "jericho.admin",
+      "password": "!Jericho123"
+    }
+  ],
+  "customers": [],
+  "products": [],
+  "orders": []
+}

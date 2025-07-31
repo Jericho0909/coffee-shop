@@ -12,11 +12,11 @@ const Footer = () => {
             <div className="footerDetails">
                 © 2025 Kape Shop. All rights reserved.
             </div>
-            <div className="footerDetails flex flex-col justify-center items-center">
+            <div className="footerDetails flex flex-col justify-center items-center w-auto">
                 <div className="cotactInfo">
                     <FontAwesomeIcon 
                         icon={faPhoneVolume}
-                        className="w-2 h-2 text-black p-2"
+                        className="w-2 h-2 sm:w-4 sm:h-4  text-black p-2"
                     />
                     <p>
                         09123456789
@@ -25,7 +25,7 @@ const Footer = () => {
                 <div className="cotactInfo">
                     <FontAwesomeIcon 
                         icon={faEnvelope}
-                        className="w-2 h-2 text-black p-2"
+                        className="w-2 h-2 sm:w-4 sm:h-4  text-black p-2"
                     />
                     <p>
                         takape0012@gmail.com
@@ -34,7 +34,7 @@ const Footer = () => {
                 <div className="cotactInfo">
                     <FontAwesomeIcon 
                         icon={faLocationDot} 
-                        className="w-2 h-2 text-black p-2"
+                        className="w-2 h-2 sm:w-4 sm:h-4 text-black p-2"
                     />
                     <p>
                         Bagong Pook Ros. Bat.
