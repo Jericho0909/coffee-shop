@@ -4,12 +4,13 @@ import useWindowsize from "../hooks/useWindowSize";
 const WindowSizeContext = createContext()
 
 export const WindowSizeProvider = ({children}) => {
-    const { isLargePhone } = useWindowsize()
+    const { isLargePhone, isMobile } = useWindowsize()
 
     return (
         <WindowSizeContext.Provider
             value={{
-                isLargePhone
+                isLargePhone,
+                isMobile
             }}
         >
             {children}

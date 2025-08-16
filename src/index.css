@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 * {
   margin: 0;
@@ -37,12 +38,19 @@ html, body {
   }
 
   label {
-    @apply block w-full h-auto p-1 mb-1 font-nunito tracking-wide text-[clamp(0.85rem,2vw,1.05rem)] font-semibold
+    @apply block w-full h-auto p-1 mb-1 font-nunito tracking-wide text-[clamp(0.85rem,2vw,1.05rem)] font-semibold;
+    
   }
 
   input, 
   textarea {
     @apply w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#8c6244] focus:border-[#8c6244] font-nunito tracking-wide text-[clamp(0.78rem,2vw,1rem)] resize-none
+  }
+
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 
   a{
@@ -51,6 +59,12 @@ html, body {
 
   h1{
     font-variant: small-caps;
+  }
+
+  select{
+    appearance: none; 
+    -webkit-appearance: none;
+    -moz-appearance: none;
   }
 
   .left {
@@ -95,6 +109,11 @@ html, body {
     @apply flex justify-center items-center w-full text-[1rem] font-nunito tracking-wide font-extrabold
   }
 
+  .press {
+    @apply bg-[#8c6244] border border-black w-full text-white font-semibold py-2 px-4 rounded transition-all duration-150;
+    font-variant: small-caps
+  }
+
   .loader {
     clip-path: inset(0 3ch 0 0);
     animation: l4 1s steps(4) infinite;
@@ -106,5 +125,45 @@ html, body {
     }
   }
 
+  .loader-two {
+    --_g: no-repeat radial-gradient(circle closest-side,#000 90%,transparent);
+    background:
+      var(--_g) 0%   50%,
+      var(--_g) 50%  50%,
+      var(--_g) 100% 50%;
+    background-size: calc(100%/3) 50%;
+    animation: l3 1s infinite linear;
+  }
+
+  @keyframes l3 {
+    20% { background-position: 0%   0%,  50% 50%, 100% 50% }
+    40% { background-position: 0% 100%, 50%  0%,  100% 50% }
+    60% { background-position: 0%  50%, 50% 100%, 100%  0% }
+    80% { background-position: 0%  50%, 50%  50%, 100% 100% }
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none; 
+    scrollbar-width: none;  
+  }
+
+  .category {
+    @apply text-[clamp(0.78rem,2vw,1rem)] font-semibold cursor-pointer;
+    font-variant: small-caps;
+  }
+
+  .productList {
+    @apply text-[clamp(1rem,2vw,1.10rem)] font-opensans font-bold tracking-wide;
+    
+  }
+
+  .text-stroke {
+    color: #8c6244; 
+    -webkit-text-stroke: 1px black;
+  }
 }
 

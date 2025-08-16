@@ -36,7 +36,8 @@ const Header = () => {
                     <img 
                         className="w-full h-full"
                         src={CoffeeIcon} 
-                        alt="Coffee-Shop" 
+                        alt="Coffee-Shop"
+                        loading="lazy"
                     />
                 </div>
                 <div className="w-full m-1 p-1 text-[clamp(1rem,2vw,1.50rem)] text-white font-bold">

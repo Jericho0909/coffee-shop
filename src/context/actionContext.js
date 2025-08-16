@@ -4,12 +4,13 @@ import useAction from "../hooks/useAction";
 const ActionContext = createContext()
 
 export const ActionProvider = ({children}) => {
-    const { addAction, patchAction } = useAction()
+    const { addAction, patchAction, deleteAction } = useAction()
     return (
         <ActionContext.Provider
             value={{
                 addAction,
-                patchAction
+                patchAction,
+                deleteAction
             }}
         >
             {children}

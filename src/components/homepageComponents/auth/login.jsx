@@ -2,9 +2,11 @@ import { useState, useEffect, useContext } from "react"
 import { useNavigate } from "react-router-dom";
 import AuthviewContext from "../../../context/autviewContext"
 import FetchDataContext from "../../../context/fetchdataContext"
+import ModalContext from "../../../context/modalContext";
 const Login = () =>{
     const { setAuthView } = useContext(AuthviewContext)
     const { adminList, setAdminsIsLoading } = useContext(FetchDataContext)
+    const { toggleModal } = useContext(ModalContext)
     const [ username, setUsername ] = useState("")
     const [ password, setPassword ] = useState("")
     const [ loginError, setLoginError ] = useState(false)
@@ -20,6 +22,7 @@ const Login = () =>{
 
         if(user){
             setAdminsIsLoading(true)
+            toggleModal(false)
             navigate(`/Adminpage/${user.id}/${user.username}`);
         }
         else{

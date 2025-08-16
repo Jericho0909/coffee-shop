@@ -16,14 +16,25 @@ const useAction =  () => {
             const response = await DbApi.patch(`/${endpoint}/${id}`, updatedData);
             return response.data;
         } catch (err){
-            console.error("change password failed:", err.message);
+            console.error("Update failed:", err.message);
+            return null;
+        }
+    }
+
+    const deleteAction = async(endpoint, id, updatedData) => {
+        try {
+            const response = await DbApi.delete(`/${endpoint}/${id}`, updatedData);
+            return response.data
+        } catch (err){
+            console.error("Delete failed:", err.message);
             return null;
         }
     }
 
     return {
         addAction,
-        patchAction
+        patchAction,
+        deleteAction
     }
 }
 

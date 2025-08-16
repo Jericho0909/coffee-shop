@@ -34,6 +34,7 @@ const Main = () => {
                             : {}}
                         transition={{ duration: 0.6 }}
                         className="w-[95%] sm:w-[85%] md:w-[85%] lg:w-[45%] xl:w-[45%] h-auto mb-[1rem] rounded-[8px]"
+                        loading="lazy"
                     />
                     <motion.div
                         ref={storyRef}

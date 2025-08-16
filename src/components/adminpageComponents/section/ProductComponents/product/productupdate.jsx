@@ -1,0 +1,55 @@
+import { useContext, useState } from "react"
+import FetchDataContext from "../../../../../context/fetchdataContext"
+import ActionContext from "../../../../../context/actionContext"
+import ModalContext from "../../../../../context/modalContext"
+import Form from "./form"
+const ProductUpdate = () => {
+    const { productList, setProductList } = useContext(FetchDataContext)
+    const { patchAction } = useContext(ActionContext)
+    const { toggleModal } = useContext(ModalContext)
+    const [ id,] = useState(sessionStorage.getItem("productId"))
+    const product = productList.find(item => item.id === id)
+
+    const selectedProduct = {
+        id: id,
+        image: product.image,
+        name: product.name,
+        price: product.price, 
+        sizeOptions: product.sizeOptions.map(option => option),
+        type: product.type,
+        flavors: product.flavors,
+        addOns: product.addOns,
+        description: product.description,
+        category: product.category,
+        available: product.available,
+        orderCount: 0
+    }
+    const [ formData, setFormData ] = useState(selectedProduct)
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        const response = await patchAction("products", product.id, formData)
+        setProductList(prev =>
+            prev.map(item =>
+                item.id === product.id ? response : item
+            )
+        )
+        toggleModal()
+    }
+    
+    return(
+        <form
+            className="w-full h-full py-[2rem] px-[0.50rem] overflow-y-scroll scrollbar-hide"
+            onSubmit={(e) => handleSubmit(e)}
+        >
+             <h1 className="text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[1rem]">
+                update
+            </h1>
+            <Form
+                formData = {formData}
+                setFormData = {setFormData}
+            />
+        </form>
+    )
+}
+export default ProductUpdate

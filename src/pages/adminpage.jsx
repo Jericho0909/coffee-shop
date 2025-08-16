@@ -1,8 +1,20 @@
-import {    useEffect, useState } from "react"
-import Header from "../components/adminpageCompoments/header"
+import { useEffect, useState, useContext, useRef } from "react"
+import WindowSizeContext from "../context/windowsizeContext"
+import ModalContext from "../context/modalContext"
+import Header from "../components/adminpageComponents/header"
+import Main from "../components/adminpageComponents/main"
+import Aside from "../components/adminpageComponents/aside"
 import CoffeGif from "../../src/assets/gif/coffee-Gif.gif"
+import Notification from "../components/notification"
+import Modal from "../components/modal"
+import ProductAdd from "../components/adminpageComponents/section/ProductComponents/product/productadd"
+import ProductUpdate from "../components/adminpageComponents/section/ProductComponents/product/productupdate"
 const Adminpage = () => {
     const [ loading, setLoading ] = useState(true)
+    const [ opensidebar, setOpenSiderBar ] = useState(false)
+    const { isMobile } = useContext(WindowSizeContext)
+    const { isOpen, modalName } = useContext(ModalContext)
+    const sidebarRef = useRef(null)
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -11,6 +23,22 @@ const Adminpage = () => {
 
         return () => clearTimeout(timer)
     }, [])
+
+    useEffect(() => {
+        const handleClickAnywhere = (e) => {
+            if(!isMobile) return
+
+            if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
+                setOpenSiderBar(false)
+            }
+        };
+      
+        document.addEventListener("click", handleClickAnywhere);
+      
+        return () => {
+          document.removeEventListener("click", handleClickAnywhere);
+        };
+      }, [isMobile]);
 
     if( loading ){
         return (
@@ -30,8 +58,45 @@ const Adminpage = () => {
     }
 
     return(
-        <>
-            <Header/>
+        <>  
+            <Notification/>
+            <Header setOpenSiderBar = { setOpenSiderBar }/>
+            <div className="flex w-full min-h-screen">
+                {isMobile ?(
+                    <aside
+                        ref={sidebarRef}
+                        onClick={(e) => e.stopPropagation()}
+                        className={`fixed top-[5rem] left-0 w-full md:w-[40%] h-full bg-[#f9f5f1] border border-[#8c6244] shadow-md z-50 transform transition-transform duration-300 ease-in-out
+                        ${opensidebar ? "translate-x-0" : "-translate-x-full"}`}
+                    >
+                        <Aside
+                            setOpenSiderBar = {setOpenSiderBar}
+                        />
+                    </aside>
+                ) : (
+                    <aside
+                        ref={sidebarRef}
+                        className="w-auto h-auto bg-[#f9f5f1] border border-[#8c6244] shadow-md mt-[6rem] p-1"
+                    >
+                        <Aside
+                            setOpenSiderBar = {setOpenSiderBar}
+                        />
+                    </aside>
+                )}
+                {(isOpen ) && (
+                <Modal>
+                    {modalName === "addProuct" 
+                        ? (
+                            <ProductAdd/>
+                        )
+                        : (
+                            <ProductUpdate/>
+                        )
+                    } 
+                </Modal>
+            )}
+                <Main />
+            </div>
         </>
     )
 }

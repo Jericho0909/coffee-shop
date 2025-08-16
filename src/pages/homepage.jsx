@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import Header from "../components/homepageComponents/header";
 import Main from "../components/homepageComponents/main";
 import Footer from "../components/homepageComponents/footer";
@@ -14,8 +14,19 @@ import Modalicon from "../assets/icons/coffee-icon2.png"
 const Homepage = () => {
     const { isOpen } = useContext(ModalContext)
     const { authView } = useContext(AuthviewContext)
+    const [ delay, setDelay ] = useState(true)
 
-    const setView ={
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDelay(false);
+        }, 800)
+
+        return () => clearTimeout(timer)
+    },[])
+
+    if(delay) return
+
+    const setView = {
         login : <Login/>,
         signup: <Signup/>,
         forgot: <Forgot/>
@@ -31,9 +42,10 @@ const Homepage = () => {
         <Modal>
             <div className="w-[20%] h-auto">
                 <img 
-                src={Modalicon}
-                alt="Coffe"
-                className="w-full h-full m-1 p1"
+                  src={Modalicon}
+                  alt="Coffe"
+                  className="w-full h-full m-1 p1"
+                  loading="lazy"
                 />
             </div>
             {setView[authView]}

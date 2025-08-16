@@ -54,7 +54,7 @@ const About = () => {
                     className="flex justify-start items-center flex-col w-full h-auto"
                 >  
                     <h1 className="text-[clamp(1rem,2vw,1.50rem)] font-nunito tracking-wide font-black mt-6 lg:mt-0 mb-2 lg:mb-0">
-                        Why Coffee is Awesome
+                        why coffee is awesome
                     </h1>
                     <ul className="flex-col gap-2 lg:flex lg:justify-center lg:items-center w-full h-full">
                         <li className="coffee-benefits-list lg:justify-center">
