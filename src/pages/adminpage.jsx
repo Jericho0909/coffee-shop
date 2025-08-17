@@ -9,6 +9,7 @@ import Notification from "../components/notification"
 import Modal from "../components/modal"
 import ProductAdd from "../components/adminpageComponents/section/ProductComponents/product/productadd"
 import ProductUpdate from "../components/adminpageComponents/section/ProductComponents/product/productupdate"
+import ProductDetails from "../components/adminpageComponents/section/ProductComponents/product/productdetails"
 const Adminpage = () => {
     const [ loading, setLoading ] = useState(true)
     const [ opensidebar, setOpenSiderBar ] = useState(false)
@@ -38,7 +39,13 @@ const Adminpage = () => {
         return () => {
           document.removeEventListener("click", handleClickAnywhere);
         };
-      }, [isMobile]);
+    }, [isMobile]);
+
+    const modalComponents = {
+        addProuct: <ProductAdd/>,
+        updateProduct: <ProductUpdate/>,
+        detailProduct: <ProductDetails/>
+    }
 
     if( loading ){
         return (
@@ -85,14 +92,7 @@ const Adminpage = () => {
                 )}
                 {(isOpen ) && (
                 <Modal>
-                    {modalName === "addProuct" 
-                        ? (
-                            <ProductAdd/>
-                        )
-                        : (
-                            <ProductUpdate/>
-                        )
-                    } 
+                    {modalComponents[modalName]}
                 </Modal>
             )}
                 <Main />

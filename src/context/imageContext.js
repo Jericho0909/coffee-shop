@@ -4,12 +4,13 @@ import useImage from "../hooks/useImage";
 const ImageContext = createContext()
 
 export const ImageProvider = ({children}) => {
-    const { preview, loadingimg, handleUpload } = useImage()
+    const { preview, setPreview,  loadingimg, handleUpload } = useImage()
 
     return(
         <ImageContext.Provider
             value={{
-                preview, 
+                preview,
+                setPreview,  
                 loadingimg, 
                 handleUpload 
             }}

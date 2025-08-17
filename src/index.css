@@ -165,5 +165,9 @@ html, body {
     color: #8c6244; 
     -webkit-text-stroke: 1px black;
   }
+
+  .container-flex{
+    @apply flex items-center w-full h-auto mb-[1rem]
+  }
 }
 

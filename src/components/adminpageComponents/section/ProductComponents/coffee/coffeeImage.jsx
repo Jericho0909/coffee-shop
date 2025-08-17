@@ -37,7 +37,8 @@ const CoffeeImage = ({formData, setFormData}) => {
                         </p>
                         ) : (preview && formData.image) || formData.image ? (
                             <img 
-                                src={preview || JSON.parse(sessionStorage.getItem("image")) || formData.image} alt="Preview" className="w-full h-full object-fill"
+                                src={preview || JSON.parse(sessionStorage.getItem("image")) || formData.image} alt="Preview" 
+                                className="w-full h-full object-fill"
                             />
                         ) : (
                         <span

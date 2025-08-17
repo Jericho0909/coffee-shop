@@ -29,7 +29,8 @@ const useImage = () => {
     };
 
     return { 
-        preview, 
+        preview,
+        setPreview, 
         loadingimg, 
         handleUpload 
     };

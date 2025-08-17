@@ -3,6 +3,7 @@ import { useIntersectionObserver } from "@uidotdev/usehooks";
 import ModalContext from "../context/modalContext";
 import FetchDataContext from "../context/fetchdataContext";
 import ActionContext from "../context/actionContext";
+import ImageContext from "../context/imageContext";
 import { motion } from "framer-motion";
 import { SunSnow } from 'lucide-react';
 import { Coffee } from 'lucide-react';
@@ -15,6 +16,7 @@ const ItemCard = ({ item }) => {
     const { toggleModal, setModalName } = useContext(ModalContext)
     const { deleteAction } = useContext(ActionContext)
     const { productList, setProductList } = useContext(FetchDataContext)
+    const { setPreview  } = useContext(ImageContext)
     const [ref, entry] = useIntersectionObserver({
         threshold: 0.1,
         root: null,
@@ -54,7 +56,13 @@ const ItemCard = ({ item }) => {
         }
     }
 
-    const openModal = () => {
+    const openModalDetails = () => {
+        setModalName("detailProduct")
+        toggleModal()
+    }
+
+    const openModalUpdate = () => {
+        setPreview(null)
         sessionStorage.clear()
         setModalName("updateProduct")
         toggleModal()
@@ -77,14 +85,16 @@ const ItemCard = ({ item }) => {
     
         if(user.endsWith(".admin")){
             return (
-                <div className="flex justify-between items-center py-1 px-1 w-full h-auto gap-3">
+                <div 
+                    className="flex justify-between items-center py-1 px-1 w-full h-auto gap-3"
+                >
                     <button
                         className="bg-[#88A550] text-white px-4 py-2 rounded shadow-md w-[35%] sm:w-[45%] h-auto
                         active:translate-y-1 active:shadow-none
                         transition-transform duration-150 ease-in-out"
                         style={{ fontVariant: "small-caps" }}
                         onClick={() => {
-                            openModal();
+                            openModalUpdate();
                             savedId(item.id)
                         }}
                     >
@@ -108,7 +118,11 @@ const ItemCard = ({ item }) => {
     <>
         <div
             ref={ref}
-            className="w-full h-[34rem] md:h-[20rem] border border-[#8c6244] rounded-md overflow-hidden mb-2 relative"
+            className="w-full h-[34rem] md:h-[20rem] border border-[#8c6244] rounded-md overflow-hidden mb-2 relative cursor-pointer"
+            onClick={() => {
+                openModalDetails();
+                savedId(item.id)
+            }}
         >
             {isVisible && (
                 <>

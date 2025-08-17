@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect} from "react"
 import ModalContext from "../../../context/modalContext"
 import ProductList from "./ProductComponents/product/productlist"
+import Loading from "../../loading"
 const Products = () => {
     const { toggleModal, setModalName } = useContext(ModalContext)
     const [ loading, setLoading ] = useState(true)
@@ -15,11 +16,7 @@ const Products = () => {
     
     if(loading){
         return(
-            <div className="flex justify-center items-center w-auto h-[100vh]">
-                <div className="loader-two w-[60px] aspect-[2/1]">
-
-                </div>
-            </div>
+            <Loading/>
         )
     }
 

@@ -2,11 +2,13 @@ import { useContext, useState } from "react"
 import FetchDataContext from "../../../../../context/fetchdataContext"
 import ActionContext from "../../../../../context/actionContext"
 import ModalContext from "../../../../../context/modalContext"
+import ImageContext from "../../../../../context/imageContext"
 import Form from "./form"
 const ProductUpdate = () => {
     const { productList, setProductList } = useContext(FetchDataContext)
     const { patchAction } = useContext(ActionContext)
     const { toggleModal } = useContext(ModalContext)
+    const { setPreview  } = useContext(ImageContext)
     const [ id,] = useState(sessionStorage.getItem("productId"))
     const product = productList.find(item => item.id === id)
 
@@ -34,6 +36,8 @@ const ProductUpdate = () => {
                 item.id === product.id ? response : item
             )
         )
+        setPreview(null)
+        sessionStorage.clear()
         toggleModal()
     }
     

@@ -9,39 +9,6 @@
   "customers": [],
   "products": [
     {
-      "id": "37ddf39d-53e0-4ba4-b29b-6aed33816c61",
-      "image": "https://res.cloudinary.com/daxhmcpkq/image/upload/v1754878314/f2jazh5bbbaah1bdcboh.webp",
-      "name": "Caffè Latte",
-      "price": 150,
-      "sizeOptions": [
-        {
-          "size": "Tall",
-          "price": 150
-        },
-        {
-          "size": "Grande",
-          "price": 170
-        },
-        {
-          "size": "Venti",
-          "price": 190
-        }
-      ],
-      "type": "Hot",
-      "flavors": [
-        "Vanilla",
-        "Caramel"
-      ],
-      "addOns": [
-        "Extra Shot",
-        "Soy Milk"
-      ],
-      "description": "Smooth espresso mixed with steamed milk for a rich and creamy taste.",
-      "category": "Espresso",
-      "available": true,
-      "orderCount": 0
-    },
-    {
       "id": "34fe6d03-653b-4ddf-84ee-0fe947392e47",
       "image": "https://res.cloudinary.com/daxhmcpkq/image/upload/v1754878774/s2dykzn59vbji20vba3q.webp",
       "name": "Matcha Latte",
@@ -73,7 +40,7 @@
     },
     {
       "id": "11a8ae0a-3bb7-4075-bc55-17629c0feed1",
-      "image": "https://res.cloudinary.com/daxhmcpkq/image/upload/v1754879225/tx0yvbleirmldf0x15uv.jpg",
+      "image": "https://res.cloudinary.com/daxhmcpkq/image/upload/v1755306396/k1nocwv6bzdebe66futg.webp",
       "name": "Cold Brew",
       "price": 150,
       "sizeOptions": [
@@ -172,7 +139,7 @@
     },
     {
       "id": "2d103aa5-cddf-433b-9603-a71c5927f906",
-      "image": null,
+      "image": "https://res.cloudinary.com/daxhmcpkq/image/upload/v1755307458/eovthnj3mrzk0szqko1y.png",
       "name": "jerichoasdasdasdasdasdasdasd123",
       "price": 1,
       "sizeOptions": [
