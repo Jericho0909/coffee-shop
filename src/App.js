@@ -5,7 +5,7 @@ import Dashboard from "./components/adminpageComponents/section/dashboard";
 import Products from "./components/adminpageComponents/section/product";
 import Customers from "./components/adminpageComponents/section/customer";
 import Orders from "./components/adminpageComponents/section/order";
-import StaffandBarista from "./components/adminpageComponents/section/staff/barista";
+import Employers from "./components/adminpageComponents/section/employers";
 import { WindowSizeProvider } from "./context/windowsizeContext";
 import { SectionProvider } from "./context/sectionContext";
 import { MediaQueryProvider } from "./context/mediaqueryContext";
@@ -15,6 +15,7 @@ import { FetchDataProvider } from "./context/fetchdataContext";
 import { ActionProvider } from "./context/actionContext";
 import { ImageProvider } from "./context/imageContext";
 import { ContainerProvider } from "./context/containerContext";
+import { AuthValidationProvider } from "./context/authvalidationContext";
 
 function App() {
   return (
@@ -28,18 +29,20 @@ function App() {
                   <AuthviewProvider>
                     <ImageProvider>
                       <ContainerProvider>
-                        <Routes>
-                          <Route path="/" element={<Homepage/>
-                          }/>
-                          <Route path="/Adminpage/:id/:username" element={<Adminpage/>}>
+                        <AuthValidationProvider>
+                          <Routes>
+                            <Route path="/" element={<Homepage/>
+                            }/>
+                            <Route path="/Adminpage/:id/:username" element={<Adminpage/>}>
                               <Route index element={<Navigate to="Dashboard" replace />} />
                               <Route path="Dashboard" element={<Dashboard/>}/>
                               <Route path="Products" element={<Products/>}/>
                               <Route path="Customers" element={<Customers/>}/>
                               <Route path="Orders" element={<Orders/>}/>
-                              <Route path="StaffandBarista" element={<StaffandBarista/>}/>
-                          </Route>
-                        </Routes>
+                              <Route path="Employers" element={<Employers/>}/>
+                            </Route>
+                          </Routes>
+                        </AuthValidationProvider>
                       </ContainerProvider>
                     </ImageProvider>
                   </AuthviewProvider>

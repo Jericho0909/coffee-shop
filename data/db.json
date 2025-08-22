@@ -3,10 +3,42 @@
     {
       "id": "1",
       "username": "jericho.admin",
-      "password": "!Jericho123"
+      "password": "!Jericho123",
+      "role": "Admin"
+    },
+    {
+      "id": "2",
+      "name": "pogi",
+      "username": "pogi.admin",
+      "password": "!Pogi123",
+      "role": "Admin"
+    },
+    {
+      "id": "3",
+      "name": "employer2",
+      "username": "employer2.admin",
+      "password": "!Employer123",
+      "role": "Admin"
     }
   ],
-  "customers": [],
+  "customers": [
+    {
+      "id": "3",
+      "username": "customer1",
+      "password": "!Customer123",
+      "email": "",
+      "phone": "",
+      "location": ""
+    },
+    {
+      "id": "3",
+      "username": "customer2",
+      "password": "!Customer1234",
+      "email": "",
+      "phone": "",
+      "location": ""
+    }
+  ],
   "products": [
     {
       "id": "34fe6d03-653b-4ddf-84ee-0fe947392e47",
@@ -165,7 +197,98 @@
       "category": "Latte",
       "available": false,
       "orderCount": 0
+    },
+    {
+      "id": "6ac0135f-429c-44de-a0f0-f51dd71f6352",
+      "image": null,
+      "name": "asdasd",
+      "price": 1,
+      "sizeOptions": [
+        {
+          "size": "Tall",
+          "price": 2
+        },
+        {
+          "size": "Grande",
+          "price": 3
+        },
+        {
+          "size": "Venti",
+          "price": 4
+        }
+      ],
+      "type": "Hot/Iced",
+      "flavors": [
+        "ha"
+      ],
+      "addOns": [
+        "Soy Milk"
+      ],
+      "description": "",
+      "category": "Frappe",
+      "available": true,
+      "orderCount": 0
+    },
+    {
+      "id": "0620daa4-21fe-4686-8589-58a0a9f03995",
+      "image": null,
+      "name": "yeah",
+      "price": 1,
+      "sizeOptions": [
+        {
+          "size": "Tall",
+          "price": 2
+        },
+        {
+          "size": "Grande",
+          "price": 3
+        },
+        {
+          "size": "Venti",
+          "price": 4
+        }
+      ],
+      "type": "Cold",
+      "flavors": [
+        "asdqw"
+      ],
+      "addOns": [
+        "pogi"
+      ],
+      "description": "",
+      "category": "Latte",
+      "available": true,
+      "orderCount": 0
     }
   ],
-  "orders": []
+  "orders": [],
+  "employers": [
+    {
+      "id": "1",
+      "name": "pogi",
+      "email": "pogi@gmail.com",
+      "gender": "M",
+      "phone": "09084124892",
+      "role": "Admin",
+      "status": "Active"
+    },
+    {
+      "id": "2",
+      "name": "employer",
+      "email": "employer@gmail.com",
+      "gender": "F",
+      "phone": "09123456789",
+      "role": "Cashier",
+      "status": "Active"
+    },
+    {
+      "id": "3",
+      "name": "employer2",
+      "email": "employer2@gmail.com",
+      "gender": "F",
+      "phone": "09123456789",
+      "role": "Admin",
+      "status": "Active"
+    }
+  ]
 }

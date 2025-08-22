@@ -1,166 +1,176 @@
-import { useContext, useState } from "react"
-import AuthviewContext from "../../../context/autviewContext"
+import { useContext, useState } from "react";
+import AuthviewContext from "../../../context/autviewContext";
 import ActionContext from "../../../context/actionContext";
 import FetchDataContext from "../../../context/fetchdataContext";
+import AuthValidationContext from "../../../context/authvalidationContext";
 import { toast } from "react-hot-toast";
-const Signup = () =>{
-    const { setAuthView } = useContext(AuthviewContext)
-    const { adminList, setAdminList } = useContext(FetchDataContext)
+
+const Signup = () => {
+    const { setAuthView } = useContext(AuthviewContext);
+    const { customerList, setCustomerList } = useContext(FetchDataContext)
     const { addAction } = useContext(ActionContext)
-    const [ username, setUsername ] = useState("")
-    const [ password, setPassword ] = useState("")
-    const [ retypePassword, setReTypePassword ] = useState("")
-    const [ userFound, setUserFound ] = useState(true)
-    const [ mismatch, setMismatch ] = useState(false)
-    const [ showPasswordError, setShowPasswordError ] = useState(false);
+    const {isUsernameExists,
+            isPasswordValid,
+            showPasswordValidationError,
+            setShowPasswordValidationError,
+            isUsernameAvailable,
+            setIsUsernameAvailable
+    } = useContext(AuthValidationContext)
 
-    const accountType = async (username) => {
-        const user = adminList.find(key => key.username === username)
-        if (user){
-            console.log(user)
-            setUserFound(false)
-            return false
-        } 
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [isPasswordMismatch, setIsPasswordMismatch] = useState(false);
 
-        if(username.endsWith(".admin")) {
-            const id = adminList.length > 0 ? (+adminList[adminList.length - 1].id + 1).toString() : "1";
-      
-            const newAdmin = {
-                id: id,
-                username: username,
-                password: password
-            }
+    const initialFormData = {
+        id: customerList.length > 0
+            ? (+customerList[customerList.length - 1].id + 1).toString()
+            : "1"
+        ,
+        username: "",
+        password: "",
+        email: "",
+        phone: "",
+        location: "",
+    };
 
-            const response = await addAction("admins", newAdmin)
-            setAdminList(prev => [...prev, response])
+    const [formData, setFormData] = useState(initialFormData);
+
+    const checkUsernameAvailability = async (username) => {
+        const usernameExists = await isUsernameExists(username, customerList);
+        if (usernameExists) {
+            setIsUsernameAvailable(false);
+            return false;
+        }
+        setIsUsernameAvailable(true);
+        return true;
+    };
+
+    const validatePassword = (password) => {
+        const valid = isPasswordValid(password);
+
+        if (!valid) {
+            console.log("ha?")
+            setShowPasswordValidationError(true);
+            return false;
         }
         else{
-            console.log("ito ay customer")
-        }
-        setUserFound(true)
-
-    }
-
-    const isPasswordValid = (password) => {
-        const pattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}[\]:;<>,.?~\\/-]).{8,}$/;
-        if(password !== retypePassword){
-            setMismatch(true)
-            return false
+            setShowPasswordValidationError(false)
         }
 
-        if(pattern.test(password)){
-            setShowPasswordError(false)
-            setMismatch(false)
-            return true
+        if (password !== confirmPassword) {
+            setIsPasswordMismatch(true);
+            return false;
         }
         else{
-            setShowPasswordError(true)
-            return false
+            setIsPasswordMismatch(false)
         }
 
-    }
 
-    const handleSignup = async (e) => {
-        e.preventDefault()
+        return true;
+    };
 
-        const isAccountValid = await accountType(username);
-        const isPassValid = isPasswordValid(password);
+    const handleSubmitSignup = async (e) => {
+        e.preventDefault();
+        console.log("nagana ga?")
+        const isUsernameOk = await checkUsernameAvailability(formData.username);
+        const isPasswordOk = validatePassword(formData.password);
 
-        if (!isAccountValid || !isPassValid) {
-            return;
-        }
+        if (!isUsernameOk || !isPasswordOk) return;
+
+        const response = await addAction("customers", formData);
+        setCustomerList((prev) => [...prev, response]);
 
         toast.success(
-            <div className="Notification">
-                Successfully signed up!
-            </div>,
-            {
-                style: {
-                    width: '100%',
-                    backgroundColor: 'white',
-                    color: '#8c6244',
-                    padding: '12px 16px',
-                    borderRadius: '8px',
-                },
-                duration: 2000,
-            }
+        <div className="Notification">Successfully signed up!</div>,
+        {
+            style: {
+            width: "100%",
+            backgroundColor: "white",
+            color: "#8c6244",
+            padding: "12px 16px",
+            borderRadius: "8px",
+            },
+            duration: 2000,
+        }
         );
-        
-    }
+    };
 
-    return(
-        <>
-            <h1 className="text-[clamp(2rem,2vw,2.50rem)] font-nunito tracking-wide font-black text-center">
-                signup
-            </h1>
-            <form 
-                className="flex justify-start items-center flex-col w-[90%] mb-4"
-                onSubmit={handleSignup}
+  return (
+    <>
+        <h1 className="text-[clamp(2rem,2vw,2.50rem)] font-nunito tracking-wide font-black text-center">
+            Sign Up
+        </h1>
+        <form
+            className="flex justify-start items-center flex-col w-[90%] mb-4"
+            onSubmit={handleSubmitSignup}
+        >
+            <label htmlFor="username">Enter your Username:</label>
+            <input
+                id="username"
+                type="text"
+                name="username"
+                placeholder="Enter your username"
+                required
+                value={formData.username}
+                onChange={(e) =>
+                    setFormData({ ...formData, [e.target.name]: e.target.value })
+                }
+            />
+            {!isUsernameAvailable && (
+                <p className="text-red-600 text-[0.75rem] w-full mt-1">
+                    Username already exists.
+                </p>
+            )}
+
+            <label htmlFor="password">Enter your Password:</label>
+            <input
+                id="password"
+                type="password"
+                name="password"
+                placeholder="Enter your Password"
+                required
+                value={formData.password}
+                onChange={(e) =>
+                    setFormData({ ...formData, [e.target.name]: e.target.value })
+                }
+            />
+            {showPasswordValidationError && (
+                <p className="text-red-600 text-[0.75rem] w-full mt-1">
+                    Password must be at least 8 characters and include an uppercase
+                    letter, a number, and a special character.
+                </p>
+            )}
+
+            <label htmlFor="confirmPassword">Retype your Password:</label>
+            <input
+                id="confirmPassword"
+                type="password"
+                placeholder="Re-enter your Password"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                style={isPasswordMismatch ? { borderColor: "red" } : {}}
+                />
+            {isPasswordMismatch && (
+                <p className="text-red-600 text-[0.75rem] w-full mt-1">
+                    Passwords do not match.
+                </p>
+            )}
+            <button
+                type="submit"
+                className="bg-[#8c6244] text-white px-6 py-2 rounded-md mt-3 hover:bg-[#734d35] transition-all duration-300"
             >
-                <label htmlFor="username">
-                    Enter your Username:
-                </label>
-                <input
-                    id="username"
-                    type="text"
-                    placeholder="Enter your username"
-                    required
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                />
-                {!userFound && (
-                    <p className="text-red-600 text-[0.75rem] w-full mt-1">
-                        "Username already exists."
-                    </p>
-                )}
-                <label htmlFor="password">
-                    Enter your Password:
-                </label>
-                <input
-                    id="password"
-                    type="password"
-                    placeholder="Enter your Password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                {showPasswordError && (
-                    <p className="text-red-600 text-[0.75rem] w-full mt-1">
-                        "Password must be at least 8 characters and include an uppercase letter, a number, and a special character."
-                    </p>
-                )}
-                <label htmlFor="retype-password">
-                    Retype your Password:   
-                </label>
-                <input
-                    id="retype-password"
-                    type="password"
-                    placeholder="Enter your Password"
-                    required
-                    value={retypePassword}
-                    onChange={(e) => setReTypePassword(e.target.value)}
-                    style={mismatch ? { borderColor: "red" } : {}}
-                />
-                {mismatch && (
-                    <p className="text-red-600 text-[0.75rem] w-full mt-1">
-                        Passwords do not match.
-                    </p>
-                )}
-                <button
-                    type="submit"
-                    className="bg-[#8c6244] text-white px-6 py-2 rounded-md mt-3 hover:bg-[#734d35] transition-all duration-300"
-                >
-                    SignUp
-                </button>
-            </form>
-            <button 
-                    onClick={() => setAuthView("login")}
-                    className="text-[clamp(0.78rem,2vw,1rem)] font-nunito tracking-wide text-blue-500 font-semibold underline text-sm mt-2"
-            >
-                Back to Login
+                Sign Up
             </button>
-        </>
-    )
-}
+        </form>
 
-export default Signup
+        <button
+            onClick={() => setAuthView("login")}
+            className="text-[clamp(0.78rem,2vw,1rem)] font-nunito tracking-wide text-blue-500 font-semibold underline text-sm mt-2"
+        >
+            Back to Login
+        </button>
+    </>
+  );
+};
+
+export default Signup;

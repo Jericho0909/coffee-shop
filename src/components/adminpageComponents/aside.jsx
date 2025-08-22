@@ -62,11 +62,11 @@ const Aside = ({ setOpenSiderBar}) => {
                     </li>
                     <li>
                         <NavLink 
-                            to={`/Adminpage/${id}/${username}/StaffandBarista`} 
+                            to={`/Adminpage/${id}/${username}/Employers`} 
                             onClick={onToggleSidebar}
                             className="text-[clamp(1.30rem,2vw,1.45rem)]"
                         >
-                            staff/barista
+                            employers
                         </NavLink>
                     </li>
                     <li>

@@ -1,11 +1,13 @@
 import { useContext } from "react";
 import ModalContext from "../context/modalContext";
 import AuthviewContext from "../context/autviewContext";
+import AuthValidationContext from "../context/authvalidationContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 const Modal = ({children }) => {
     const { isOpen, toggleModal} = useContext(ModalContext)
     const { setAuthView } = useContext(AuthviewContext)
+    const { clearValidationErrors } = useContext(AuthValidationContext)
 
   if (!isOpen) return null;
 
@@ -19,7 +21,8 @@ const Modal = ({children }) => {
             onClick={() => {
                 toggleModal();
                 setAuthView("login");
-                sessionStorage.clear()
+                sessionStorage.clear();
+                clearValidationErrors()
             }}>
                 <FontAwesomeIcon 
                     icon={faXmark}

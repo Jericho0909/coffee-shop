@@ -38,7 +38,7 @@ html, body {
   }
 
   label {
-    @apply block w-full h-auto p-1 mb-1 font-nunito tracking-wide text-[clamp(0.85rem,2vw,1.05rem)] font-semibold;
+    @apply block w-full h-auto p-1 font-nunito tracking-wide text-[clamp(0.85rem,2vw,1.05rem)] font-semibold;
     
   }
 
@@ -65,6 +65,14 @@ html, body {
     appearance: none; 
     -webkit-appearance: none;
     -moz-appearance: none;
+  }
+
+  th{
+    @apply border border-gray-300 px-2 py-2 font-nunito tracking-wide text-left
+  }
+
+  td{
+    @apply border border-gray-300 px-2 py-2 font-opensans tracking-wide whitespace-nowrap truncate max-w-[200px] text-[clamp(0.78rem,2vw,1rem)]
   }
 
   .left {
@@ -169,5 +177,6 @@ html, body {
   .container-flex{
     @apply flex items-center w-full h-auto mb-[1rem]
   }
+
 }
 

@@ -10,6 +10,9 @@ import Modal from "../components/modal"
 import ProductAdd from "../components/adminpageComponents/section/ProductComponents/product/productadd"
 import ProductUpdate from "../components/adminpageComponents/section/ProductComponents/product/productupdate"
 import ProductDetails from "../components/adminpageComponents/section/ProductComponents/product/productdetails"
+import ManageModal from "../components/adminpageComponents/section/OrderComponents/manageModal/managemodal"
+import AddEmployer from "../components/adminpageComponents/section/EmployerComponents/EmployersModal/addemployer"
+import ManageEmployer from "../components/adminpageComponents/section/EmployerComponents/EmployersModal/updateemployer"
 const Adminpage = () => {
     const [ loading, setLoading ] = useState(true)
     const [ opensidebar, setOpenSiderBar ] = useState(false)
@@ -44,7 +47,11 @@ const Adminpage = () => {
     const modalComponents = {
         addProuct: <ProductAdd/>,
         updateProduct: <ProductUpdate/>,
-        detailProduct: <ProductDetails/>
+        detailProduct: <ProductDetails/>,
+        manage: <ManageModal/>,
+        addEmployer: <AddEmployer/>,
+        manageEmployer: <ManageEmployer/>
+
     }
 
     if( loading ){
