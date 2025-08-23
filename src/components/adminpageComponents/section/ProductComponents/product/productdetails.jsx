@@ -52,7 +52,7 @@ const ProductDetails = () => {
                     </h1>
                     <div className="container-flex justify-start px-[2rem]">
                         <p
-                            className="font-opensans tracking-wide text-[clamp(0.78rem,2vw,1rem)]"
+                            className="flex font-opensans tracking-wide text-[clamp(0.78rem,2vw,1rem)] gap-1"
                         >
                             <span 
                                 className="text-[clamp(0.85rem,2vw,1.05rem)] text-[#D4A373] font-semibold"
@@ -66,7 +66,7 @@ const ProductDetails = () => {
                     </div>
                     <div className="container-flex justify-start px-[2rem]">
                         <p
-                            className="font-opensans tracking-wide text-[clamp(0.78rem,2vw,1rem)]"
+                            className="flex font-opensans tracking-wide text-[clamp(0.78rem,2vw,1rem)] gap-1"
                         >
                             <span 
                                 className="text-[clamp(0.85rem,2vw,1.05rem)] text-[#D4A373] font-semibold"
@@ -80,7 +80,7 @@ const ProductDetails = () => {
                     </div>
                     <div className="container-flex justify-start px-[2rem]">
                        <p
-                            className="font-opensans tracking-wide text-[clamp(0.78rem,2vw,1rem)]"
+                            className="flex font-opensans tracking-wide text-[clamp(0.78rem,2vw,1rem)] gap-1"
                         >
                             <span 
                                 className="text-[clamp(0.85rem,2vw,1.05rem)] text-[#D4A373] font-semibold"
@@ -102,7 +102,7 @@ const ProductDetails = () => {
                     </h1>
                     <div className="container-flex justify-start px-[2rem]">
                         <p
-                            className="font-opensans tracking-wide text-[clamp(0.78rem,2vw,1rem)]"
+                            className="flex font-opensans tracking-wide text-[clamp(0.78rem,2vw,1rem)] gap-1"
                         >
                             <span 
                                 className="text-[clamp(0.85rem,2vw,1.05rem)] text-[#D4A373] font-semibold"
@@ -121,7 +121,7 @@ const ProductDetails = () => {
                                 className="container-flex w-auto h-auto mb-0"
                             >
                                 <p
-                                    className="font-opensans tracking-wide text-[clamp(0.78rem,2vw,1rem)]"
+                                    className="flex font-opensans tracking-wide text-[clamp(0.78rem,2vw,1rem)] gap-1"
                                 >
                                     <span 
                                         className="text-[clamp(0.85rem,2vw,1.05rem)] text-[#D4A373] font-semibold"

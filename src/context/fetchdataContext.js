@@ -8,11 +8,13 @@ export const FetchDataProvider = ({children}) => {
     const [ productList, setProductList ] = useState([])
     const [ employerList, setEmployerList ] = useState([])
     const [ customerList, setCustomerList ] = useState([])
+    const [ orderList, setOrderList ] = useState([])
 
     const { data: Admins, fetchError: adminsError, isLoading: adminsIsLoading, setIsLoading: setAdminsIsLoading } = useAxiosFetch('http://localhost:3500/admins')
     const { data: Products, fetchError: productsError, isLoading: productsIsLoading, setIsLoading: setProductsIsLoading } = useAxiosFetch('http://localhost:3500/products')
     const { data: Employers, fetchError: EmployersError, isLoading: EmployersIsLoading, setIsLoading: setEmployersIsLoading } = useAxiosFetch('http://localhost:3500/employers')
     const { data: Customers, fetchError: CustomersError, isLoading: CustomersIsLoading, setIsLoading: setCustomersIsLoading } = useAxiosFetch('http://localhost:3500/employers')
+    const { data: Orders, fetchError: OrdersError, isLoading: OrdersIsLoading, setIsLoading: setOrdersIsLoading } = useAxiosFetch('http://localhost:3500/orders')
 
 
     useEffect(() => {
@@ -20,7 +22,8 @@ export const FetchDataProvider = ({children}) => {
         setProductList(Products)
         setEmployerList(Employers)
         setCustomerList(Customers)
-    },[Admins, Products, Employers, Customers])
+        setOrderList(Orders)
+    },[Admins, Products, Employers, Customers, Orders])
 
     return (
         <FetchDataContext.Provider
@@ -29,7 +32,8 @@ export const FetchDataProvider = ({children}) => {
                 Products, productList, setProductList, productsError, productsIsLoading, setProductsIsLoading,
                 Employers, employerList, setEmployerList, EmployersError, EmployersIsLoading, setEmployersIsLoading,
                 Customers, customerList, setCustomerList, CustomersError,
-                CustomersIsLoading, setCustomersIsLoading
+                CustomersIsLoading, setCustomersIsLoading,
+                Orders, orderList, setOrderList, OrdersError, OrdersIsLoading, setOrdersIsLoading
             }}
         >
             {children}

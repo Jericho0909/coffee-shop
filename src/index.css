@@ -175,7 +175,7 @@ html, body {
   }
 
   .container-flex{
-    @apply flex items-center w-full h-auto mb-[1rem]
+    @apply flex items-center w-auto h-auto mb-[1rem]
   }
 
 }

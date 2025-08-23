@@ -10,7 +10,7 @@ import Modal from "../components/modal"
 import ProductAdd from "../components/adminpageComponents/section/ProductComponents/product/productadd"
 import ProductUpdate from "../components/adminpageComponents/section/ProductComponents/product/productupdate"
 import ProductDetails from "../components/adminpageComponents/section/ProductComponents/product/productdetails"
-import ManageModal from "../components/adminpageComponents/section/OrderComponents/manageModal/managemodal"
+import ManageOrder from "../components/adminpageComponents/section/OrderComponents/manageModal/manageOrder"
 import AddEmployer from "../components/adminpageComponents/section/EmployerComponents/EmployersModal/addemployer"
 import ManageEmployer from "../components/adminpageComponents/section/EmployerComponents/EmployersModal/updateemployer"
 const Adminpage = () => {
@@ -48,7 +48,7 @@ const Adminpage = () => {
         addProuct: <ProductAdd/>,
         updateProduct: <ProductUpdate/>,
         detailProduct: <ProductDetails/>,
-        manage: <ManageModal/>,
+        manageOrder: <ManageOrder/>,
         addEmployer: <AddEmployer/>,
         manageEmployer: <ManageEmployer/>
 
