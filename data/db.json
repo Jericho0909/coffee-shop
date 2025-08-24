@@ -285,7 +285,7 @@
         }
       ],
       "orderDate": "2025-08-22T09:30:00",
-      "status": "Processing",
+      "status": "Pending",
       "paymentMethod": "Cash",
       "total": 340
     },
@@ -331,7 +331,7 @@
         }
       ],
       "orderDate": "2025-08-22T10:15:00",
-      "status": "Processing",
+      "status": "Completed",
       "paymentMethod": "Cash",
       "total": 210
     }

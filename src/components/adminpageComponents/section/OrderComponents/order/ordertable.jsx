@@ -1,9 +1,7 @@
 import { useContext } from "react"
-import FetchDataContext from "../../../../../context/fetchdataContext"
 import ModalContext from "../../../../../context/modalContext"
 import Table from "../../../../table"
-const OrderTable = () => {
-    const { orderList } = useContext(FetchDataContext)
+const OrderTable = ({orders}) => {
     const { toggleModal, setModalName } = useContext(ModalContext)
     const tableHeader = [
         {label: "OrderID", key: "id"},
@@ -12,8 +10,6 @@ const OrderTable = () => {
         {label: "Total", key: "total"},
         {label: "Status", key: "status"},
     ]
-
-
 
     const openModal = (row) => {
         sessionStorage.setItem("orderID", row.id)
@@ -24,7 +20,7 @@ const OrderTable = () => {
     return (
         <Table
             tableHeader = {tableHeader}
-            tableData = {orderList}
+            tableData = {orders}
             openModal = {openModal}
         />
     )

@@ -1,11 +1,14 @@
 import { useState, useContext } from "react"
 import FetchDataContext from "../../../../../context/fetchdataContext"
 import ActionContext from "../../../../../context/actionContext"
+import ModalContext from "../../../../../context/modalContext"
+import toast from "react-hot-toast"
 const ManageOrder = () => {
     const { orderList, setOrderList } = useContext(FetchDataContext)
     const { patchAction } = useContext(ActionContext)
+    const { toggleModal } = useContext(ModalContext)
     const [ orderId, ] = useState(sessionStorage.getItem("orderID"))
-    const [ openItemId, setOpenItemId ] = useState(null);
+    const [ openItemId, setOpenItemId ] = useState(null)
 
     const selectedOrder = orderList.find(key => key.id === orderId)
 
@@ -22,10 +25,25 @@ const ManageOrder = () => {
 
     const handleUpdateStatus = async(newStatus) => {
         const response = await patchAction("orders", selectedOrder.id, {...currentOrderData, status: newStatus})
-        console.log(response)
         setOrderList(prev => (
             prev.map(order => order.id === selectedOrder.id ? response : order)
         ))
+        toggleModal()
+        toast.success(
+            <div className="Notification">
+                Order status updated successfully!
+            </div>,
+            {
+                style: {
+                width: "100%",
+                backgroundColor: "white",
+                color: "#8c6244",
+                padding: "12px 16px",
+                borderRadius: "8px",
+                },
+                duration: 2000,
+            }
+        );
     }
 
     return (
