@@ -13,7 +13,7 @@ export const FetchDataProvider = ({children}) => {
     const { data: Admins, fetchError: adminsError, isLoading: adminsIsLoading, setIsLoading: setAdminsIsLoading } = useAxiosFetch('http://localhost:3500/admins')
     const { data: Products, fetchError: productsError, isLoading: productsIsLoading, setIsLoading: setProductsIsLoading } = useAxiosFetch('http://localhost:3500/products')
     const { data: Employers, fetchError: EmployersError, isLoading: EmployersIsLoading, setIsLoading: setEmployersIsLoading } = useAxiosFetch('http://localhost:3500/employers')
-    const { data: Customers, fetchError: CustomersError, isLoading: CustomersIsLoading, setIsLoading: setCustomersIsLoading } = useAxiosFetch('http://localhost:3500/employers')
+    const { data: Customers, fetchError: CustomersError, isLoading: CustomersIsLoading, setIsLoading: setCustomersIsLoading } = useAxiosFetch('http://localhost:3500/customers')
     const { data: Orders, fetchError: OrdersError, isLoading: OrdersIsLoading, setIsLoading: setOrdersIsLoading } = useAxiosFetch('http://localhost:3500/orders')
 
 

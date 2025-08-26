@@ -13,6 +13,7 @@ import ProductDetails from "../components/adminpageComponents/section/ProductCom
 import ManageOrder from "../components/adminpageComponents/section/OrderComponents/manageModal/manageOrder"
 import AddEmployer from "../components/adminpageComponents/section/EmployerComponents/EmployersModal/addemployer"
 import ManageEmployer from "../components/adminpageComponents/section/EmployerComponents/EmployersModal/updateemployer"
+import ManageCustomer from "../components/adminpageComponents/section/CustomerCompoments/cutomerModal/manageCustomer"
 const Adminpage = () => {
     const [ loading, setLoading ] = useState(true)
     const [ opensidebar, setOpenSiderBar ] = useState(false)
@@ -50,8 +51,8 @@ const Adminpage = () => {
         detailProduct: <ProductDetails/>,
         manageOrder: <ManageOrder/>,
         addEmployer: <AddEmployer/>,
-        manageEmployer: <ManageEmployer/>
-
+        manageEmployer: <ManageEmployer/>,
+        manageCustomer: <ManageCustomer/>
     }
 
     if( loading ){

@@ -104,7 +104,6 @@ const AddEmployer = () => {
 
         setTimeout(() => {
             const employersContainer = container.current;
-            console.log(employersContainer)
             if (employersContainer) {
                 employersContainer.scrollTop = employersContainer.scrollHeight;
             }

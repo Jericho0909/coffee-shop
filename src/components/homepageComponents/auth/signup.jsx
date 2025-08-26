@@ -4,12 +4,13 @@ import ActionContext from "../../../context/actionContext";
 import FetchDataContext from "../../../context/fetchdataContext";
 import AuthValidationContext from "../../../context/authvalidationContext";
 import { toast } from "react-hot-toast";
+import { format } from "date-fns";
 
 const Signup = () => {
     const { setAuthView } = useContext(AuthviewContext);
     const { customerList, setCustomerList } = useContext(FetchDataContext)
     const { addAction } = useContext(ActionContext)
-    const {isUsernameExists,
+    const { isUsernameExists,
             isPasswordValid,
             showPasswordValidationError,
             setShowPasswordValidationError,
@@ -17,19 +18,26 @@ const Signup = () => {
             setIsUsernameAvailable
     } = useContext(AuthValidationContext)
 
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [isPasswordMismatch, setIsPasswordMismatch] = useState(false);
+    const [ confirmPassword, setConfirmPassword ] = useState("");
+    const [ isPasswordMismatch, setIsPasswordMismatch ] = useState(false)
+    const [ date,  ] = useState(new Date());
 
-    const initialFormData = {
-        id: customerList.length > 0
+    const customerId = customerList.length > 0
             ? (+customerList[customerList.length - 1].id + 1).toString()
             : "1"
-        ,
+
+    const initialFormData = {
+        id: customerId,
         username: "",
         password: "",
         email: "",
         phone: "",
         location: "",
+        dateJoined: format(date, "MM/dd/yy"),
+        totalOrders: 0,
+        totalSpent: 0,
+        lastOrderDate: "",
+        orders: []
     };
 
     const [formData, setFormData] = useState(initialFormData);
@@ -48,7 +56,6 @@ const Signup = () => {
         const valid = isPasswordValid(password);
 
         if (!valid) {
-            console.log("ha?")
             setShowPasswordValidationError(true);
             return false;
         }
@@ -70,7 +77,6 @@ const Signup = () => {
 
     const handleSubmitSignup = async (e) => {
         e.preventDefault();
-        console.log("nagana ga?")
         const isUsernameOk = await checkUsernameAvailability(formData.username);
         const isPasswordOk = validatePassword(formData.password);
 

@@ -2,11 +2,13 @@ import { useState, useContext } from "react"
 import FetchDataContext from "../../../../../context/fetchdataContext"
 import ActionContext from "../../../../../context/actionContext"
 import ModalContext from "../../../../../context/modalContext"
+import ContainerContext from "../../../../../context/containerContext"
 import toast from "react-hot-toast"
 const ManageOrder = () => {
     const { orderList, setOrderList } = useContext(FetchDataContext)
     const { patchAction } = useContext(ActionContext)
     const { toggleModal } = useContext(ModalContext)
+    const { container } = useContext(ContainerContext)
     const [ orderId, ] = useState(sessionStorage.getItem("orderID"))
     const [ openItemId, setOpenItemId ] = useState(null)
 
@@ -29,6 +31,13 @@ const ManageOrder = () => {
             prev.map(order => order.id === selectedOrder.id ? response : order)
         ))
         toggleModal()
+        setTimeout(() => {
+            const ordersContainer = container.current;
+            if (ordersContainer) {
+                ordersContainer.scrollTop = ordersContainer.scrollHeight;
+            }
+        },0)
+
         toast.success(
             <div className="Notification">
                 Order status updated successfully!
@@ -55,42 +64,62 @@ const ManageOrder = () => {
                 >
                     Order Status
                 </h1>
-                <select
-                    name="status"
-                    value={currentOrderData.status}
-                    onChange={(e) => {
-                        const newStatus = e.target.value
-                        setCurrentOrderData({...currentOrderData, [e.target.name]: e.target.value});
-                        handleUpdateStatus(newStatus)
-                    }}
-                    className="category w-auto h-auto p-1 font-opensans"
-                    style={{ fontVariant: "normal" }}
-                >
-                    <option 
-                        className="category font-opensans"
-                        style={{ fontVariant: "normal" }}
+                {selectedOrder.status === "Completed" || selectedOrder.status === "Cancelled"
+                    ? (
+                        <div className="container-flex justify-center px-[2rem] mb-[0.50rem]">
+                            <p
+                        className="flex gap-1 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]"
                     >
-                        Pending
-                    </option>
-                    <option 
-                        className="category font-opensans"
-                        style={{ fontVariant: "normal" }}
-                    >
-                        Processing
-                    </option>
-                    <option 
-                        className="category font-opensans"
-                        style={{ fontVariant: "normal" }}
-                    >
-                        Completed
-                    </option>
-                    <option 
-                        className="category font-opensans"
-                        style={{ fontVariant: "normal" }}
-                    >
-                        Cancelled
-                    </option>
-                </select>
+                        <span 
+                            className="text-[#D4A373] font-semibold"
+                        >
+                            Status: 
+                        </span>
+                        <span>
+                            {currentOrderData.status}
+                        </span>
+                    </p>
+                        </div>
+                    )
+                    : (
+                        <select
+                            name="status"
+                            value={currentOrderData.status}
+                            onChange={(e) => {
+                                const newStatus = e.target.value
+                                setCurrentOrderData({...currentOrderData, [e.target.name]: e.target.value});
+                                handleUpdateStatus(newStatus)
+                            }}
+                            className="category w-auto h-auto p-1 font-opensans"
+                            style={{ fontVariant: "normal" }}
+                        >
+                            <option 
+                                className="category font-opensans"
+                                style={{ fontVariant: "normal" }}
+                            >
+                                Pending
+                            </option>
+                            <option 
+                                className="category font-opensans"
+                                style={{ fontVariant: "normal" }}
+                            >
+                                Processing
+                            </option>
+                            <option 
+                                className="category font-opensans"
+                                style={{ fontVariant: "normal" }}
+                            >
+                                Completed
+                            </option>
+                            <option 
+                                className="category font-opensans"
+                                style={{ fontVariant: "normal" }}
+                            >
+                                Cancelled
+                            </option>
+                        </select>
+                    )
+                }
             </div>
             <div className="flex justify-start items-start flex-col w-full h-auto mb-[1rem] p-2">
                 <h1 className="w-full text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[1rem]"

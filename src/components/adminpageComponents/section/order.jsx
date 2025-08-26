@@ -1,9 +1,11 @@
 import { useContext, useState, useEffect, useCallback } from "react"
 import FetchDataContext from "../../../context/fetchdataContext"
+import ContainerContext from "../../../context/containerContext"
 import Loading from "../../loading"
 import OrderTable from "./OrderComponents/order/ordertable"
 const Orders = () => {
     const { orderList } = useContext(FetchDataContext)
+    const { container } = useContext(ContainerContext)
     const [ loading, setLoading ] = useState(true)
     const [ orders, setOrders ] = useState([])
     const [ table, setTable ] = useState("currentOrders")
@@ -17,13 +19,13 @@ const Orders = () => {
     },[])
 
     const checkOrders = useCallback((table) => {
-        const completedOrders = orderList.filter(order => order.status.includes("Completed"))
+        const completedOrders = orderList.filter(order => order.status.includes("Completed") || order.status.includes("Cancelled"))
 
         if (table === "ordersHistory") {
             return completedOrders
         }
 
-        const currentOrders = orderList.filter(order => !order.status.includes("Completed"))
+        const currentOrders = orderList.filter(order => !order.status.includes("Completed") && !order.status.includes("Cancelled"))
 
         return currentOrders;
     }, [orderList])
@@ -70,7 +72,10 @@ const Orders = () => {
                                 </button>
                         )}
                 </div>
-                <div className="w-full max-h-[82vh] xl:max-h-[72vh] overflow-y-auto scrollbar-hide">
+                <div 
+                    ref={container}
+                    className="w-full max-h-[82vh] xl:max-h-[72vh] overflow-y-auto scrollbar-hide"
+                >
                     <OrderTable 
                         orders = {orders}
                     />

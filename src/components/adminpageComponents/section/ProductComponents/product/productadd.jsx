@@ -5,7 +5,7 @@ import ImageContext from "../../../../../context/imageContext"
 import ModalContext from "../../../../../context/modalContext"
 import ContainerContext from "../../../../../context/containerContext"
 import Form from "./form"
-import { toast } from "react-hot-toast";
+import { toast } from "react-hot-toast"
 import { v4 as uuidv4 } from 'uuid'
 const ProductAdd = () => {
         const { addAction } = useContext(ActionContext)

@@ -23,20 +23,93 @@
   ],
   "customers": [
     {
-      "id": "3",
-      "username": "customer1",
-      "password": "!Customer123",
-      "email": "",
-      "phone": "",
-      "location": ""
+      "id": "1",
+      "username": "pogi",
+      "password": "!Pogi123",
+      "email": "pogi@example.com",
+      "phone": "09123456789",
+      "location": "Rosario, Batangas",
+      "dateJoined": "08/24/25",
+      "totalOrders": 2,
+      "totalSpent": 450,
+      "lastOrderDate": "08/25/25",
+      "accountStatus": "Block",
+      "orders": [
+        {
+          "orderId": "ORD-1001",
+          "orderDate": "08/24/25",
+          "status": "Completed",
+          "paymentMethod": "Cash",
+          "items": [
+            {
+              "productId": "201",
+              "name": "Caramel Macchiato",
+              "size": "Grande",
+              "quantity": 2,
+              "price": 120,
+              "subtotal": 240
+            },
+            {
+              "productId": "202",
+              "name": "Café Latte",
+              "size": "Tall",
+              "quantity": 1,
+              "price": 100,
+              "subtotal": 100
+            }
+          ],
+          "total": 340
+        },
+        {
+          "orderId": "ORD-1002",
+          "orderDate": "08/25/25",
+          "status": "Pending",
+          "paymentMethod": "GCash",
+          "items": [
+            {
+              "productId": "203",
+              "name": "Espresso",
+              "size": "Solo",
+              "quantity": 1,
+              "price": 110,
+              "subtotal": 110
+            }
+          ],
+          "total": 110
+        }
+      ]
     },
     {
-      "id": "3",
-      "username": "customer2",
-      "password": "!Customer1234",
-      "email": "",
-      "phone": "",
-      "location": ""
+      "id": "2",
+      "username": "panget",
+      "password": "!Panget123",
+      "email": "panget@example.com",
+      "phone": "09987654321",
+      "location": "Lipa, Batangas",
+      "dateJoined": "08/24/25",
+      "totalOrders": 1,
+      "totalSpent": 200,
+      "lastOrderDate": "08/24/25",
+      "accountStatus": "Block",
+      "orders": [
+        {
+          "orderId": "ORD-2001",
+          "orderDate": "08/24/25",
+          "status": "Completed",
+          "paymentMethod": "Cash",
+          "items": [
+            {
+              "productId": "204",
+              "name": "Mocha Frappuccino",
+              "size": "Venti",
+              "quantity": 1,
+              "price": 200,
+              "subtotal": 200
+            }
+          ],
+          "total": 200
+        }
+      ]
     }
   ],
   "products": [
@@ -304,7 +377,7 @@
         }
       ],
       "orderDate": "2025-08-22T10:00:00",
-      "status": "Completed",
+      "status": "Pending",
       "paymentMethod": "GCash",
       "total": 150
     },
@@ -331,7 +404,7 @@
         }
       ],
       "orderDate": "2025-08-22T10:15:00",
-      "status": "Completed",
+      "status": "Cancelled",
       "paymentMethod": "Cash",
       "total": 210
     }
