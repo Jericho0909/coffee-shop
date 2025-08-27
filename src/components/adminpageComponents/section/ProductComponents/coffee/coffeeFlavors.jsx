@@ -76,7 +76,7 @@ const CoffeeFlavors = ({formData, setFormData}) => {
                         
                     ))}
                 </div>
-                <div className="flex justify-center items-center flex-col w-auto h-auto p-1">
+                <div className="flex justify-center items-center flex-col w-auto h-auto p-1 gap-1">
                     <label
                         htmlFor="add-flavors"
                         style={{ fontVariant: 'small-caps' }}
@@ -94,9 +94,10 @@ const CoffeeFlavors = ({formData, setFormData}) => {
                         className="w-full"
                     />
                     <button
-                        className="bg-[#8c6244] text-white px-4 py-2 rounded shadow-md w-[30%] h-auto mt-2
-                        active:translate-y-1 active:shadow-none
-                        transition-transform duration-150 ease-in-out"
+                        className="bg-[#3B2F2F] text-white px-4 py-2 rounded shadow-md w-[35%] sm:w-[45%] h-auto mt-2
+                        hover:bg-[#2d2323] hover:scale-105 
+                        active:scale-95 active:shadow-none
+                        transition-transform duration-200 ease-in-out"
                         style={{ fontVariant: "small-caps" }}
                         type="button"
                         onClick={() => addFlavors(flavors)}

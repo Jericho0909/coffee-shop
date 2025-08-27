@@ -34,9 +34,9 @@ const Table = ({tableHeader, tableData, openModal}) => {
                             ))}
                             <td>
                                 <button
-                                    className="bg-[#8c6244] text-white px-4 py-2 rounded shadow-md w-full h-auto mt-2
-                                    active:translate-y-1 active:shadow-none
-                                    transition-transform duration-150 ease-in-out"
+                                    className="bg-[#88A550] text-white px-4 py-2 rounded shadow-md w-full h-auto
+                                    transition-transform duration-300 ease-in-out
+                                    hover:bg-[#7a9549] hover:scale-105 hover:shadow-[0_4px_12px_rgba(136,165,80,0.4)] active:translate-y-1 active:shadow-none"
                                     style={{ fontVariant: "small-caps" }}
                                     onClick={() => {
                                         openModal(row)

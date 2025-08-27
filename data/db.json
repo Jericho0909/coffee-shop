@@ -252,7 +252,7 @@
     {
       "id": "2d103aa5-cddf-433b-9603-a71c5927f906",
       "image": "https://res.cloudinary.com/daxhmcpkq/image/upload/v1755307458/eovthnj3mrzk0szqko1y.png",
-      "name": "jerichoasdasdasdasdasdasdasd123",
+      "name": "richoasdasdasdasdasdasdasd123",
       "price": 1,
       "sizeOptions": [
         {
@@ -365,7 +365,7 @@
         }
       ],
       "orderDate": "2025-08-22T09:30:00",
-      "status": "Processing",
+      "status": "Pending",
       "paymentMethod": "Cash",
       "total": 340
     },
@@ -432,7 +432,16 @@
       "email": "employer1@gmail.com",
       "gender": "M",
       "phone": "09123456789",
-      "role": "Barista",
+      "role": "Cashier",
+      "status": "Active"
+    },
+    {
+      "id": "E-20fdf",
+      "name": "admin1",
+      "email": "admin1@gmail.com",
+      "gender": "F",
+      "phone": "09091234567",
+      "role": "Staff",
       "status": "Active"
     }
   ]

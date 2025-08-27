@@ -1,11 +1,28 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import DailySalesChart from "../charts/dailysaleschart"
 import WeeklySalesChart from "../charts/weeklysaleschart"
 import MonthlySalesChart from "../charts/monthlysaleschart"
+import Loading from "../../loading"
 const Dashboard = () => {
-    const [chart, setChart] = useState("dailysales");
+    const [chart, setChart] = useState("dailysales")
+    const [ loading, setLoading ] = useState(true)
+
     const switchChartView = (chart) => {
         setChart(chart)
+    }
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setLoading(false)
+        }, 2000)
+
+        return () => clearTimeout(timer)
+    }, [])
+    
+    if(loading){
+        return(
+            <Loading/>
+        )
     }
 
     const chartView = {
@@ -29,20 +46,23 @@ const Dashboard = () => {
                         <div className="flex justify-between items-center gap-1 w-full h-auto p-1">
                             <button
                                 onClick={() => switchChartView("dailysales")}
-                                className={`press ${chart === "dailysales" ? "translate-y-1 shadow-inner" : "shadow-md"}`}
+                                className={`bg-[#8c6244] border border-black w-full text-white font-semibold py-2 px-4 rounded 
+                                ${chart === "dailysales" ? "translate-y-1 shadow-inner" : "shadow-md"}`}
                             >
                                 daily
                             </button>
                             <button
                                 onClick={() => switchChartView("weeklysales")}
-                                className={`press ${chart === "weeklysales" ? "translate-y-1 shadow-inner" : "shadow-md"}`}
+                                className={`bg-[#8c6244] border border-black w-full text-white font-semibold py-2 px-4 rounded 
+                                ${chart === "weeklysales" ? "translate-y-1 shadow-inner" : "shadow-md"}`}
                             
                             >
                                 weekly  
                             </button>
                             <button
                                 onClick={() => switchChartView("monthlysales")}
-                                className={`press ${chart === "monthlysales" ? "translate-y-1 shadow-inner" : "shadow-md"}`}
+                                className={`bg-[#8c6244] border border-black w-full text-white font-semibold py-2 px-4 rounded 
+                                ${chart === "monthlysales" ? "translate-y-1 shadow-inner" : "shadow-md"}`}
                             >
                                 monthly
                             </button>

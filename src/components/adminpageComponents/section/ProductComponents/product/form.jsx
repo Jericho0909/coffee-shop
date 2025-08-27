@@ -57,9 +57,7 @@ const Form = ({formData, setFormData}) => {
             <div className="flex justify-center items-center w-full h-auto">
                 <button
                     type="submit"
-                    className="bg-[#8c6244] text-white px-4 py-2 rounded shadow-md w-[50%] h-auto
-                    active:translate-y-1 active:shadow-none
-                    transition-transform duration-150 ease-in-out"
+                    className="press w-[48%]"
                     style={{ fontVariant: "small-caps" }}
                 >
                     conforim

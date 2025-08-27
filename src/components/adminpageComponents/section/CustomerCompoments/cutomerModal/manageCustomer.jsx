@@ -15,11 +15,25 @@ const ManageCustomer = () => {
     const [ customerId, ] = useState(sessionStorage.getItem("customerID"))
     const [ showFullDetail, setShowFullDetails ] = useState(false)
     const [ orderID, setOrderId ] = useState("")
+    const containerRef = useRef(null)
     const ref = useRef(null)
 
     const selectedCustomer = customerList.find(key => key.id === customerId)
 
     const [ status, setStatus ] = useState(selectedCustomer.accountStatus)
+
+    const handleScrollToTop = () => {
+    if (containerRef.current) {
+
+        const timer = setTimeout(() => {
+            containerRef.current.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        })
+        },100)
+        return () => clearTimeout(timer)
+    }
+  };
 
     const orderDetails = (id) => {
         const selectedProduct = selectedCustomer.orders.find(key => key.orderId === id)
@@ -29,14 +43,14 @@ const ManageCustomer = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
-                className="absolute top-0 right-0 w-[70%] h-[50%] 
+                className="absolute top-0 right-0 w-[70%] h-[18.50rem] 
                 bg-[#fffdf9] border border-[#d3b89f] rounded-xl 
                 shadow-lg p-1 pb-[1rem] overflow-hidden"
             >
                 <div className="w-full h-[15rem] overflow-y-auto my-1">
                     {selectedProduct.items.map((item, index) => (
                         <div 
-                            key={index} 
+                            key={index}
                             className="flex justify-start items-center px-2 py-1 border-b border-[#e5d1b8] last:border-0"
                         >
                             <p className="flex gap-1 font-opensans tracking-wide text-[#3e2723]">
@@ -105,6 +119,7 @@ const ManageCustomer = () => {
     }
     return(
         <div 
+            ref={containerRef}
             className="w-full h-full overflow-y-scroll scrollbar-hide relative"
         >
             <div className="w-full text-center my-[2rem]">
@@ -267,8 +282,9 @@ const ManageCustomer = () => {
                                     key={index} 
                                     className="cursor-pointer"
                                     onClick={() => {
-                                        setOrderId(item.orderId)
-                                        setShowFullDetails(true)
+                                        setOrderId(item.orderId);
+                                        setShowFullDetails(true);
+                                        handleScrollToTop()
                                     }}
                                 >
                                     <td>

@@ -118,8 +118,9 @@ html, body {
   }
 
   .press {
-    @apply bg-[#8c6244] border border-black w-full text-white font-semibold py-2 px-4 rounded transition-all duration-150;
-    font-variant: small-caps
+    @apply bg-[#8c6244] border border-black w-full text-white font-semibold py-2 px-4 rounded 
+    transition-all duration-300 [font-variant:small-caps] 
+    hover:bg-[#8b5e3c] hover:scale-105 hover:shadow-[0_4px_12px_rgba(111,78,55,0.4)]
   }
 
   .loader {

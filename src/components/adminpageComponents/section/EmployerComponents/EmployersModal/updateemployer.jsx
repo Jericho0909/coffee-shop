@@ -141,17 +141,18 @@ const ManageEmployer = () => {
                 <button
                     type="submit"
                     className="bg-[#6F4E37] text-white px-4 py-2 rounded shadow-md w-[40%] h-auto
-                    active:translate-y-1 active:shadow-none
-                    transition-transform duration-150 ease-in-out"
-                    style={{ fontVariant: "small-caps" }}
+                    hover:bg-[#5a3f2c] hover:scale-105
+                    active:scale-95 active:shadow-none
+                    transition-all duration-300 ease-in-out"
                 >
                     Update
                 </button>
                 <button
                     type="button"
                     className="bg-[#8B3A2B] text-white px-4 py-2 rounded shadow-md w-[40%] h-auto
-                    active:translate-y-1 active:shadow-none
-                    transition-transform duration-150 ease-in-out"
+                    hover:bg-[#732f23] hover:scale-105
+                    active:scale-95 active:shadow-none
+                    transition-all duration-300 ease-in-out"
                     style={{ fontVariant: "small-caps" }}
                     onClick={(e) => handleDelete(e)}
                     >

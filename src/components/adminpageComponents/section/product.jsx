@@ -39,7 +39,7 @@ const Products = () => {
                         add product
                     </button>
                 </div>
-                <div className="w-full h-auto p-1">
+                <div className="w-full h-auto p-1 ">
                     <ProductList/>
                 </div>
             </div>

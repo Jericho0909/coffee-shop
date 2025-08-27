@@ -91,7 +91,7 @@ const Adminpage = () => {
                 ) : (
                     <aside
                         ref={sidebarRef}
-                        className="w-auto h-auto bg-[#f9f5f1] border border-[#8c6244] shadow-md mt-[6rem] p-1"
+                        className="w-auto h-auto bg-[#f9f5f1] border border-[#8c6244] shadow-md mt-[5.25rem] p-1"
                     >
                         <Aside
                             setOpenSiderBar = {setOpenSiderBar}
