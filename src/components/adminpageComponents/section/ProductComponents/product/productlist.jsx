@@ -1,11 +1,12 @@
 import { useContext } from "react"
 import FetchDataContext from "../../../../../context/fetchdataContext"
 import ContainerContext from "../../../../../context/containerContext"
+import AddHighlightContext from "../../../../../context/addhighlightContext"
 import ItemCard from "../../../../itemcard"
 const ProductList = () => {
     const { productList } = useContext(FetchDataContext)
     const { container } = useContext(ContainerContext)
-    
+    const { containerRefs } = useContext(AddHighlightContext)
     return (
         <div 
             ref={container}
@@ -14,6 +15,7 @@ const ProductList = () => {
             {productList.map(item => (
                 <div 
                     key={item.id}
+                    ref={(el) => (containerRefs.current[item.id] = el)}
                     className="productList flex justify-center items-center flex-col border border-gray-400
                     w-full h-full p-3"
                 >   

@@ -2,6 +2,7 @@ import { useContext, useState } from "react"
 import FetchDataContext from "../../../../../context/fetchdataContext"
 import ActionContext from "../../../../../context/actionContext"
 import ModalContext from "../../../../../context/modalContext"
+import AddHighlightContext from "../../../../../context/addhighlightContext"
 import EmployerForm from "../Employer/employerformjsx"
 import toast from "react-hot-toast"
 const ManageEmployer = () => {
@@ -17,13 +18,16 @@ const ManageEmployer = () => {
         deleteAction 
     } = useContext(ActionContext)
     const { toggleModal } = useContext(ModalContext)
+    const { highlightUpdated } = useContext(AddHighlightContext)
     const [ employerID, ] = useState(sessionStorage.getItem("employerID"))
-    const [ employername, ] = useState(sessionStorage.getItem("employerName"))
+    const [ employerName, ] = useState(sessionStorage.getItem("employerName"))
 
     const selectedAdmin = adminList.find(key => 
-        (key.name === employername && key.role === "Admin")
+        (key.name === employerName && key.role === "Admin")
     )
+
     const selectedEmployer = employerList.find(key => key.id === employerID)
+
 
 
     const [ editableAdminData, setEditableAdminData ] = useState(selectedAdmin)
@@ -41,12 +45,29 @@ const ManageEmployer = () => {
             removeAdminFromList()
         }
         else{
-            if(editableEmployerData.role === "Admin"){
-                const response = await addAction("admins",  editableEmployerData)
+             const checkAdminExist = adminList.find(key => key.id === employerID || key.name === employerName)
+            if(editableEmployerData.role === "Admin" && !checkAdminExist){
+                const promotetoAdmin = {
+                    id: editableEmployerData.id,
+                    name: editableEmployerData.name,
+                    username: editableAdminData.username,
+                    password: editableAdminData.password,
+                    role: "Admin",
+                }
+
+                const response = await addAction("admins", promotetoAdmin)
                 setAdminList(prev => (
                     [...prev, response]
                 ))
             }
+            else{
+                if(selectedAdmin){
+                    const response = await patchAction("admins", selectedAdmin.id, editableAdminData)
+                    setAdminList(prev => (
+                    prev.map(item => item.id === selectedAdmin.id ? response : item)))
+                }
+            }
+
         }
 
         const response = await patchAction("employers", selectedEmployer.id, editableEmployerData)
@@ -70,7 +91,8 @@ const ManageEmployer = () => {
                 },
                 duration: 2000,
             }
-        );
+        )
+        highlightUpdated(selectedEmployer.id)
     }
 
     const handleDelete = async (e) => {

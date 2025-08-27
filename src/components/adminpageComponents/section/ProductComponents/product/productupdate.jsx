@@ -3,12 +3,15 @@ import FetchDataContext from "../../../../../context/fetchdataContext"
 import ActionContext from "../../../../../context/actionContext"
 import ModalContext from "../../../../../context/modalContext"
 import ImageContext from "../../../../../context/imageContext"
+import AddHighlightContext from "../../../../../context/addhighlightContext"
 import Form from "./form"
+import toast from "react-hot-toast"
 const ProductUpdate = () => {
     const { productList, setProductList } = useContext(FetchDataContext)
     const { patchAction } = useContext(ActionContext)
     const { toggleModal } = useContext(ModalContext)
     const { setPreview  } = useContext(ImageContext)
+    const { highlightUpdated } = useContext(AddHighlightContext)
     const [ id,] = useState(sessionStorage.getItem("productId"))
     const product = productList.find(item => item.id === id)
 
@@ -39,6 +42,23 @@ const ProductUpdate = () => {
         setPreview(null)
         sessionStorage.clear()
         toggleModal()
+        toast.success(
+            <div className="Notification">
+                Product updated successfully!
+            </div>,
+            {
+                style: {
+                width: "100%",
+                backgroundColor: "white",
+                color: "#8c6244",
+                padding: "12px 16px",
+                borderRadius: "8px",
+                },
+                duration: 2000,
+            }
+        )
+
+        highlightUpdated(product.id)
     }
     
     return(

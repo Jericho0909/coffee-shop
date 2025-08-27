@@ -4,6 +4,7 @@ import ModalContext from "../context/modalContext";
 import FetchDataContext from "../context/fetchdataContext";
 import ActionContext from "../context/actionContext";
 import ImageContext from "../context/imageContext";
+import AddHighlightContext from "../context/addhighlightContext";
 import { motion } from "framer-motion";
 import { SunSnow } from 'lucide-react';
 import { Coffee } from 'lucide-react';
@@ -17,6 +18,7 @@ const ItemCard = ({ item }) => {
     const { deleteAction } = useContext(ActionContext)
     const { productList, setProductList } = useContext(FetchDataContext)
     const { setPreview  } = useContext(ImageContext)
+    const { saveIndex } = useContext(AddHighlightContext)
     const [ref, entry] = useIntersectionObserver({
         threshold: 0.1,
         root: null,
@@ -66,10 +68,12 @@ const ItemCard = ({ item }) => {
         sessionStorage.clear()
         setModalName("updateProduct")
         toggleModal()
+        saveIndex()
     }
 
     const savedId = (id) => {
         sessionStorage.setItem("productId", id)
+        saveIndex(id)
     }
 
     const deleteProduct = async (e, item) => {
@@ -82,7 +86,6 @@ const ItemCard = ({ item }) => {
     }
 
     const ViewButton = (user, item) => {
-    
         if(user.endsWith(".admin")){
             return (
                 <div 
@@ -112,6 +115,11 @@ const ItemCard = ({ item }) => {
                 </div>
             )
         }
+        else(
+            <p>
+                asdasd
+            </p>
+        )
     }
 
   return (

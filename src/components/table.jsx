@@ -1,4 +1,7 @@
+import { useContext } from "react"
+import AddHighlightContext from "../context/addhighlightContext"
 const Table = ({tableHeader, tableData, openModal}) => {
+    const { containerRefs, saveIndex } = useContext(AddHighlightContext)
     return(
         <div 
             className="overflow-x-auto w-full"
@@ -20,10 +23,12 @@ const Table = ({tableHeader, tableData, openModal}) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {tableData.map((row, rowIndex) => (
-                        <tr key={rowIndex}>
+                    {tableData.map(row => (
+                        <tr key={row.id} ref={(el) => (containerRefs.current[row.id] = el)}>
                             {tableHeader.map((header, colIndex) => (
-                                <td key={colIndex}>
+                                <td 
+                                    key={colIndex}
+                                >
                                     {row[header.key]}
                                 </td>
                             ))}
@@ -33,7 +38,10 @@ const Table = ({tableHeader, tableData, openModal}) => {
                                     active:translate-y-1 active:shadow-none
                                     transition-transform duration-150 ease-in-out"
                                     style={{ fontVariant: "small-caps" }}
-                                    onClick={() => openModal(row)}
+                                    onClick={() => {
+                                        openModal(row)
+                                        saveIndex(row.id)
+                                    }}
                                 >
                                     manage
                                 </button>

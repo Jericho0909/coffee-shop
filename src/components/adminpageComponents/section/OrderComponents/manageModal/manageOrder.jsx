@@ -3,12 +3,14 @@ import FetchDataContext from "../../../../../context/fetchdataContext"
 import ActionContext from "../../../../../context/actionContext"
 import ModalContext from "../../../../../context/modalContext"
 import ContainerContext from "../../../../../context/containerContext"
+import AddHighlightContext from "../../../../../context/addhighlightContext"
 import toast from "react-hot-toast"
 const ManageOrder = () => {
     const { orderList, setOrderList } = useContext(FetchDataContext)
     const { patchAction } = useContext(ActionContext)
     const { toggleModal } = useContext(ModalContext)
     const { container } = useContext(ContainerContext)
+    const { highlightUpdated } = useContext(AddHighlightContext)
     const [ orderId, ] = useState(sessionStorage.getItem("orderID"))
     const [ openItemId, setOpenItemId ] = useState(null)
 
@@ -52,7 +54,9 @@ const ManageOrder = () => {
                 },
                 duration: 2000,
             }
-        );
+        )
+
+        highlightUpdated(selectedOrder.id)
     }
 
     return (

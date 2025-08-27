@@ -5,10 +5,11 @@ import ModalContext from "../../../../../context/modalContext";
 import ContainerContext from "../../../../../context/containerContext";
 import AuthValidationContext from "../../../../../context/authvalidationContext";
 import EmployerForm from "../Employer/employerformjsx";
+import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-hot-toast";
 
 const AddEmployer = () => {
-    const { employerList, setEmployerList, adminList, setAdminList } =
+    const { setEmployerList, adminList, setAdminList } =
     useContext(FetchDataContext);
     const { addAction } = useContext(ActionContext);
     const { toggleModal } = useContext(ModalContext);
@@ -20,18 +21,11 @@ const AddEmployer = () => {
     } = useContext(AuthValidationContext)
     const { container } = useContext(ContainerContext)
 
-    const generateEmployerId =
-        employerList.length > 0
-        ? (+employerList[employerList.length - 1].id + 1).toString()
-        : "1";
-
-    const generateAdminId =
-        adminList.length > 0
-        ? (+adminList[adminList.length - 1].id + 1).toString()
-        : "1";
+    const shortAdminId = "A-" + uuidv4().slice(0, 5)
+    const shortEmployerId = "E-" + uuidv4().slice(0, 5)
 
     const initialEmployerData = {
-        id: generateEmployerId,
+        id: shortEmployerId,
         name: "",
         email: "",
         gender: "",
@@ -43,7 +37,7 @@ const AddEmployer = () => {
     const [ employerData, setEmployerData ] = useState(initialEmployerData);
 
     const initialAdminData = {
-        id: generateAdminId,
+        id: shortAdminId,
         name: "",
         username: "",
         password: "",

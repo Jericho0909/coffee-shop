@@ -7,17 +7,10 @@
       "role": "Admin"
     },
     {
-      "id": "2",
-      "name": "pogi",
-      "username": "pogi.admin",
-      "password": "!Pogi123",
-      "role": "Admin"
-    },
-    {
-      "id": "3",
-      "name": "employer2",
-      "username": "employer2.admin",
-      "password": "!Employer123",
+      "id": "A-c3c1b",
+      "name": "gojo",
+      "username": "gojo.admin",
+      "password": "!Gojo123",
       "role": "Admin"
     }
   ],
@@ -110,6 +103,20 @@
           "total": 200
         }
       ]
+    },
+    {
+      "id": "C-1d378",
+      "username": "lame",
+      "password": "!Lame123",
+      "email": "",
+      "phone": "",
+      "location": "",
+      "dateJoined": "08/27/25",
+      "totalOrders": 0,
+      "totalSpent": 0,
+      "lastOrderDate": "",
+      "orders": [],
+      "accountStatus": "Active"
     }
   ],
   "products": [
@@ -305,7 +312,7 @@
     {
       "id": "0620daa4-21fe-4686-8589-58a0a9f03995",
       "image": null,
-      "name": "yeah",
+      "name": "yeah1",
       "price": 1,
       "sizeOptions": [
         {
@@ -358,7 +365,7 @@
         }
       ],
       "orderDate": "2025-08-22T09:30:00",
-      "status": "Pending",
+      "status": "Processing",
       "paymentMethod": "Cash",
       "total": 340
     },
@@ -377,7 +384,7 @@
         }
       ],
       "orderDate": "2025-08-22T10:00:00",
-      "status": "Pending",
+      "status": "Processing",
       "paymentMethod": "GCash",
       "total": 150
     },
@@ -411,30 +418,21 @@
   ],
   "employers": [
     {
-      "id": "1",
-      "name": "pogi",
-      "email": "pogi@gmail.com",
+      "id": "E-ca3cd",
+      "name": "gojo",
+      "email": "gojo@gmail.com",
       "gender": "M",
       "phone": "09084124892",
       "role": "Admin",
       "status": "Active"
     },
     {
-      "id": "2",
-      "name": "employer",
-      "email": "employer@gmail.com",
-      "gender": "F",
+      "id": "E-23ad9",
+      "name": "employer1",
+      "email": "employer1@gmail.com",
+      "gender": "M",
       "phone": "09123456789",
-      "role": "Cashier",
-      "status": "Active"
-    },
-    {
-      "id": "3",
-      "name": "employer2",
-      "email": "employer2@gmail.com",
-      "gender": "F",
-      "phone": "09123456789",
-      "role": "Admin",
+      "role": "Barista",
       "status": "Active"
     }
   ]

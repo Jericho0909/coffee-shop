@@ -16,6 +16,7 @@ import { ActionProvider } from "./context/actionContext";
 import { ImageProvider } from "./context/imageContext";
 import { ContainerProvider } from "./context/containerContext";
 import { AuthValidationProvider } from "./context/authvalidationContext";
+import { AddHighlightProvider } from "./context/addhighlightContext";
 
 function App() {
   return (
@@ -30,18 +31,20 @@ function App() {
                     <ImageProvider>
                       <ContainerProvider>
                         <AuthValidationProvider>
-                          <Routes>
-                            <Route path="/" element={<Homepage/>
-                            }/>
-                            <Route path="/Adminpage/:id/:username" element={<Adminpage/>}>
-                              <Route index element={<Navigate to="Dashboard" replace />} />
-                              <Route path="Dashboard" element={<Dashboard/>}/>
-                              <Route path="Products" element={<Products/>}/>
-                              <Route path="Customers" element={<Customers/>}/>
-                              <Route path="Orders" element={<Orders/>}/>
-                              <Route path="Employers" element={<Employers/>}/>
-                            </Route>
-                          </Routes>
+                          <AddHighlightProvider>
+                            <Routes>
+                              <Route path="/" element={<Homepage/>
+                              }/>
+                              <Route path="/Adminpage/:id/:username" element={<Adminpage/>}>
+                                <Route index element={<Navigate to="Dashboard" replace />} />
+                                <Route path="Dashboard" element={<Dashboard/>}/>
+                                <Route path="Products" element={<Products/>}/>
+                                <Route path="Customers" element={<Customers/>}/>
+                                <Route path="Orders" element={<Orders/>}/>
+                                <Route path="Employers" element={<Employers/>}/>
+                              </Route>
+                            </Routes>
+                          </AddHighlightProvider>
                         </AuthValidationProvider>
                       </ContainerProvider>
                     </ImageProvider>

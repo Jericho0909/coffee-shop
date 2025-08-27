@@ -3,6 +3,7 @@ import AuthviewContext from "../../../context/autviewContext";
 import ActionContext from "../../../context/actionContext";
 import FetchDataContext from "../../../context/fetchdataContext";
 import AuthValidationContext from "../../../context/authvalidationContext";
+import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-hot-toast";
 import { format } from "date-fns";
 
@@ -22,12 +23,10 @@ const Signup = () => {
     const [ isPasswordMismatch, setIsPasswordMismatch ] = useState(false)
     const [ date,  ] = useState(new Date());
 
-    const customerId = customerList.length > 0
-            ? (+customerList[customerList.length - 1].id + 1).toString()
-            : "1"
+    const shortCustomerId = "C-" + uuidv4().slice(0, 5)
 
     const initialFormData = {
-        id: customerId,
+        id: shortCustomerId,
         username: "",
         password: "",
         email: "",
@@ -103,7 +102,7 @@ const Signup = () => {
   return (
     <>
         <h1 className="text-[clamp(2rem,2vw,2.50rem)] font-nunito tracking-wide font-black text-center">
-            Sign Up
+            sign up
         </h1>
         <form
             className="flex justify-start items-center flex-col w-[90%] mb-4"

@@ -178,5 +178,9 @@ html, body {
     @apply flex items-center w-auto h-auto mb-[1rem]
   }
 
+  .highlight {
+    border: 3px solid green !important;
+  }
+
 }
 

@@ -3,6 +3,7 @@ import FetchDataContext from "../../../../../context/fetchdataContext"
 import ActionContext from "../../../../../context/actionContext"
 import ModalContext from "../../../../../context/modalContext"
 import ContainerContext from "../../../../../context/containerContext"
+import AddHighlightContext from "../../../../../context/addhighlightContext"
 import { motion, AnimatePresence } from "framer-motion"
 import { toast } from "react-hot-toast"
 const ManageCustomer = () => {
@@ -10,6 +11,7 @@ const ManageCustomer = () => {
     const { patchAction } = useContext(ActionContext)
     const { container } = useContext(ContainerContext)
     const { toggleModal } = useContext(ModalContext)
+    const { highlightUpdated } = useContext(AddHighlightContext)
     const [ customerId, ] = useState(sessionStorage.getItem("customerID"))
     const [ showFullDetail, setShowFullDetails ] = useState(false)
     const [ orderID, setOrderId ] = useState("")
@@ -97,7 +99,9 @@ const ManageCustomer = () => {
                 },
                 duration: 2000,
             }
-        );
+        )
+
+        highlightUpdated(selectedCustomer.id)
     }
     return(
         <div 
