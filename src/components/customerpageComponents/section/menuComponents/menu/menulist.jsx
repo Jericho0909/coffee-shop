@@ -1,23 +1,13 @@
 import { useContext } from "react"
 import FetchDataContext from "../../../../../context/fetchdataContext"
-import ContainerContext from "../../../../../context/containerContext"
-import AddHighlightContext from "../../../../../context/addhighlightContext"
 import ItemCard from "../../../../itemcard"
-const ProductList = () => {
+const MenuList = () => {
     const { productList } = useContext(FetchDataContext)
-    const { container } = useContext(ContainerContext)
-    const { containerRefs } = useContext(AddHighlightContext)
-    return (
-        <div 
-            ref={container}
-            className={`
-                grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 w-full 
-            `}
-        >
+    return(
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 w-full">
             {productList.map(item => (
                 <div 
                     key={item.id}
-                    ref={(el) => (containerRefs.current[item.id] = el)}
                     className="productList flex justify-center items-center flex-col border border-gray-400
                     w-full h-full p-3 rounded-lg cursor-pointer
                     hover:scale-[0.97] hover:shadow-inner
@@ -34,4 +24,4 @@ const ProductList = () => {
     )
 }
 
-export default ProductList
+export default MenuList

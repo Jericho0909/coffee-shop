@@ -108,9 +108,9 @@
       "id": "C-1d378",
       "username": "lame",
       "password": "!Lame123",
-      "email": "",
-      "phone": "",
-      "location": "",
+      "email": "lame@gmail.com",
+      "phone": "09129876543",
+      "location": "bagong pook rosario batangas",
       "dateJoined": "08/27/25",
       "totalOrders": 0,
       "totalSpent": 0,
@@ -280,7 +280,7 @@
     },
     {
       "id": "6ac0135f-429c-44de-a0f0-f51dd71f6352",
-      "image": null,
+      "image": "https://res.cloudinary.com/daxhmcpkq/image/upload/v1756341499/jic5wofia8jrqcledhx1.png",
       "name": "asdasd",
       "price": 1,
       "sizeOptions": [
@@ -339,6 +339,37 @@
       "category": "Latte",
       "available": true,
       "orderCount": 0
+    },
+    {
+      "id": "50b9ff56-714f-45fb-af4d-1197562dd54a",
+      "image": null,
+      "name": "testingpo",
+      "price": 1,
+      "sizeOptions": [
+        {
+          "size": "Tall",
+          "price": 2
+        },
+        {
+          "size": "Grande",
+          "price": 3
+        },
+        {
+          "size": "Venti",
+          "price": 4
+        }
+      ],
+      "type": "Hot/Iced",
+      "flavors": [
+        "pogi"
+      ],
+      "addOns": [
+        "pogiko"
+      ],
+      "description": "masarap",
+      "category": "Espresso",
+      "available": true,
+      "orderCount": 0
     }
   ],
   "orders": [
@@ -384,7 +415,7 @@
         }
       ],
       "orderDate": "2025-08-22T10:00:00",
-      "status": "Processing",
+      "status": "Pending",
       "paymentMethod": "GCash",
       "total": 150
     },

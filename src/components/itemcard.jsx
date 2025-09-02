@@ -13,7 +13,7 @@ import { PhilippinePeso } from 'lucide-react';
 import { useContext } from "react";
 
 const ItemCard = ({ item }) => {
-    const { username} = useParams()
+    const { username } = useParams()
     const { toggleModal, setModalName } = useContext(ModalContext)
     const { deleteAction } = useContext(ActionContext)
     const { productList, setProductList } = useContext(FetchDataContext)
@@ -58,9 +58,15 @@ const ItemCard = ({ item }) => {
         }
     }
 
-    const openModalDetails = () => {
-        setModalName("detailProduct")
-        toggleModal()
+    const openModal = (user) => {
+        if(user.endsWith(".admin")){
+            setModalName("detailProduct")
+            toggleModal()
+        }
+        else{
+            setModalName("placeorder")
+            toggleModal()
+        }
     }
 
     const openModalUpdate = () => {
@@ -130,7 +136,7 @@ const ItemCard = ({ item }) => {
             ref={ref}
             className="w-full h-[34rem] md:h-[20rem] border border-[#8c6244] rounded-md overflow-hidden mb-2 relative cursor-pointer"
             onClick={() => {
-                openModalDetails();
+                openModal(username);
                 savedId(item.id)
             }}
         >

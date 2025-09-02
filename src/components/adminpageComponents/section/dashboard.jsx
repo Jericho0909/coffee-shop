@@ -4,7 +4,7 @@ import WeeklySalesChart from "../charts/weeklysaleschart"
 import MonthlySalesChart from "../charts/monthlysaleschart"
 import Loading from "../../loading"
 const Dashboard = () => {
-    const [chart, setChart] = useState("dailysales")
+    const [ chart, setChart ] = useState("dailysales")
     const [ loading, setLoading ] = useState(true)
 
     const switchChartView = (chart) => {
@@ -31,8 +31,10 @@ const Dashboard = () => {
         monthlysales: <MonthlySalesChart/>
     }
     return (
-        <section>
-            <div className="bg-[#f9f5f1] border border-[#8c6244] rounded-xl shadow-md sm:p-[0.90rem] md:p-[1.10rem] lg:p-[1.30rem] xl:p-[1.50rem] w-full">
+        <section className="flex justify-center">
+            <div 
+                className="container flex justify-start items-center flex-col w-full overflow-y-auto scrollbar-hide p-2"
+            >
                 <h1 className="text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-start p-1">
                     dashboard
                 </h1>
@@ -81,7 +83,7 @@ const Dashboard = () => {
                         </ol>
                     </div>
                 </div>
-                <div className="w-auto h-auto p-1">
+                <div className="w-full h-auto p-1">
                     <div className="grid grid-rows-2 lg:grid-cols-[auto_auto] lg:grid-rows-[auto] gap-2 h-auto">
                         <div className="w-full p-1 border border-black">
                             <h1 className="text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-start">

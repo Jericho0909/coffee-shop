@@ -26,9 +26,11 @@ const Products = () => {
     }
 
     return(
-        <section>
-            <div className="bg-[#f9f5f1] border border-[#8c6244] rounded-xl shadow-md sm:p-[0.90rem] md:p-[1.10rem] lg:p-[1.30rem] xl:p-[1.50rem] w-full">
-                <div className="flex justify-between w-auto h-auto my-1 p-1">
+        <section className="flex justify-center">
+            <div 
+                className="container flex justify-start items-center flex-col w-full p-2"
+            >
+                <div className="flex justify-between w-full h-auto my-1 p-1">
                     <h1 className="text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-start">
                         product
                     </h1>
@@ -39,7 +41,7 @@ const Products = () => {
                         add product
                     </button>
                 </div>
-                <div className="w-full h-auto p-1 ">
+                <div className="w-full flex-1 overflow-y-auto scrollbar-hide">
                     <ProductList/>
                 </div>
             </div>

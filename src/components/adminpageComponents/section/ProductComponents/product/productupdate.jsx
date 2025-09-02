@@ -66,7 +66,7 @@ const ProductUpdate = () => {
             className="w-full h-full py-[2rem] px-[0.50rem] overflow-y-scroll scrollbar-hide"
             onSubmit={(e) => handleSubmit(e)}
         >
-             <h1 className="text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[1rem]">
+            <h1 className="text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[1rem]">
                 update
             </h1>
             <Form

@@ -5,7 +5,12 @@ import FetchDataContext from "../../../context/fetchdataContext"
 import ModalContext from "../../../context/modalContext";
 const Login = () =>{
     const { setAuthView } = useContext(AuthviewContext)
-    const { adminList, setAdminsIsLoading } = useContext(FetchDataContext)
+    const { 
+        adminList, 
+        setAdminsIsLoading, 
+        customerList, 
+        setCustomersIsLoading 
+    } = useContext(FetchDataContext)
     const { toggleModal } = useContext(ModalContext)
     const [ username, setUsername ] = useState("")
     const [ password, setPassword ] = useState("")
@@ -16,14 +21,21 @@ const Login = () =>{
         setAuthView("login")
     },[setAuthView])
 
+    const admin = adminList.find(key => key.username === username && key.password === password)
+    const customer = customerList.find(key => key.username === username && key.password === password)
+
     const handleLogin = (e) => {
         e.preventDefault()
-        const user = adminList.find(key => key.username === username && key.password === password)
 
-        if(user){
+        if(admin){
             setAdminsIsLoading(true)
             toggleModal(false)
-            navigate(`/Adminpage/${user.id}/${user.username}`);
+            navigate(`/Adminpage/${admin.id}/${admin.username}`)
+        }
+        else if(customer){
+            setCustomersIsLoading(true)
+            toggleModal(false)
+            navigate(`/Customerpage/${customer.id}/${customer.username}`);
         }
         else{
             setLoginError(true)
