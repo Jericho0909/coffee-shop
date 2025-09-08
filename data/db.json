@@ -80,9 +80,9 @@
       "phone": "09987654321",
       "location": "Lipa, Batangas",
       "dateJoined": "08/24/25",
-      "totalOrders": 1,
-      "totalSpent": 200,
-      "lastOrderDate": "08/24/25",
+      "totalOrders": 2,
+      "totalSpent": 390,
+      "lastOrderDate": "09/05/25",
       "accountStatus": "Block",
       "orders": [
         {
@@ -112,10 +112,78 @@
       "phone": "09129876543",
       "location": "bagong pook rosario batangas",
       "dateJoined": "08/27/25",
-      "totalOrders": 0,
-      "totalSpent": 0,
-      "lastOrderDate": "",
-      "orders": [],
+      "totalOrders": 3,
+      "totalSpent": 555,
+      "lastOrderDate": "09/08/25",
+      "orders": [
+        {
+          "orderId": "ORD-6cb99",
+          "orderDate": "09/06/25",
+          "status": "Completed",
+          "paymentMethod": "Gcash",
+          "items": [
+            {
+              "productId": "34fe6d03-653b-4ddf-84ee-0fe947392e47",
+              "name": "Matcha Latte",
+              "size": "Tall",
+              "quantity": 1,
+              "flavor": "",
+              "addOns": [
+                "Soy Milk",
+                "Almond Milk"
+              ],
+              "price": 180,
+              "subtotal": 190
+            }
+          ],
+          "total": 190
+        },
+        {
+          "orderId": "ORD-0fab0",
+          "orderDate": "09/06/25",
+          "status": "Processing",
+          "paymentMethod": "Debit/Credit",
+          "items": [
+            {
+              "productId": "34fe6d03-653b-4ddf-84ee-0fe947392e47",
+              "name": "Matcha Latte",
+              "size": "Tall",
+              "quantity": 1,
+              "flavor": "",
+              "addOns": [
+                "Soy Milk",
+                "Almond Milk"
+              ],
+              "price": 180,
+              "subtotal": 190
+            }
+          ],
+          "total": 190
+        },
+        {
+          "orderId": "ORD-988ed",
+          "orderDate": "09/08/25",
+          "status": "Pending",
+          "paymentMethod": "Gcash",
+          "items": [
+            {
+              "productId": "96b65369-27ab-4354-b2c6-6f3e59096e71",
+              "name": "Cappuccino",
+              "size": "Tall",
+              "quantity": 1,
+              "flavor": "Caramel",
+              "addOns": [
+                "Extra Shot",
+                "Soy Milk",
+                "Almond Milk"
+              ],
+              "price": 160,
+              "subtotal": 175
+            }
+          ],
+          "total": 175
+        }
+      ],
       "accountStatus": "Active"
     }
   ],
@@ -281,7 +349,7 @@
     {
       "id": "6ac0135f-429c-44de-a0f0-f51dd71f6352",
       "image": "https://res.cloudinary.com/daxhmcpkq/image/upload/v1756341499/jic5wofia8jrqcledhx1.png",
-      "name": "asdasd",
+      "name": "2sdas",
       "price": 1,
       "sizeOptions": [
         {
@@ -311,7 +379,7 @@
     },
     {
       "id": "0620daa4-21fe-4686-8589-58a0a9f03995",
-      "image": null,
+      "image": "https://res.cloudinary.com/daxhmcpkq/image/upload/v1756794522/geuwvd6c72afzmm1svmr.png",
       "name": "yeah1",
       "price": 1,
       "sizeOptions": [
@@ -328,7 +396,7 @@
           "price": 4
         }
       ],
-      "type": "Cold",
+      "type": "Hot/Iced",
       "flavors": [
         "asdqw"
       ],
@@ -415,7 +483,7 @@
         }
       ],
       "orderDate": "2025-08-22T10:00:00",
-      "status": "Pending",
+      "status": "Processing",
       "paymentMethod": "GCash",
       "total": 150
     },
@@ -445,6 +513,79 @@
       "status": "Cancelled",
       "paymentMethod": "Cash",
       "total": 210
+    },
+    {
+      "id": "ORD-6cb99",
+      "customerName": "lame",
+      "customerContact": "09129876543",
+      "items": [
+        {
+          "productId": "34fe6d03-653b-4ddf-84ee-0fe947392e47",
+          "name": "Matcha Latte",
+          "size": "Tall",
+          "quantity": 1,
+          "flavor": "",
+          "addOns": [
+            "Soy Milk",
+            "Almond Milk"
+          ],
+          "price": 180,
+          "subtotal": 190
+        }
+      ],
+      "orderDate": "2025-09-06T08:00:08",
+      "status": "Completed",
+      "paymentMethod": "Gcash",
+      "total": 190
+    },
+    {
+      "id": "ORD-0fab0",
+      "customerName": "lame",
+      "customerContact": "09129876543",
+      "items": [
+        {
+          "productId": "34fe6d03-653b-4ddf-84ee-0fe947392e47",
+          "name": "Matcha Latte",
+          "size": "Tall",
+          "quantity": 1,
+          "flavor": "",
+          "addOns": [
+            "Soy Milk",
+            "Almond Milk"
+          ],
+          "price": 180,
+          "subtotal": 190
+        }
+      ],
+      "orderDate": "2025-09-06T08:30:51",
+      "status": "Processing",
+      "paymentMethod": "Debit/Credit",
+      "total": 190
+    },
+    {
+      "id": "ORD-988ed",
+      "customerName": "lame",
+      "customerContact": "09129876543",
+      "items": [
+        {
+          "productId": "96b65369-27ab-4354-b2c6-6f3e59096e71",
+          "name": "Cappuccino",
+          "size": "Tall",
+          "quantity": 1,
+          "flavor": "Caramel",
+          "addOns": [
+            "Extra Shot",
+            "Soy Milk",
+            "Almond Milk"
+          ],
+          "price": 160,
+          "subtotal": 175
+        }
+      ],
+      "orderDate": "2025-09-08T12:49:34",
+      "status": "Pending",
+      "paymentMethod": "Gcash",
+      "total": 175
     }
   ],
   "employers": [
@@ -472,7 +613,7 @@
       "email": "admin1@gmail.com",
       "gender": "F",
       "phone": "09091234567",
-      "role": "Staff",
+      "role": "Barista",
       "status": "Active"
     }
   ]

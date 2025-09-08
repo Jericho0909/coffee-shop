@@ -4,16 +4,14 @@ import FetchDataContext from "../../context/fetchdataContext"
 import ActionContext from "../../context/actionContext"
 import ModalContext from "../../context/modalContext"
 import { toast } from "react-hot-toast";
-const ContactForm = () => {
+const ContactForm = ({customer}) => {
     const { id } = useParams()
-    const { customerList, setCustomerList } = useContext(FetchDataContext)
+    const { setCustomerList } = useContext(FetchDataContext)
     const { patchAction } = useContext(ActionContext)
     const { setIsOpen } = useContext(ModalContext)
     const [ phone, setPhone ] = useState("")
     const [ email, setEmail ] = useState("")
     const [ location, setLocation ] = useState("")
-
-    const customer = customerList.find(key => key.id === id)
 
     const handleSubmit = async(e) => {
         e.preventDefault();

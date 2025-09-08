@@ -6,7 +6,11 @@ import ContainerContext from "../../../../../context/containerContext"
 import AddHighlightContext from "../../../../../context/addhighlightContext"
 import toast from "react-hot-toast"
 const ManageOrder = () => {
-    const { orderList, setOrderList } = useContext(FetchDataContext)
+    const { orderList, 
+        setOrderList, 
+        customerList, 
+        setCustomerList 
+    } = useContext(FetchDataContext)
     const { patchAction } = useContext(ActionContext)
     const { toggleModal } = useContext(ModalContext)
     const { container } = useContext(ContainerContext)
@@ -15,6 +19,7 @@ const ManageOrder = () => {
     const [ openItemId, setOpenItemId ] = useState(null)
 
     const selectedOrder = orderList.find(key => key.id === orderId)
+    const currentCustomer = customerList.find(key => key.username === selectedOrder.customerName)
 
     const [ currentOrderData, setCurrentOrderData ] = useState(selectedOrder)
 
@@ -32,6 +37,15 @@ const ManageOrder = () => {
         setOrderList(prev => (
             prev.map(order => order.id === selectedOrder.id ? response : order)
         ))
+        
+        const customerOrderResponse = await patchAction("customers", currentCustomer.id, {
+            ...currentCustomer,
+            orders: currentCustomer.orders.map(item => item.orderId === currentOrderData.id ? {...item, status:newStatus} : item)
+        })
+        setCustomerList(prev => (
+            prev.map(customer => customer.id === currentCustomer.id ? customerOrderResponse : customer)
+        ))
+
         toggleModal()
         setTimeout(() => {
             const ordersContainer = container.current;
@@ -72,17 +86,17 @@ const ManageOrder = () => {
                     ? (
                         <div className="container-flex justify-center px-[2rem] mb-[0.50rem]">
                             <p
-                        className="flex gap-1 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]"
-                    >
-                        <span 
-                            className="text-[#D4A373] font-semibold"
-                        >
-                            Status: 
-                        </span>
-                        <span>
-                            {currentOrderData.status}
-                        </span>
-                    </p>
+                                className="flex gap-1 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]"
+                            >
+                                <span 
+                                    className="text-[#D4A373] font-semibold"
+                                >
+                                    Status: 
+                                </span>
+                                <span>
+                                    {currentOrderData.status}
+                                </span>
+                            </p>
                         </div>
                     )
                     : (

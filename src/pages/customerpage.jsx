@@ -1,29 +1,39 @@
 import { useContext, useState, useRef } from "react";
 import { useNavigate, NavLink, useParams } from "react-router-dom";
-import Notification from "../components/notification"
+import FetchDataContext from "../context/fetchdataContext";
 import MediaQueryContext from "../context/mediaqueryContext"
 import WindowSizeContext from "../context/windowsizeContext";
 import ModalContext from "../context/modalContext";
-import { Bars3Icon } from "@heroicons/react/24/outline";
+import Notification from "../components/notification"
 import Header from "../components/header";
 import Aside from "../components/aside";
 import Main from "../components/customerpageComponents/main";
+import { Bars3Icon } from "@heroicons/react/24/outline";
 import Modal from "../components/modal";
-import PlaceOrderModal from "../components/customerpageComponents/section/menuComponents/menuModal/placeordermodal";
+import PlaceOrder from "../components/customerpageComponents/section/menuComponents/menuModal/placeorder";
+import CustomerOrders from "../components/customerpageComponents/section/menuComponents/menuModal/customerorder";
 import ContactForm from "../components/customerpageComponents/contactform";
+import ManageCustomerOrder from "../components/customerpageComponents/section/customerordersComponents/customerorderModal/managecustomerorder";
 const Customerpage = () => {
     const navigate = useNavigate()
     const { id, username } = useParams()
-    const { isMobile: mediaQueryMobile, isMediumDevice, isLargeDevice } = useContext(MediaQueryContext)
+    const { customerList } = useContext(FetchDataContext)
+    const { isMobile: mediaQueryMobile, 
+        isMediumDevice, 
+        isLargeDevice 
+    }  = useContext(MediaQueryContext)
+
     const { isMobile: windowSizeMobile } = useContext(WindowSizeContext)
     const { isOpen, modalName } = useContext(ModalContext)
     const [ opensidebar, setOpenSiderBar ] = useState(false)
     const sidebarRef = useRef(null)
+
+    const customer = customerList.find(key => key.id === id)
+
     const onToggleSidebar = () => {
         setTimeout(() => setOpenSiderBar(prev => !prev))
     }
    
-
     const rightChildren = () => {
         return(
             <>
@@ -54,13 +64,13 @@ const Customerpage = () => {
                 </li>
                 <li>
                     <NavLink 
-                        to={`/Customerpage/${id}/${username}/History`} 
+                        to={`/Customerpage/${id}/${username}/CustomerOrders`} 
                         onClick={onToggleSidebar}
                         className="relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
                         after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full"
                     >
                     
-                        history
+                        orders
                     </NavLink>
                 </li>
                 <li>
@@ -90,15 +100,15 @@ const Customerpage = () => {
     }
 
     const modalComponents = {
-        contactform: <ContactForm/>,
-        placeorder: <PlaceOrderModal/>
+        contactform: <ContactForm customer={customer}/>,
+        placeorder: <PlaceOrder customer={customer}/>,
+        customerorder: <CustomerOrders customer={customer}/>,
+        manageCustomerOrder: <ManageCustomerOrder customer={customer}/>
     }
-
 
     const Logout = () => {
         navigate("/");
     }
-
 
     return (
         <div className="flex flex-col">

@@ -21,7 +21,7 @@ const Signup = () => {
 
     const [ confirmPassword, setConfirmPassword ] = useState("");
     const [ isPasswordMismatch, setIsPasswordMismatch ] = useState(false)
-    const [ date,  ] = useState(new Date());
+    const [ date,  ] = useState(new Date())
 
     const shortCustomerId = "C-" + uuidv4().slice(0, 5)
 

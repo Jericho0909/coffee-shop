@@ -3,7 +3,10 @@ import { createContext, useState } from "react";
 const CustomerorderContext = createContext()
 
 export const CustomerOrderProvider = ({children}) => {
-    const [ customerOrders, setCustomerOrders ] = useState([JSON.parse(sessionStorage.getItem("customerOrders")) || []])
+    const [ customerOrders, setCustomerOrders ] = useState(() => {
+        const saved = sessionStorage.getItem("customerOrders");
+        return saved ? JSON.parse(saved) : []
+    });
 
     return(
         <CustomerorderContext.Provider

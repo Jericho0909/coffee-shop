@@ -6,7 +6,7 @@ const Main = () => {
     return(
         <main 
             className={`flex justify-center w-full h-[calc(100dvh-14dvh)] sm:h-[88dvh] lg:h-[87dvh] mt-[0.50rem] p-2
-                ${isMediumPhone && "h-[calc(100dvh-11dvh)]"}
+                ${isMediumPhone && "h-[calc(100dvh-12dvh)]"}
             `}
         >
             <Outlet/>

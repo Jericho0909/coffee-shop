@@ -10,13 +10,13 @@ const useAddHighlight = () => {
     const highlightUpdated = () => {
         if (selectedIndex !== null) {
             const container = containerRefs.current[selectedIndex];
-            if (container) {
+            if(container){
                 
                 container.classList.add("highlight")
 
                 setTimeout(() => {
                 container.classList.remove("highlight")
-                }, 4000);
+                }, 4000)
             }
         }
     }

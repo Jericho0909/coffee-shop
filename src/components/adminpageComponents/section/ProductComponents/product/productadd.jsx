@@ -8,39 +8,40 @@ import Form from "./form"
 import { toast } from "react-hot-toast"
 import { v4 as uuidv4 } from 'uuid'
 const ProductAdd = () => {
-        const { addAction } = useContext(ActionContext)
-        const { setProductList } = useContext(FetchDataContext)
-        const { preview } = useContext(ImageContext)
-        const { toggleModal } = useContext(ModalContext)
-        const { container } = useContext(ContainerContext)
-        const id = uuidv4()
+    const { addAction } = useContext(ActionContext)
+    const { setProductList } = useContext(FetchDataContext)
+    const { preview, setPreview } = useContext(ImageContext)
+    const { toggleModal } = useContext(ModalContext)
+    const { container } = useContext(ContainerContext)
+    const id = uuidv4()
 
-        const defaultFormData = {
-                id: id,
-                image: preview,
-                name: "",
-                price: 0, 
-                sizeOptions: [
-                    { size: "Tall", price: 0},
-                    { size: "Grande", price: 0},
-                    { size: "Venti", price: 0}
-                ],
-                type: "",
-                flavors: [],
-                addOns: [],
-                description: "",
-                category: "",
-                available: true,
-                orderCount: 0
-            }
-        const [ formData, setFormData ] = useState(defaultFormData)
+    const defaultFormData = {
+        id: id,
+        image: preview,
+        name: "",
+        price: 0, 
+        sizeOptions: [
+            { size: "Tall", price: 0},
+            { size: "Grande", price: 0},
+            { size: "Venti", price: 0}
+        ],
+        type: "",
+        flavors: [],
+        addOns: [],
+        description: "",
+        category: "",
+        available: true,
+        orderCount: 0
+    }
+    const [ formData, setFormData ] = useState(defaultFormData)
 
-        const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         const response = await addAction("products", formData)
         setProductList(prev => ([...prev, response]))
         sessionStorage.clear()
         setFormData(defaultFormData)
+        setPreview(null)
         toggleModal()
         setTimeout(() => {
             const productContainer = container.current;

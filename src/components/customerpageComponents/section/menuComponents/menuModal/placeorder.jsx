@@ -1,21 +1,18 @@
 import { useState, useContext, useEffect } from "react"
-import { useParams } from "react-router-dom";
 import FetchDataContext from "../../../../../context/fetchdataContext"
 import CustomerorderContext from "../../../../../context/customerorderContext";
 import ModalContext from "../../../../../context/modalContext";
 import { PhilippinePeso } from 'lucide-react';
 import { toast } from "react-hot-toast";
 
-const PlaceOrderModal = () => {
-    const { id } = useParams()
-    const { productList, customerList } = useContext(FetchDataContext)
+const PlaceOrder = ({customer}) => {
+    const { productList } = useContext(FetchDataContext)
     const { customerOrders, setCustomerOrders } = useContext(CustomerorderContext)
     const { setIsOpen, setModalName } = useContext(ModalContext)
     const [ productId ] = useState(sessionStorage.getItem("productId"))
     const [ count, setCount ] = useState(1)
 
     const item = productList.find(key => key.id === productId)
-    const customerInfo = customerList.find(key => key.id === id)
 
     const orderFormat = {
         productId: item.id,
@@ -30,11 +27,10 @@ const PlaceOrderModal = () => {
     }
 
     const [ order, setOrder ] = useState(orderFormat)
-
-
     const [ subtotal, setSubTotal] = useState(order.subtotal)
 
     useEffect(() => {
+        order.quantity = count
         const addOnsPrice = order.addOns.length * 5;
         const total = (order.price + addOnsPrice) * count
         setSubTotal(total)
@@ -56,8 +52,9 @@ const PlaceOrderModal = () => {
         }
     }
 
-    const placeOrder = () => {
-        const isMissingContact = !customerInfo.email || !customerInfo.phone || !customerInfo.location;
+    const placeOrder = (e) => {
+        e.preventDefault();
+        const isMissingContact = !customer.email || !customer.phone || !customer.location;
         if(isMissingContact){
             setModalName("contactform")
             setIsOpen(true)
@@ -103,7 +100,10 @@ const PlaceOrderModal = () => {
     }
 
     return(
-        <div className="container-flex justify-center sm:justify-start flex-col w-full py-[2rem] px-1 overflow-y-auto scrollbar-hide">
+        <form 
+            className="container-flex justify-center sm:justify-start flex-col w-full py-[2rem] px-1 overflow-y-auto scrollbar-hide"
+            onSubmit={(e) => placeOrder(e)}
+        >
             <div className="w-full p-2">
                 <div className="float-left mr-4 mb-[1rem]">
                     <img
@@ -120,7 +120,7 @@ const PlaceOrderModal = () => {
                 <div className="w-full h-auto p-1">
                     <p className="container-flex justify-start mb-0 font-nunito tracking-wide text-[clamp(0.85rem,2vw,1.05rem)] font-semibold gap-1"
                     >
-                        <span className="container-flex mb-0 gap">
+                        <span className="container-flex mb-0 gap-1">
                             <PhilippinePeso 
                                 size={15} color="black"
                             />
@@ -138,10 +138,8 @@ const PlaceOrderModal = () => {
                     </p>
                 </div>
                 <div className="w-full h-auto p-1 mb-[1rem]">
-                    <h1 
-                        className="container-flex justify-center w-full h-auto p-1 font-opensans font-bold tracking-wide mb-0"
-                    >
-                        SIZE
+                    <h1 className="text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[0.50rem]">
+                        size
                     </h1>
                     <div className="container-flex justify-between w-full h-auto p-1 gap-2 mb-[0.50rem]">
                         {item.sizeOptions.map((key, index) => (
@@ -165,7 +163,7 @@ const PlaceOrderModal = () => {
                                     className="w-auto"
                                 />
                                 <label 
-                                    htmlFor={`${key}-size`}
+                                    htmlFor={`${key.size}-size`}
                                     className="container-flex justify-center w-full h-full gap-1 mb-0"
                                 >
                                     <span>
@@ -186,11 +184,8 @@ const PlaceOrderModal = () => {
                     </div>
                 </div>
                 <div className="w-full h-auto p-1 mb-[1rem]">
-                    <h1 
-                        className="container-flex justify-center w-full h-auto p-1 font-opensans font-bold tracking-wide mb-0"
-                        
-                    >
-                        FLAVORS
+                    <h1 className="text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[0.50rem]">
+                        flavors
                     </h1>
                     <div className="container-flex justify-around w-full h-auto p-1 gap-2 mb-[0.50rem]">
                         {item.flavors.length === 0 
@@ -228,11 +223,8 @@ const PlaceOrderModal = () => {
                     </div>
                 </div>
                 <div className="w-full h-auto p-1 mb-[1rem]">
-                    <h1 
-                        className="container-flex justify-center w-full h-auto p-1 font-opensans font-bold tracking-wide mb-0"
-                        
-                    >
-                        ADDONS
+                    <h1 className="text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[0.50rem]">
+                        addons
                     </h1>
                     <div className="container-flex justify-around w-full h-auto p-1 gap-2 mb-[0.50rem]">
                         {item.addOns.length === 0 
@@ -249,7 +241,6 @@ const PlaceOrderModal = () => {
                                     id={`${addons}`}
                                     type="checkbox"
                                     name="addOns"
-                                    required
                                     value={addons}
                                     onChange={(e) => addOns(e.target.value)}
                                     className="w-auto"
@@ -266,15 +257,13 @@ const PlaceOrderModal = () => {
                     </div>
                 </div>
                 <div className="container-flex justify-center flex-col  w-full h-auto p-1">
-                    <h1 
-                        className=" w-auto h-auto p-1 font-opensans font-bold tracking-wide"
-                        
-                    >
-                        HOW MANY ORDER
+                    <h1 className="text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[0.50rem]">
+                        how many order  
                     </h1>
                     <div className="container-flex justify-center w-[40%] sm:w-[30%] h-[3rem] mb-0">
                         <div className="container-flex mb-0 w-[3rem] h-full">
-                            <button 
+                            <button
+                                type="button"
                                 className="bg-[#8c6244] w-full h-full text-white font-black shadow-md rounded-[15px] active:translate-y-[2px] active:shadow-inner 
                                 transition-all duration-150"
                                 onClick={() => setCount(prev => (prev > 1 ? prev - 1 : 1))}
@@ -289,6 +278,7 @@ const PlaceOrderModal = () => {
                         </div>
                         <div className="container-flex mb-0 w-[3rem] h-full">
                             <button
+                                type="button"
                                 className="bg-[#8c6244] w-full h-full text-white font-black shadow-md rounded-[15px] active:translate-y-[2px] active:shadow-inner 
                                 transition-all duration-150"
                                 onClick={() => setCount(count + 1)}
@@ -301,14 +291,14 @@ const PlaceOrderModal = () => {
                 <div className="container-flex justify-center w-full h-auto p-1">
                     <button 
                         className="press bg-[#6b4226] hover:bg-[#5a3620] w-[50%]"
-                        onClick={() => placeOrder()}
+                        type="submit"
                     >
                         add to order ({subtotal})
                     </button>
                 </div>
             </div>
-        </div>
+        </form>
     )
 }
 
-export default PlaceOrderModal
+export default PlaceOrder

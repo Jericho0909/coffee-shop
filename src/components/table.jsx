@@ -24,7 +24,7 @@ const Table = ({tableHeader, tableData, openModal}) => {
                 </thead>
                 <tbody>
                     {tableData.map(row => (
-                        <tr key={row.id} ref={(el) => (containerRefs.current[row.id] = el)}>
+                        <tr key={row.id || row.orderId} ref={(el) => (containerRefs.current[row.id || row.orderId] = el)}>
                             {tableHeader.map((header, colIndex) => (
                                 <td 
                                     key={colIndex}

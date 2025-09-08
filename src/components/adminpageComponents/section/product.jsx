@@ -1,9 +1,11 @@
 import { useContext, useState, useEffect} from "react"
 import ModalContext from "../../../context/modalContext"
+import ContainerContext from "../../../context/containerContext"
 import ProductList from "./ProductComponents/product/productlist"
 import Loading from "../../loading"
 const Products = () => {
     const { toggleModal, setModalName } = useContext(ModalContext)
+    const { container } = useContext(ContainerContext)
     const [ loading, setLoading ] = useState(true)
 
     useEffect(() => {
@@ -41,7 +43,10 @@ const Products = () => {
                         add product
                     </button>
                 </div>
-                <div className="w-full flex-1 overflow-y-auto scrollbar-hide">
+                <div 
+                    ref={container}
+                    className="w-full flex-1 overflow-y-auto scrollbar-hide"
+                >
                     <ProductList/>
                 </div>
             </div>

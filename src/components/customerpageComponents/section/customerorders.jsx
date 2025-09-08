@@ -1,0 +1,63 @@
+import { useState, useEffect, useContext } from "react"
+import { useParams } from "react-router-dom"
+import FetchDataContext from "../../../context/fetchdataContext"
+import MediaQueryContext from "../../../context/mediaqueryContext"
+import Loading from "../../loading"
+import CustomerOrderTable from "./customerordersComponents/customerorder/customerordertable"
+import CustomerOrderCards from "./customerordersComponents/customerorder/customerordercards"
+const CustomerOrders = () => {
+    const { id } = useParams()
+    const { customerList } = useContext(FetchDataContext)
+    const { isMobile } = useContext(MediaQueryContext)
+    const [ loading, setLoading ] = useState(true)
+
+    const customerData = customerList.find(key => key.id === id)
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setLoading(false)
+        }, 2000)
+
+        return () => clearTimeout(timer)
+    }, [])
+
+    if(loading){
+        return(
+            <Loading/>
+        )
+    }
+    return(
+        <>
+            <section className="container flex justify-start flex-col   p-2 mb-0">
+                <div className="w-full h-auto p-2 mb-[1rem]">
+                    <h1 className="text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-start p-1">
+                        orders
+                    </h1>
+                </div>
+                <div 
+                    className={`w-full flex-1
+                            ${isMobile 
+                                ? "overflow-x-auto scrollbar-hide" 
+                                : "overflow-y-auto scrollbar-hide"
+                            }
+                        `}
+                >
+                    {isMobile 
+                        ? (
+                            <CustomerOrderCards
+                                customerOrders = {customerData.orders}
+                            />
+                        )
+                        : (
+                            <CustomerOrderTable
+                                customerOrders = {customerData.orders}
+                            />
+                        )
+                    }
+                </div>
+            </section>
+        </>
+    )
+}
+
+export default CustomerOrders
