@@ -113,8 +113,8 @@
       "location": "bagong pook rosario batangas",
       "dateJoined": "08/27/25",
       "totalOrders": 3,
-      "totalSpent": 555,
-      "lastOrderDate": "09/08/25",
+      "totalSpent": 715,
+      "lastOrderDate": "09/12/25",
       "orders": [
         {
           "orderId": "ORD-6cb99",
@@ -139,10 +139,10 @@
           "total": 190
         },
         {
-          "orderId": "ORD-0fab0",
-          "orderDate": "09/06/25",
-          "status": "Processing",
-          "paymentMethod": "Debit/Credit",
+          "orderId": "ORD-f6059",
+          "orderDate": "09/12/25",
+          "status": "Completed",
+          "paymentMethod": "Gcash",
           "items": [
             {
               "productId": "34fe6d03-653b-4ddf-84ee-0fe947392e47",
@@ -151,40 +151,51 @@
               "quantity": 1,
               "flavor": "",
               "addOns": [
-                "Soy Milk",
-                "Almond Milk"
+                "Soy Milk"
               ],
               "price": 180,
-              "subtotal": 190
+              "subtotal": 185
             }
           ],
-          "total": 190
+          "total": 185
         },
         {
-          "orderId": "ORD-988ed",
-          "orderDate": "09/08/25",
-          "status": "Pending",
-          "paymentMethod": "Gcash",
+          "orderId": "ORD-bb03e",
+          "orderDate": "09/12/25",
+          "status": "Processing",
+          "paymentMethod": "Maya",
           "items": [
             {
               "productId": "96b65369-27ab-4354-b2c6-6f3e59096e71",
               "name": "Cappuccino",
               "size": "Tall",
-              "quantity": 1,
+              "quantity": 2,
               "flavor": "Caramel",
               "addOns": [
-                "Extra Shot",
                 "Soy Milk",
-                "Almond Milk"
+                "Extra Shot"
               ],
               "price": 160,
-              "subtotal": 175
+              "subtotal": 340
             }
           ],
-          "total": 175
+          "total": 340
         }
       ],
       "accountStatus": "Active"
+    },
+    {
+      "id": "C-dbe55",
+      "username": "dummy",
+      "password": "!Dummy123",
+      "email": "",
+      "phone": "",
+      "location": "",
+      "dateJoined": "09/11/25",
+      "totalOrders": 0,
+      "totalSpent": 0,
+      "lastOrderDate": "",
+      "orders": []
     }
   ],
   "products": [
@@ -216,7 +227,7 @@
       "description": "Earthy matcha green tea blended with steamed milk for a creamy treat.",
       "category": "Latte",
       "available": true,
-      "orderCount": 0
+      "orderCount": 1
     },
     {
       "id": "11a8ae0a-3bb7-4075-bc55-17629c0feed1",
@@ -539,7 +550,7 @@
       "total": 190
     },
     {
-      "id": "ORD-0fab0",
+      "id": "ORD-f6059",
       "customerName": "lame",
       "customerContact": "09129876543",
       "items": [
@@ -550,20 +561,19 @@
           "quantity": 1,
           "flavor": "",
           "addOns": [
-            "Soy Milk",
-            "Almond Milk"
+            "Soy Milk"
           ],
           "price": 180,
-          "subtotal": 190
+          "subtotal": 185
         }
       ],
-      "orderDate": "2025-09-06T08:30:51",
-      "status": "Processing",
-      "paymentMethod": "Debit/Credit",
-      "total": 190
+      "orderDate": "2025-09-12T09:59:46",
+      "status": "Completed",
+      "paymentMethod": "Gcash",
+      "total": 185
     },
     {
-      "id": "ORD-988ed",
+      "id": "ORD-bb03e",
       "customerName": "lame",
       "customerContact": "09129876543",
       "items": [
@@ -571,21 +581,20 @@
           "productId": "96b65369-27ab-4354-b2c6-6f3e59096e71",
           "name": "Cappuccino",
           "size": "Tall",
-          "quantity": 1,
+          "quantity": 2,
           "flavor": "Caramel",
           "addOns": [
-            "Extra Shot",
             "Soy Milk",
-            "Almond Milk"
+            "Extra Shot"
           ],
           "price": 160,
-          "subtotal": 175
+          "subtotal": 340
         }
       ],
-      "orderDate": "2025-09-08T12:49:34",
-      "status": "Pending",
-      "paymentMethod": "Gcash",
-      "total": 175
+      "orderDate": "2025-09-12T10:08:42",
+      "status": "Processing",
+      "paymentMethod": "Maya",
+      "total": 340
     }
   ],
   "employers": [

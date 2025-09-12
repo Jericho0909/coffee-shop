@@ -4,22 +4,30 @@ import ActionContext from "../../../../../context/actionContext"
 import ModalContext from "../../../../../context/modalContext"
 import ContainerContext from "../../../../../context/containerContext"
 import AddHighlightContext from "../../../../../context/addhighlightContext"
-import toast from "react-hot-toast"
+import ShowToastContext from "../../../../../context/showtoastContext"
+import { format } from "date-fns";
 const ManageOrder = () => {
     const { orderList, 
         setOrderList, 
         customerList, 
-        setCustomerList 
+        setCustomerList,
+        productList 
     } = useContext(FetchDataContext)
     const { patchAction } = useContext(ActionContext)
     const { toggleModal } = useContext(ModalContext)
     const { container } = useContext(ContainerContext)
     const { highlightUpdated } = useContext(AddHighlightContext)
+    const { showToast } = useContext(ShowToastContext)
     const [ orderId, ] = useState(sessionStorage.getItem("orderID"))
     const [ openItemId, setOpenItemId ] = useState(null)
 
     const selectedOrder = orderList.find(key => key.id === orderId)
     const currentCustomer = customerList.find(key => key.username === selectedOrder.customerName)
+
+    const customerTotalSpent = currentCustomer.orders.reduce((sum, order) => sum + order.total, 0)
+
+    const selectedOrderItemIds = selectedOrder.items.map(key => key.productId)
+    const selectedOrderItemQuantity = selectedOrder.items.map(key => key.quantity)
 
     const [ currentOrderData, setCurrentOrderData ] = useState(selectedOrder)
 
@@ -30,9 +38,30 @@ const ManageOrder = () => {
         else {
             setOpenItemId(id)
         }
-    };
+    }
+
+    const handleOrderCount = async () => {
+        try {
+            for (let i = 0; i < selectedOrderItemIds.length; i++) {
+            const product = productList.find(key => key.id === selectedOrderItemIds[i])
+
+            if (product) {
+                await patchAction("products", selectedOrderItemIds[i], {
+                ...product,
+                orderCount: product.orderCount + selectedOrderItemQuantity[i]
+                })
+            }
+            }
+        } catch (error) {
+            console.error("Error updating products:", error)
+        }
+    }
 
     const handleUpdateStatus = async(newStatus) => {
+        if(newStatus === "Completed"){
+            await handleOrderCount()
+        }
+
         const response = await patchAction("orders", selectedOrder.id, {...currentOrderData, status: newStatus})
         setOrderList(prev => (
             prev.map(order => order.id === selectedOrder.id ? response : order)
@@ -40,6 +69,9 @@ const ManageOrder = () => {
         
         const customerOrderResponse = await patchAction("customers", currentCustomer.id, {
             ...currentCustomer,
+            totalOrders: currentCustomer.totalOrders + 1,
+            totalSpent: customerTotalSpent,
+            lastOrderDate: format(new Date(), "MM/dd/yy"),
             orders: currentCustomer.orders.map(item => item.orderId === currentOrderData.id ? {...item, status:newStatus} : item)
         })
         setCustomerList(prev => (
@@ -54,21 +86,7 @@ const ManageOrder = () => {
             }
         },0)
 
-        toast.success(
-            <div className="Notification">
-                Order status updated successfully!
-            </div>,
-            {
-                style: {
-                width: "100%",
-                backgroundColor: "white",
-                color: "#8c6244",
-                padding: "12px 16px",
-                borderRadius: "8px",
-                },
-                duration: 2000,
-            }
-        )
+        showToast("success", "Order status updated successfully!", 2000)
 
         highlightUpdated(selectedOrder.id)
     }

@@ -14,6 +14,7 @@ import PlaceOrder from "../components/customerpageComponents/section/menuCompone
 import CustomerOrders from "../components/customerpageComponents/section/menuComponents/menuModal/customerorder";
 import ContactForm from "../components/customerpageComponents/contactform";
 import ManageCustomerOrder from "../components/customerpageComponents/section/customerordersComponents/customerorderModal/managecustomerorder";
+import EditProfile from "../components/customerpageComponents/section/settingsComponents/settingsModal/editProfile";
 const Customerpage = () => {
     const navigate = useNavigate()
     const { id, username } = useParams()
@@ -103,12 +104,15 @@ const Customerpage = () => {
         contactform: <ContactForm customer={customer}/>,
         placeorder: <PlaceOrder customer={customer}/>,
         customerorder: <CustomerOrders customer={customer}/>,
-        manageCustomerOrder: <ManageCustomerOrder customer={customer}/>
+        manageCustomerOrder: <ManageCustomerOrder customer={customer}/>,
+        editProfile: <EditProfile  customer={customer}/>
     }
 
     const Logout = () => {
         navigate("/");
     }
+
+    if(!customer) return
 
     return (
         <div className="flex flex-col">
@@ -149,7 +153,6 @@ const Customerpage = () => {
                     </Modal>
                 )}
                 <Main/>
-                
             </div>
 
         </div>

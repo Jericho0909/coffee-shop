@@ -5,8 +5,8 @@ import CustomerorderContext from "../../../../../context/customerorderContext"
 import ModalContext from "../../../../../context/modalContext";
 import Cart from "../../../../cart";
 import PaymentMethod from "../../../../paymentmethod";
+import ShowToastContext from "../../../../../context/showtoastContext";
 import { PhilippinePeso } from 'lucide-react';
-import { toast } from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
 import { format } from "date-fns";
 const CustomerOrders = ({customer}) => {
@@ -16,31 +16,11 @@ const CustomerOrders = ({customer}) => {
     const { customerOrders, 
         setCustomerOrders 
     } = useContext(CustomerorderContext)
+    const { showToast } = useContext(ShowToastContext)
     const [ method, setMethod ] = useState("")
     const [ isPaymentSelected, setIsPaymentSelected ] = useState(true)
     const total = customerOrders.reduce((sum, order) => sum + order.subtotal, 0)
     const orderID = "ORD-" + uuidv4().slice(0, 5)
-
-    const toastMap = {
-        success: toast.success,
-        error: toast.error,
-        default: toast
-    }
-
-    const showToast = (type, message, timer) => {
-        const fn = toastMap[type] || toastMap.default;
-        fn(<div className="Notification">{message}</div>, {
-            style: {
-            width: "100%",
-            backgroundColor: "white",
-            color: "#8c6244",
-            padding: "12px 16px",
-            borderRadius: "8px",
-            },
-            duration: timer,
-        })
-    };
-
 
     const removeOrder = (id) => {
         const updatedOrder = customerOrders.filter(key => key.productId !== id)
@@ -79,9 +59,6 @@ const CustomerOrders = ({customer}) => {
 
         const updatedCustomerData = {
             ...customer,
-            totalOrders: customer.totalOrders + 1,
-            totalSpent: customer.totalSpent + total,
-            lastOrderDate: format(new Date(), "MM/dd/yy"),
             orders: updatedOrders
         }
 
@@ -107,7 +84,6 @@ const CustomerOrders = ({customer}) => {
                 remove={removeOrder}
                 customHeight={{ height: "100%"}}
                 isRemovable={true}
-
             />
             <PaymentMethod
                 setMethod={setMethod}

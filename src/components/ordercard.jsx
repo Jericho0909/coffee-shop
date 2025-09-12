@@ -1,14 +1,14 @@
 import { useContext } from 'react';
 import ModalContext from '../context/modalContext';
 import { PhilippinePeso } from 'lucide-react';
-const OrderCard = ({orderCard}) => {
-    console.log(orderCard)
+const OrderCard = ({orderCard, orderlength}) => {
     const { toggleModal, setModalName } = useContext(ModalContext)
     const statusColors = {
         Pending: "bg-[#3b82f6]",
         Processing: "bg-[#f59e0b]",
         Completed: "bg-[#10b981]",
     }
+
 
     const openModal = (order) => {
         sessionStorage.setItem("customerOrder", JSON.stringify(order))
@@ -19,7 +19,9 @@ const OrderCard = ({orderCard}) => {
     return(
         <div 
             key={orderCard.orderId}
-            className="container-flex justify-center flex-col border border-[#8c6244] rounded-md cursor-pointerw-full h-full p-2 mb-0 relative"
+            className={`container-flex justify-center flex-col border border-[#8c6244] rounded-md cursor-pointerw-full p-2 mb-0 relative
+                ${orderlength === 1 ? "h-[21.50rem] sm:h-[24.50rem]" : "h-full"}    
+            `}
             onClick={() => openModal(orderCard)}
         >
             <div className="container-flex justify-center flex-col w-full font-opensans tracking-wide mb-[1rem]">

@@ -101,7 +101,7 @@ const PlaceOrder = ({customer}) => {
 
     return(
         <form 
-            className="container-flex justify-center sm:justify-start flex-col w-full py-[2rem] px-1 overflow-y-auto scrollbar-hide"
+            className="container-flex justify-start flex-col w-full py-[2rem] px-1 overflow-y-auto scrollbar-hide"
             onSubmit={(e) => placeOrder(e)}
         >
             <div className="w-full p-2">

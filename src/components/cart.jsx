@@ -24,11 +24,11 @@ const Cart = ({arr, remove, customHeight, isRemovable}) => {
                                 <div className="container-flex gap-1 w-auto p-1 mb-[0.20rem]">
                                     <span className="font-opensans tracking-wide text-[clamp(0.78rem,2vw,1rem)]">
                                         {order.name}
-                                        <span className="text-[#D4A373] font-opensans italic tracking-wide text-[clamp(0.65rem,2vw,0.80rem)]">
+                                        <span className="text-[#D4A373] text-[clamp(0.65rem,2vw,0.80rem)]">
                                         ({order.size})
                                         </span>
                                     </span>
-                                    <span className="font-opensans tracking-wide text-[clamp(0.78rem,2vw,1rem)]">
+                                    <span className="text-[clamp(0.78rem,2vw,1rem)]">
                                         x{order.quantity}
                                     </span>
                                 </div>

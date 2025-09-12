@@ -6,6 +6,7 @@ const CustomerOrderCards = ({customerOrders}) => {
                 <OrderCard
                     key={orderCard.orderId}
                     orderCard={orderCard}
+                    orderlength ={customerOrders.length}
                 />
             ))}
         </div>

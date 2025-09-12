@@ -26,9 +26,12 @@ const CustomerOrders = () => {
             <Loading/>
         )
     }
+
+    if(!customerData) return
+    
     return(
         <>
-            <section className="container flex justify-start flex-col   p-2 mb-0">
+            <section className="container flex justify-start flex-col p-2 mb-0">
                 <div className="w-full h-auto p-2 mb-[1rem]">
                     <h1 className="text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-start p-1">
                         orders
@@ -42,16 +45,26 @@ const CustomerOrders = () => {
                             }
                         `}
                 >
-                    {isMobile 
+                    {customerData.orders.length === 0 
                         ? (
-                            <CustomerOrderCards
-                                customerOrders = {customerData.orders}
-                            />
+                            <div className="container-flex justify-center w-full h-[90%]">
+                                <p>
+                                    Looks like you haven’t placed any orders yet.
+                                </p>
+                            </div>    
                         )
                         : (
-                            <CustomerOrderTable
-                                customerOrders = {customerData.orders}
-                            />
+                            isMobile 
+                            ? (
+                                <CustomerOrderCards
+                                    customerOrders = {customerData.orders}
+                                />
+                            )
+                            : (
+                                <CustomerOrderTable
+                                    customerOrders = {customerData.orders}
+                                />
+                            )
                         )
                     }
                 </div>
