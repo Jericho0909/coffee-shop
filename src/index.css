@@ -53,6 +53,10 @@ html, body {
     margin: 0;
   }
 
+  .input-plain {
+    @apply w-auto border-none bg-transparent focus:outline-none focus:ring-0 focus:border-transparent;
+  }
+
   a{
     @apply font-nunito tracking-wide text-[clamp(0.85rem,2vw,1.05rem)] font-semibold
   }

@@ -1,5 +1,5 @@
 import CoffeeIcon from "../assets/icons/coffee-icon.png"
-const Header = ({ style, title, children }) => {
+const Header = ({ style, title, rightContent }) => {
     return(
         <header 
             className="bg-[#8c6244] w-full h-[5.20rem] border border-black"
@@ -19,7 +19,7 @@ const Header = ({ style, title, children }) => {
                 </div>
             </div>
             <div className="right">
-                {children()}
+                {rightContent}
             </div>
         </header>
     )

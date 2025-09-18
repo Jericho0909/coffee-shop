@@ -12,7 +12,7 @@ const Aside = ({children}) => {
             </div>
 
             <nav className="flex flex-col items-start p-4 space-y-4">
-                {children()}
+                {children}
             </nav>
         </>
     )

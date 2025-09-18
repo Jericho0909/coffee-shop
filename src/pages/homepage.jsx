@@ -53,15 +53,15 @@ const Homepage = () => {
         forgot: <Forgot/>
     }
 
-    const rightChildren = () => {
+    const RightContent = () => {
         return(
             <>
                 {isMobile ? (
                     <>
                         <button
-                        ref={buttonRef}
-                        onClick={toggleNavbar}
-                        className="text-sm px-4 py-2 bg-gray-200 rounded cursor-pointer"
+                            ref={buttonRef}
+                            onClick={toggleNavbar}
+                            className="text-sm px-4 py-2 bg-gray-200 rounded cursor-pointer"
                         >
                             <Bars3Icon className="w-6 h-6 text-gray-700" />
                         </button>
@@ -100,7 +100,7 @@ const Homepage = () => {
             <Header
                 style={{ position: "fixed", top: 0, right: 0, zIndex: 10 }}
                 title="kape shop"
-                children = {rightChildren}
+                rightContent={<RightContent/>}
             />
             <Main/>
             <Footer/>

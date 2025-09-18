@@ -1,11 +1,9 @@
 import { useContext } from "react"
-import FetchDataContext from "../../../../../context/fetchdataContext"
 import ModalContext from "../../../../../context/modalContext"
 import Table from "../../../../table"
 
-const EmployerTable = () => {
+const EmployerTable = ({employerList}) => {
     const { toggleModal, setModalName } = useContext(ModalContext)
-    const { employerList } = useContext(FetchDataContext)
     const tableHeader = [
         {label: "Id", key: "id"},
         {label: "Name", key: "name"},

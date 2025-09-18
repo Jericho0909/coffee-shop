@@ -23,6 +23,9 @@ import { AuthValidationProvider } from "./context/authvalidationContext";
 import { AddHighlightProvider } from "./context/addhighlightContext";
 import { CustomerOrderProvider } from "./context/customerorderContext";
 import { ShowToastProvider } from "./context/showtoastContext";
+import { SearchProvider } from "./context/searchContext";
+import { SuggestionProvider } from "./context/suggestionContext";
+import { HandleKeyProvider } from "./context/handlekeyContext";
 
 function App() {
   return (
@@ -49,7 +52,7 @@ function App() {
                             <ImageProvider>
                               <ContainerProvider>
                                 <AddHighlightProvider>
-                                  <Adminpage/>
+                                    <Adminpage/>
                                 </AddHighlightProvider>
                               </ContainerProvider>
                             </ImageProvider>
@@ -58,10 +61,42 @@ function App() {
                           <Route index element={
                           <Navigate to="Dashboard" replace />} />
                           <Route path="Dashboard" element={<Dashboard/>}/>
-                          <Route path="Products" element={<Products/>}/>
-                          <Route path="Customers" element={<Customers/>}/>
-                          <Route path="Orders" element={<Orders/>}/>
-                          <Route path="Employers" element={<Employers/>}/>
+                          <Route path="Products" element={
+                            <SearchProvider>
+                              <SuggestionProvider>
+                                <HandleKeyProvider>
+                                  <Products/>
+                                </HandleKeyProvider>
+                              </SuggestionProvider>
+                            </SearchProvider>
+                          }/>
+                          <Route path="Customers" element={
+                            <SearchProvider>
+                              <SuggestionProvider>
+                                <HandleKeyProvider>
+                                  <Customers/>
+                                </HandleKeyProvider>
+                              </SuggestionProvider>
+                            </SearchProvider>
+                          }/>
+                          <Route path="Orders" element={
+                            <SearchProvider>
+                              <SuggestionProvider>
+                                <HandleKeyProvider>
+                                  <Orders/>
+                                </HandleKeyProvider>
+                              </SuggestionProvider>
+                            </SearchProvider>
+                          }/>
+                          <Route path="Employers" element={
+                            <SearchProvider>
+                              <SuggestionProvider>
+                                <HandleKeyProvider>
+                                  <Employers/>
+                                </HandleKeyProvider>
+                              </SuggestionProvider>
+                            </SearchProvider>
+                          }/>
                         </Route>
                         <Route
                           path="/Customerpage/:id/:username"

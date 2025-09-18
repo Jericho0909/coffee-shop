@@ -11,6 +11,8 @@ const OrderTable = ({orders}) => {
         {label: "Status", key: "status"},
     ]
 
+
+
     const openModal = (row) => {
         sessionStorage.setItem("orderID", row.id)
         setModalName("manageOrder")

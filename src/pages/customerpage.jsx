@@ -35,7 +35,7 @@ const Customerpage = () => {
         setTimeout(() => setOpenSiderBar(prev => !prev))
     }
    
-    const rightChildren = () => {
+    const RightContent = () => {
         return(
             <>
                 { (mediaQueryMobile || isMediumDevice || isLargeDevice) && (
@@ -49,7 +49,7 @@ const Customerpage = () => {
         )
     }
 
-    const asideRightChildren = () => {
+    const NavContent = () => {
         return(
             <ul className="flex-col">
                  <li>
@@ -120,7 +120,7 @@ const Customerpage = () => {
             <Header
                 style={{}}
                 title = "kape na"
-                children = {rightChildren}
+                rightContent={<RightContent/>}
             />
             <div className="flex w-full">
                 {windowSizeMobile 
@@ -131,9 +131,9 @@ const Customerpage = () => {
                             className={`fixed top-[5rem] left-0 w-full md:w-[40%] h-full bg-[#f9f5f1] border border-[#8c6244] shadow-md z-50 transform transition-transform duration-300 ease-in-out
                             ${opensidebar ? "translate-x-0" : "-translate-x-full"}`}
                         >
-                            <Aside
-                                children = {asideRightChildren}
-                            />
+                            <Aside>
+                                <NavContent/>
+                            </Aside>
                         </aside>
                     )
                     : (
@@ -141,9 +141,9 @@ const Customerpage = () => {
                             ref={sidebarRef}
                             className="w-auto h-[89vh] bg-[#f9f5f1] border border-[#8c6244] shadow-md mt- p-1 mr-1"
                         >
-                            <Aside
-                                children = {asideRightChildren}
-                            />
+                            <Aside>
+                                <NavContent/>
+                            </Aside>
                         </aside>
                     )
                 }
