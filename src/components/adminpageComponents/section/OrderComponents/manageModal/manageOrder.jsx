@@ -95,7 +95,7 @@ const ManageOrder = () => {
         <div 
             className="w-full h-full overflow-y-scroll scrollbar-hide"
         >
-             <div className="w-full text-center my-[2rem]">
+            <div className="w-full text-center my-[2rem]">
                 <h1 className="w-full text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[1rem]"
                 >
                     Order Status

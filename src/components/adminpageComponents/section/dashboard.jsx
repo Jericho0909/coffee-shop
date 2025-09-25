@@ -1,11 +1,39 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
+import FetchDataContext from "../../../context/fetchdataContext"
+import { useParams } from "react-router-dom"
 import DailySalesChart from "../charts/dailysaleschart"
 import WeeklySalesChart from "../charts/weeklysaleschart"
 import MonthlySalesChart from "../charts/monthlysaleschart"
 import Loading from "../../loading"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUserTie } from '@fortawesome/free-solid-svg-icons'
+import { Trophy } from "lucide-react";
 const Dashboard = () => {
+    const { id } = useParams()
+    const { adminList, 
+        productList,
+        orderList,
+    } = useContext(FetchDataContext)
     const [ chart, setChart ] = useState("dailysales")
     const [ loading, setLoading ] = useState(true)
+
+    const today = new Date().toISOString().split("T")[0]
+    const admin = adminList.find(key => key.id === id)
+    const topSales = productList.sort((a, b) => b.orderCount - a.orderCount).slice(0,5)
+    const totalSalesToday = orderList
+        .filter(order => {
+            const orderDate = order.orderDate.split("T")[0]
+            return (
+            orderDate === today && 
+            (order.status === "Processing" || order.status === "Completed")
+            )
+    }).reduce((sum, order) => sum + order.total, 0)
+
+    const colorTrophy = [
+        "#FFD700",
+        "#C0C0C0",
+        "#CD7F32"
+    ]
 
     const switchChartView = (chart) => {
         setChart(chart)
@@ -31,16 +59,27 @@ const Dashboard = () => {
         monthlysales: <MonthlySalesChart/>
     }
     return (
-        <section className="flex justify-center">
-            <div 
-                className="container flex justify-start items-center flex-col w-full overflow-y-auto scrollbar-hide p-2"
-            >
-                <h1 className="text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-start p-1">
-                    dashboard
-                </h1>
-                <div className="grid grid-rows-[auto_auto] lg:grid-cols-[2fr_1fr] w-full h-auto gap-2">
+        <section className="flex justify-start items-center flex-col w-full p-2">
+                <div className="container-flex justify-between w-full h-auto p-1 mb-0">
+                    <h1 className="text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-start p-1">
+                        dashboard
+                    </h1>
+                    <div className="container-flex justify-center w-auto h-auto p-1 mb-0 gap-1">
+                        <div className="container-flex justify-center mb-0">
+                            <FontAwesomeIcon 
+                                icon={faUserTie}
+                                size="1x" 
+                                color="#8c6244"
+                            />
+                        </div>
+                        <span className="font-opensans text-[clamp(1rem,2vw,1.10rem)] tracking-wide font-semibold">
+                            {admin.username}
+                        </span>
+                    </div>
+                </div>
+                <div className="grid grid-rows-[auto_auto] lg:grid-cols-[2fr_1fr] w-full h-auto gap-2 m-1 p-1">
                     <div 
-                        className="w-auto h-auto m-1 p-1 border border-black"
+                        className="w-auto h-auto border border-black bg-[#D9CBBF]"
                     >
                         <div className="w-full h-[20rem] md:h-[25rem] p-2">
                             {chartView[chart]}
@@ -70,43 +109,67 @@ const Dashboard = () => {
                             </button>
                         </div>
                     </div>
-                    <div className="w-auto h-auto m-1 p-1 border border-black">
+                    <div className="w-auto h-auto border border-black bg-[#6F4E37]">
                         <h1 className="text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-start">
                             top sales
                         </h1>
                         <ol className="flex justify-center items-center flex-col w-full h-[80%] p-1">
-                            <li>una</li>
-                            <li>pangalawa</li>
-                            <li>pangatlo</li>
-                            <li>pangapat</li>
-                            <li>panglima</li>
+                            {topSales.map((item, value) => (
+                                <li
+                                    key={value}
+                                    className="container-flex font-opensans font-bold text-[clamp(1.20rem,2vw,1.35rem)] mb-0 gap-1"
+                                >
+                                    {value <= 2 && 
+                                        (
+                                            <span>
+                                                <Trophy size={18} color={colorTrophy[value]}/>
+                                            </span>
+                                        )
+                                    }
+                                    <span>
+                                        {item.name.toLowerCase()}
+                                    </span>
+                                    <span className="text-[#D4A373] text-[clamp(0.65rem,2vw,0.80rem)] font-medium italic">
+                                        ({item.orderCount}x)
+                                    </span>
+                                </li>
+                            ))}
                         </ol>
                     </div>
                 </div>
-                <div className="w-full h-auto p-1">
-                    <div className="grid grid-rows-2 lg:grid-cols-[auto_auto] lg:grid-rows-[auto] gap-2 h-auto">
-                        <div className="w-full p-1 border border-black">
-                            <h1 className="text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-start">
-                                total overview cards
-                            </h1>
-                            <ul className="flex justify-center items-start flex-col h-auto">
-                                <li>total products -------- 15</li>
-                                <li>total orders today -------- 6</li>
-                                <li>total sales today -------- ₱740</li>
-                            </ul>
-                        </div>
-                        <div className="p-1 border border-black">
-                            <h1 className="text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-start">
-                                low stock
-                            </h1>
-                            <ul className="flex justify-center items-start flex-col h-auto">
-                                <li>- matcha latte (3)</li>
-                                <li>- cold brew (out of stock)</li>
-                            </ul>
-                        </div>
+                <div 
+                    className="grid grid-rows-2 lg:grid-cols-[auto_auto] lg:grid-rows-[auto] w-full h-auto gap-2 m-1 p-1"
+                >
+                    <div className="w-auto h-auto border border-black bg-[#A3B18A]">
+                        <h1 className="text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-start">
+                            total overview cards
+                        </h1>
+                        <ul className="flex justify-center items-start flex-col w-auto h-auto">
+                            <li className="font-opensans font-bold text-[clamp(1.05rem,2vw,1.20rem)]">
+                                total products -------- {productList.length}
+                            </li>
+                            <li className="font-opensans font-bold text-[clamp(1.05rem,2vw,1.20rem)]">
+                                total orders today -------- {orderList.length}
+                            </li>
+                            <li className="font-opensans font-bold text-[clamp(1.05rem,2vw,1.20rem)]">
+                                total sales today -------- {totalSalesToday}
+                            </li>
+                        </ul>
+                    </div>
+                    <div className="w-auto h-auto border border-black bg-[#C18F65]">
+                        <h1 className="text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-start">
+                            low stock
+                        </h1>
+                        <ul className="flex justify-center items-start flex-col h-auto">
+                            <li className="font-opensans font-bold text-[clamp(1.05rem,2vw,1.20rem)]">
+                                - matcha latte (3)
+                            </li>
+                            <li className="font-opensans font-bold text-[clamp(1.05rem,2vw,1.20rem)]">
+                                - cold brew (out of stock)
+                            </li>
+                        </ul>
                     </div>
                 </div>
-            </div>
         </section>
     )
 }

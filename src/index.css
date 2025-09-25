@@ -88,6 +88,11 @@ html, body {
     @apply flex justify-end items-center w-auto m-1 p-[clamp(0.50rem,2vw,0.95rem)] relative
   }
 
+  .container-flex {
+    @apply flex items-center w-auto h-auto mb-[1rem]
+  }
+
+
   .container {
     @apply bg-[#f9f5f1] border border-[#8c6244] rounded-xl shadow-md
   }
@@ -177,10 +182,6 @@ html, body {
   .text-stroke {
     color: #8c6244; 
     -webkit-text-stroke: 1px black;
-  }
-
-  .container-flex{
-    @apply flex items-center w-auto h-auto mb-[1rem]
   }
 
   .highlight {

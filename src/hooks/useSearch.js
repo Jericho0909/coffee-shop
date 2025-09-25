@@ -9,7 +9,8 @@ const useSearch = () => {
         setOrderList, 
         setCustomerList,
         setEmployerList,
-        setProductList
+        setProductList,
+        setStockList
     } = useContext(FetchDataContext);
     
     const [ key, setKey ] = useState("")
@@ -56,6 +57,13 @@ const useSearch = () => {
                 )
                 setProductList(response.data)
             }
+            else if (key === "stockList"){
+                const response = await axios.get(!isNaN(query)
+                    ? `${url}?id=${query}`
+                    : `${url}?name=${query}`
+                )
+                setStockList(response.data)
+            }
         } 
         catch(error) {
             console.error("Search error:", error)
@@ -81,6 +89,9 @@ const useSearch = () => {
             }
             else if (key === "productList"){
                 setProductList(response.data)
+            }
+            else if (key === "stockList"){
+                setStockList(response.data)
             }
         }catch(error) {
             console.error("Fetch error:", error)

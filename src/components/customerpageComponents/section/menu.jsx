@@ -1,11 +1,16 @@
 import { useEffect, useState, useContext, useRef } from "react"
 import CustomerorderContext from "../../../context/customerorderContext"
 import ModalContext from "../../../context/modalContext"
+import SearchContext from "../../../context/searchContext"
+import SuggestionContext from "../../../context/suggestionContext"
 import MenuList from "./menuComponents/menu/menulist"
 import CoffeeCupIcon from "../../../assets/icons/coffee-icon3.png"
 import Loading from "../../loading"
+import SectionHeder from "../../sectionheader"
 const Menu = () => {
     const { customerOrders } = useContext(CustomerorderContext)
+    const { setKey, setUrl } = useContext(SearchContext)
+    const { setKeyList } = useContext(SuggestionContext)
     const { setIsOpen, setModalName } = useContext(ModalContext)
     const [ loading, setLoading ] = useState(true)
     const bounceRef = useRef(null)
@@ -17,6 +22,12 @@ const Menu = () => {
 
         return () => clearTimeout(timer)
     }, [])
+
+    useEffect(() => { 
+        setKey("productList") 
+        setUrl("http://localhost:3500/products") 
+        setKeyList("productlist") 
+    }, [setKey, setUrl, setKeyList])
 
     useEffect(() => {
         bounce()
@@ -37,6 +48,24 @@ const Menu = () => {
             }, 1500)
         }
     }
+
+    const CartBtn = () => {
+        return(
+            <button 
+                ref={bounceRef}
+                className="container-flex justify-center w-12 h-12 p-1 mb-0 cursor-pointer"
+                onClick={() => orderList()}
+                
+            >
+                <img
+                    src={CoffeeCupIcon}
+                    className="w-[80%] h-[80%]"
+                    alt="CoffeeCup-Icon"
+                    loading="lazy"
+                />
+            </button>
+        )
+    }
     
     if(loading){
         return(
@@ -44,29 +73,14 @@ const Menu = () => {
         )
     }
     return (
-        <section className="container flex justify-center items-center flex-col p-2">
-            <div className="w-full h-auto p-2">
-                <div className="container-flex justify-between w-full h-auto mb-1">
-                    <h1 className="text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-start p-1">
-                        menu
-                    </h1>
-                    <div 
-                        ref={bounceRef}
-                        className="container-flex justify-center w-12 h-12 p-1 mb-0 cursor-pointer"
-                        onClick={() => orderList()}
-                        
-                    >
-                        <img
-                            src={CoffeeCupIcon}
-                            className="w-[80%] h-[80%]"
-                            alt="CoffeeCup-Icon"
-                            loading="lazy"
-                        />
-                    </div>
-                </div>
-            </div>
+        <section className="container-flex justify-start items-center flex-col w-full p-2 mb-0 min-h-screen">
+            <SectionHeder 
+                title="products" 
+                haveExtraBtn={true}
+                btnContent={<CartBtn/>}
+            />
            <div 
-                className="w-full flex-1 overflow-y-auto scrollbar-hide"
+                className="w-full flex-1"
             >
                 <MenuList/>
             </div>

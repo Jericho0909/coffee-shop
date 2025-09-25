@@ -48,7 +48,7 @@ const SectionHeder = ({title, haveExtraBtn, btnContent}) => {
 
     const searchBar = () => {
         return(
-            <div ref={searchBarRef} className="container-flex mb-0">
+            <div ref={searchBarRef} className="container-flex mb-0 border border-black">
                 <input
                     id="search-Id-username"
                     type="text"
@@ -102,14 +102,14 @@ const SectionHeder = ({title, haveExtraBtn, btnContent}) => {
 
     const suggestionSearch = () => {
         return(
-            <div className="absolute top-full left-0 w-full rounded-none z-50 bg-white">
-                <ul className="max-h-48 container-flex flex-col">
+            <div className="absolute top-full left-0 w-full z-50 bg-[#f9f5f1] border border-[#8c6244] rounded-xl shadow-md">
+                <ul className="container-flex justify-start flex-col w-full min-h-48 m-0 p-2 overflow-y-auto scrollbar-hide">
                     {filterData.length !== 0
                         ? (
                             filterData.map((item, index) => (
                                 <li
                                     key={index}
-                                    className={`font-opensans text-[clamp(0.82rem,2vw,1rem)] font-medium cursor-pointer transition-colors duration-300
+                                    className={`block font-opensans text-[clamp(0.82rem,2vw,1rem)] font-medium truncate cursor-pointer transition-colors duration-300
                                     ${highlightedIndex === index ? "bg-[#8c6244] text-white" : "hover:bg-[#8c6244] hover:text-white"}
                                     `}
                                     style={{ fontVariant: "normal" }}

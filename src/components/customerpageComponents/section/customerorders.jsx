@@ -31,19 +31,14 @@ const CustomerOrders = () => {
     
     return(
         <>
-            <section className="container flex justify-start flex-col p-2 mb-0">
+            <section className="container-flex justify-start items-center flex-col w-full p-2 mb-0 min-h-screen">
                 <div className="w-full h-auto p-2 mb-[1rem]">
                     <h1 className="text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-start p-1">
                         orders
                     </h1>
                 </div>
                 <div 
-                    className={`w-full flex-1
-                            ${isMobile 
-                                ? "overflow-x-auto scrollbar-hide" 
-                                : "overflow-y-auto scrollbar-hide"
-                            }
-                        `}
+                    className="w-full flex-1"
                 >
                     {customerData.orders.length === 0 
                         ? (

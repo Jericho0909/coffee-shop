@@ -46,6 +46,10 @@ const useSuggestion = () => {
             fetchData("http://localhost:3500/products")
             .then((data) => setList(data));
         }
+        else if(keyList === "stocklist"){
+            fetchData("http://localhost:3500/stocks")
+            .then((data) => setList(data));
+        }
     }, [keyList, fetchData]);
 
     useEffect(() => {

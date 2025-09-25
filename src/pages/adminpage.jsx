@@ -1,9 +1,10 @@
 import { useEffect, useState, useContext, useRef } from "react"
 import { useNavigate, NavLink, useParams } from "react-router-dom";
+import FetchDataContext from "../context/fetchdataContext";
 import WindowSizeContext from "../context/windowsizeContext"
 import ModalContext from "../context/modalContext"
 import Header from "../components/header";
-import Main from "../components/adminpageComponents/main"
+import Main from "../components/main";
 import Aside from "../components/aside";
 import CoffeGif from "../../src/assets/gif/coffee-Gif.gif";
 import Notification from "../components/notification";
@@ -15,14 +16,17 @@ import ManageOrder from "../components/adminpageComponents/section/OrderComponen
 import AddEmployer from "../components/adminpageComponents/section/EmployerComponents/EmployersModal/addemployer";
 import ManageEmployer from "../components/adminpageComponents/section/EmployerComponents/EmployersModal/updateemployer";
 import ManageCustomer from "../components/adminpageComponents/section/CustomerCompoments/cutomerModal/manageCustomer";
+import AddStock from "../components/adminpageComponents/section/StockComponents/stockModal/addstock";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 const Adminpage = () => {
     const navigate = useNavigate()
+    const { fetchData } = useContext(FetchDataContext)
     const { isMobile } = useContext(WindowSizeContext)
     const { isOpen, modalName } = useContext(ModalContext)
     const { id, username } = useParams()
     const [ loading, setLoading ] = useState(true)
     const [ opensidebar, setOpenSiderBar ] = useState(false)
+    const [ active, setActive ] = useState(sessionStorage.getItem("section") || "dashboardsection")
     const sidebarRef = useRef(null)
 
     useEffect(() => {
@@ -57,14 +61,20 @@ const Adminpage = () => {
         manageOrder: <ManageOrder/>,
         addEmployer: <AddEmployer/>,
         manageEmployer: <ManageEmployer/>,
-        manageCustomer: <ManageCustomer/>
+        manageCustomer: <ManageCustomer/>,
+        addStock: <AddStock/>
     }
 
     const onToggleSidebar = () => {
         setTimeout(() => setOpenSiderBar(prev => !prev))
     }
 
+    const saveSection = (section) => {
+        sessionStorage.setItem("section", section)
+    }
+
     const Logout = () => {
+        sessionStorage.clear()
         navigate("/");
     }
 
@@ -79,9 +89,11 @@ const Adminpage = () => {
                 {!isMobile 
                     ? (
                         null
-                ) : (
+                    ) 
+                    : (
                         <Bars3Icon className="w-6 h-6 text-white" />
-                )}
+                    )
+                }
             </button>
         )
     }
@@ -92,9 +104,19 @@ const Adminpage = () => {
                 <li>
                     <NavLink 
                         to={`/Adminpage/${id}/${username}/Dashboard`} 
-                        onClick={onToggleSidebar}
-                        className="relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
-                        after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full"
+                        onClick={() => {
+                            onToggleSidebar();
+                            setActive("dashboardsection");
+                            saveSection("dashboardsection")
+                        }}
+                        className={`
+                            relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
+                            after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
+                            ${active === "dashboardsection" 
+                                ? "after:w-full text-[#6F4E37] font-semibold" 
+                                : ""
+                            } 
+                        `}
                     >
                     
                         dashboard
@@ -103,18 +125,40 @@ const Adminpage = () => {
                 <li>
                     <NavLink 
                         to={`/Adminpage/${id}/${username}/Products`} 
-                        onClick={onToggleSidebar}
-                        className="relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
-                        after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full"
+                        onClick={() => {
+                            onToggleSidebar();
+                            setActive("productsection");
+                            saveSection("productsection");
+                            fetchData("http://localhost:3500/products", "productList")
+                        }}
+                        className={`
+                            relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
+                            after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
+                            ${active === "productsection" 
+                                ? "after:w-full text-[#6F4E37] font-semibold" 
+                                : ""
+                            } 
+                        `}
                     >
                         products
                     </NavLink> 
                 </li>
                 <li>
                     <NavLink 
-                        to={`/Adminpage/${id}/${username}/Orders`} onClick={onToggleSidebar}
-                        className="relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
-                        after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full"
+                        to={`/Adminpage/${id}/${username}/Orders`} onClick={() => {
+                            onToggleSidebar();
+                            setActive("ordersection");
+                            saveSection("ordersection");
+                            fetchData("http://localhost:3500/orders", "orderList")
+                        }}
+                        className={`
+                            relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
+                            after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
+                            ${active === "ordersection" 
+                                ? "after:w-full text-[#6F4E37] font-semibold" 
+                                : ""
+                            } 
+                        `}
                     >
                         orders
                     </NavLink>
@@ -122,9 +166,20 @@ const Adminpage = () => {
                 <li>
                     <NavLink 
                         to={`/Adminpage/${id}/${username}/Customers`} 
-                        onClick={onToggleSidebar}
-                        className="relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
-                        after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full"
+                        onClick={() => {
+                            onToggleSidebar();
+                            setActive("customersection");
+                            saveSection("customersection");
+                            fetchData("http://localhost:3500/customers", "customerList")
+                        }}
+                        className={`
+                            relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
+                            after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
+                            ${active === "customersection" 
+                                ? "after:w-full text-[#6F4E37] font-semibold" 
+                                : ""
+                            } 
+                        `}
                     >
                         customers
                     </NavLink>
@@ -132,11 +187,42 @@ const Adminpage = () => {
                 <li>
                     <NavLink 
                         to={`/Adminpage/${id}/${username}/Employers`} 
-                        onClick={onToggleSidebar}
-                        className="relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
-                        after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full"
+                        onClick={() => {
+                            onToggleSidebar();
+                            setActive("employersection");
+                            saveSection("employersection");
+                            fetchData("http://localhost:3500/employers", "employerList")
+                        }}
+                        className={`
+                            relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
+                            after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
+                            ${active === "employersection" 
+                                ? "after:w-full text-[#6F4E37] font-semibold" 
+                                : ""
+                            } 
+                        `}
                     >
                         employers
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink 
+                        to={`/Adminpage/${id}/${username}/Stocks`} onClick={() => {
+                            onToggleSidebar();
+                            setActive("stocksection")
+                            saveSection("stocksection");
+                            fetchData("http://localhost:3500/stocks", "stockList")
+                        }}
+                        className={`
+                            relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
+                            after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
+                            ${active === "stocksection" 
+                                ? "after:w-full text-[#6F4E37] font-semibold" 
+                                : ""
+                            } 
+                        `}
+                    >
+                        stocks
                     </NavLink>
                 </li>
                 <li>
@@ -176,7 +262,6 @@ const Adminpage = () => {
         <div className="flex flex-col">  
             <Notification/>
             <Header
-                style={{}}
                 title = "admin"
                 rightContent={<RightContent/>}
             />
@@ -195,7 +280,7 @@ const Adminpage = () => {
                 ) : (
                     <aside
                         ref={sidebarRef}
-                        className="w-auto h-[89vh] bg-[#f9f5f1] border border-[#8c6244] shadow-md mt- p-1 mr-1"
+                        className="fixed top-[5.20rem] bottom-0 bg-[#f9f5f1] border border-[#8c6244] shadow-md mt- p-1 mr-1"
                     >
                         <Aside>
                             <NavContent/>

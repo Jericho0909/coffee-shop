@@ -98,7 +98,6 @@ const Homepage = () => {
             </Modal>
             )}
             <Header
-                style={{ position: "fixed", top: 0, right: 0, zIndex: 10 }}
                 title="kape shop"
                 rightContent={<RightContent/>}
             />

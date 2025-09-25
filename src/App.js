@@ -7,6 +7,7 @@ import Products from "./components/adminpageComponents/section/product";
 import Customers from "./components/adminpageComponents/section/customer";
 import Orders from "./components/adminpageComponents/section/order";
 import Employers from "./components/adminpageComponents/section/employers";
+import Stocks from "./components/adminpageComponents/section/stock";
 import Menu from "./components/customerpageComponents/section/menu";
 import CustomerOrders from "./components/customerpageComponents/section/customerorders";
 import Settings from "./components/customerpageComponents/section/settings";
@@ -52,7 +53,9 @@ function App() {
                             <ImageProvider>
                               <ContainerProvider>
                                 <AddHighlightProvider>
-                                    <Adminpage/>
+                                    <SearchProvider>
+                                      <Adminpage/>
+                                    </SearchProvider>
                                 </AddHighlightProvider>
                               </ContainerProvider>
                             </ImageProvider>
@@ -97,6 +100,15 @@ function App() {
                               </SuggestionProvider>
                             </SearchProvider>
                           }/>
+                          <Route path="Stocks" element={
+                            <SearchProvider>
+                              <SuggestionProvider>
+                                <HandleKeyProvider>
+                                  <Stocks/>
+                                </HandleKeyProvider>
+                              </SuggestionProvider>
+                            </SearchProvider>
+                          }/>
                         </Route>
                         <Route
                           path="/Customerpage/:id/:username"
@@ -113,7 +125,15 @@ function App() {
                           <Route index element={
                             <Navigate to="Menu" replace />} 
                           />
-                          <Route path="Menu" element={<Menu/>}/>
+                          <Route path="Menu" element={
+                            <SearchProvider>
+                              <SuggestionProvider>
+                                <HandleKeyProvider>
+                                  <Menu/>
+                                </HandleKeyProvider>
+                              </SuggestionProvider>
+                            </SearchProvider>
+                          }/>
                           <Route path="CustomerOrders" element={<CustomerOrders/>}/>
                           <Route path="Settings" element={<Settings/>}/>
                         </Route>

@@ -2,13 +2,14 @@ import { useState, useContext, useEffect } from "react"
 import FetchDataContext from "../../../../../context/fetchdataContext"
 import CustomerorderContext from "../../../../../context/customerorderContext";
 import ModalContext from "../../../../../context/modalContext";
+import ShowToastContext from "../../../../../context/showtoastContext";
 import { PhilippinePeso } from 'lucide-react';
-import { toast } from "react-hot-toast";
 
 const PlaceOrder = ({customer}) => {
     const { productList } = useContext(FetchDataContext)
     const { customerOrders, setCustomerOrders } = useContext(CustomerorderContext)
     const { setIsOpen, setModalName } = useContext(ModalContext)
+    const { showToast } = useContext(ShowToastContext)
     const [ productId ] = useState(sessionStorage.getItem("productId"))
     const [ count, setCount ] = useState(1)
 
@@ -58,39 +59,10 @@ const PlaceOrder = ({customer}) => {
         if(isMissingContact){
             setModalName("contactform")
             setIsOpen(true)
-
-            toast.success(
-                <div className="Notification">
-                    We need your contact details before we can process your order.
-                </div>,
-                {
-                    style: {
-                    width: "100%",
-                    backgroundColor: "white",
-                    color: "#8c6244",
-                    padding: "12px 16px",
-                    borderRadius: "8px",
-                    },
-                    duration: 4000,
-                }
-            );
+            showToast("error", "We need your contact details before we can process your order.",2000)
             return
         }
-        toast.success(
-            <div className="Notification">
-                Your order has been placed successfully.
-            </div>,
-            {
-                style: {
-                width: "100%",
-                backgroundColor: "white",
-                color: "#8c6244",
-                padding: "12px 16px",
-                borderRadius: "8px",
-                },
-                duration: 2000,
-            }
-        );
+        showToast("success", "Your order has been placed successfully.",2000)
         setCustomerOrders(item => ([...item, order]))
         const orders = [...customerOrders, order]
         sessionStorage.setItem("customerOrders", JSON.stringify(orders))
@@ -272,9 +244,9 @@ const PlaceOrder = ({customer}) => {
                             </button>
                         </div>
                         <div className="container-flex justify-center mb-0 flex-1 h-full">
-                            <p>
+                            <span>
                                 {count}
-                            </p>
+                            </span>
                         </div>
                         <div className="container-flex mb-0 w-[3rem] h-full">
                             <button

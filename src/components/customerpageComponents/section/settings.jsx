@@ -27,13 +27,13 @@ const Settings = () => {
     if(!user) return
 
     return(
-        <section className="container flex justify-start flex-col p-2 mb-0">
-            <div className="w-full h-auto p-2 mb-[1rem]">
+        <section className="container-flex justify-start items-center flex-col w-full p-2 mb-0 min-h-screen">
+            <div className="w-full h-auto p-2">
                 <h1 className="text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-start p-1">
                     settings
                 </h1>
             </div>
-            <div className="container-flex justify-center w-full flex-1 border border-[#8c6244] rounded-md overflow-y-auto scrollbar-hide">
+            <div className="container-flex justify-center w-full flex-1 border border-[#8c6244] rounded-md">
                 <UserSettings
                     user={user}
                 />

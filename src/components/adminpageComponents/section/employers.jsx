@@ -29,6 +29,10 @@ const Employers = () => {
         setKeyList("employerlist")
     }, [setKey, setUrl, setKeyList])
 
+    const openModal = () => {
+        setModalName("addEmployer")
+        toggleModal()
+    }
 
     const AddEmployerBtn = () => {
         return (
@@ -47,17 +51,9 @@ const Employers = () => {
         )
     }
 
-    const openModal = () => {
-        setModalName("addEmployer")
-        toggleModal()
-    }
-
     return(
-        <section className="flex justify-center">
-            <div 
-                className="container flex justify-start items-center flex-col w-full p-2"
-            >
-                <SectionHeder 
+        <section className="container-flex justify-start items-center flex-col w-full p-2 mb-0 min-h-screen">
+            <SectionHeder 
                     title="products" 
                     haveExtraBtn={true}
                     btnContent={<AddEmployerBtn/>}
@@ -66,7 +62,7 @@ const Employers = () => {
                     ? (
                         <div 
                             ref={container}
-                            className="w-full flex-1 overflow-y-auto scrollbar-hide"
+                            className="w-full flex-1"
                         >
                             <EmployerTable
                                 employerList={employerList}
@@ -79,7 +75,6 @@ const Employers = () => {
                         </div>
                     )
                 }
-            </div>
         </section>
     )
 }

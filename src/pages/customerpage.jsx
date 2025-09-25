@@ -7,7 +7,7 @@ import ModalContext from "../context/modalContext";
 import Notification from "../components/notification"
 import Header from "../components/header";
 import Aside from "../components/aside";
-import Main from "../components/customerpageComponents/main";
+import Main from "../components/main";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import Modal from "../components/modal";
 import PlaceOrder from "../components/customerpageComponents/section/menuComponents/menuModal/placeorder";
@@ -18,7 +18,7 @@ import EditProfile from "../components/customerpageComponents/section/settingsCo
 const Customerpage = () => {
     const navigate = useNavigate()
     const { id, username } = useParams()
-    const { customerList } = useContext(FetchDataContext)
+    const { customerList, fetchData } = useContext(FetchDataContext)
     const { isMobile: mediaQueryMobile, 
         isMediumDevice, 
         isLargeDevice 
@@ -27,6 +27,7 @@ const Customerpage = () => {
     const { isMobile: windowSizeMobile } = useContext(WindowSizeContext)
     const { isOpen, modalName } = useContext(ModalContext)
     const [ opensidebar, setOpenSiderBar ] = useState(false)
+    const [ active, setActive ] = useState(sessionStorage.getItem("customerSection") || "menusection")
     const sidebarRef = useRef(null)
 
     const customer = customerList.find(key => key.id === id)
@@ -55,9 +56,20 @@ const Customerpage = () => {
                  <li>
                     <NavLink 
                         to={`/Customerpage/${id}/${username}/Menu`} 
-                        onClick={onToggleSidebar}
-                        className="relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
-                        after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full"
+                        onClick={() => {
+                            onToggleSidebar();
+                            setActive("menusection")
+                            saveSection("menusection")
+                            fetchData("http://localhost:3500/products", "productList")
+                        }}
+                        className={`
+                            relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
+                            after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
+                            ${active === "menusection" 
+                                ? "after:w-full text-[#6F4E37] font-semibold" 
+                                : ""
+                            } 
+                        `}
                     >
                     
                         menu
@@ -66,9 +78,19 @@ const Customerpage = () => {
                 <li>
                     <NavLink 
                         to={`/Customerpage/${id}/${username}/CustomerOrders`} 
-                        onClick={onToggleSidebar}
-                        className="relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
-                        after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full"
+                        onClick={() => {
+                            onToggleSidebar();
+                            setActive("customerordersection");
+                            saveSection("customerordersection")
+                        }}
+                        className={`
+                            relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
+                            after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
+                            ${active === "customerordersection" 
+                                ? "after:w-full text-[#6F4E37] font-semibold" 
+                                : ""
+                            } 
+                        `}
                     >
                     
                         orders
@@ -77,9 +99,19 @@ const Customerpage = () => {
                 <li>
                     <NavLink 
                         to={`/Customerpage/${id}/${username}/Settings`} 
-                        onClick={onToggleSidebar}
-                        className="relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
-                        after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full"
+                        onClick={() => {
+                            onToggleSidebar();
+                            setActive("settingsection")
+                            saveSection("settingsection")
+                        }}
+                        className={`
+                            relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
+                            after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
+                            ${active === "settingsection" 
+                                ? "after:w-full text-[#6F4E37] font-semibold" 
+                                : ""
+                            } 
+                        `}
                     >
                         setting
                     </NavLink>
@@ -108,7 +140,12 @@ const Customerpage = () => {
         editProfile: <EditProfile  customer={customer}/>
     }
 
+    const saveSection = (section) => {
+        sessionStorage.setItem("customerSection", section)
+    }
+
     const Logout = () => {
+        sessionStorage.clear()
         navigate("/");
     }
 
@@ -118,7 +155,6 @@ const Customerpage = () => {
         <div className="flex flex-col">
             <Notification/>
             <Header
-                style={{}}
                 title = "kape na"
                 rightContent={<RightContent/>}
             />
@@ -139,7 +175,7 @@ const Customerpage = () => {
                     : (
                         <aside
                             ref={sidebarRef}
-                            className="w-auto h-[89vh] bg-[#f9f5f1] border border-[#8c6244] shadow-md mt- p-1 mr-1"
+                            className="fixed top-[5.20rem] bottom-0 bg-[#f9f5f1] border border-[#8c6244] shadow-md mt- p-1 mr-1"
                         >
                             <Aside>
                                 <NavContent/>

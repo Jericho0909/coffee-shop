@@ -112,9 +112,9 @@
       "phone": "09129876543",
       "location": "bagong pook rosario batangas",
       "dateJoined": "08/27/25",
-      "totalOrders": 3,
-      "totalSpent": 715,
-      "lastOrderDate": "09/12/25",
+      "totalOrders": 4,
+      "totalSpent": 900,
+      "lastOrderDate": "09/19/25",
       "orders": [
         {
           "orderId": "ORD-6cb99",
@@ -180,6 +180,27 @@
             }
           ],
           "total": 340
+        },
+        {
+          "orderId": "ORD-97b9e",
+          "orderDate": "09/19/25",
+          "status": "Completed",
+          "paymentMethod": "Gcash",
+          "items": [
+            {
+              "productId": "34fe6d03-653b-4ddf-84ee-0fe947392e47",
+              "name": "Matcha Latte",
+              "size": "Tall",
+              "quantity": 1,
+              "flavor": "",
+              "addOns": [
+                "Almond Milk"
+              ],
+              "price": 180,
+              "subtotal": 185
+            }
+          ],
+          "total": 185
         }
       ],
       "accountStatus": "Active"
@@ -227,7 +248,7 @@
       "description": "Earthy matcha green tea blended with steamed milk for a creamy treat.",
       "category": "Latte",
       "available": true,
-      "orderCount": 1
+      "orderCount": 2
     },
     {
       "id": "11a8ae0a-3bb7-4075-bc55-17629c0feed1",
@@ -595,6 +616,29 @@
       "status": "Processing",
       "paymentMethod": "Maya",
       "total": 340
+    },
+    {
+      "id": "ORD-97b9e",
+      "customerName": "lame",
+      "customerContact": "09129876543",
+      "items": [
+        {
+          "productId": "34fe6d03-653b-4ddf-84ee-0fe947392e47",
+          "name": "Matcha Latte",
+          "size": "Tall",
+          "quantity": 1,
+          "flavor": "",
+          "addOns": [
+            "Almond Milk"
+          ],
+          "price": 180,
+          "subtotal": 185
+        }
+      ],
+      "orderDate": "2025-09-19T09:58:26",
+      "status": "Completed",
+      "paymentMethod": "Gcash",
+      "total": 185
     }
   ],
   "employers": [
@@ -624,6 +668,35 @@
       "phone": "09091234567",
       "role": "Barista",
       "status": "Active"
+    }
+  ],
+  "stocks": [
+    {
+      "id": "S-00019",
+      "name": "Espresso Beans",
+      "quantity": 10,
+      "unit": "ml",
+      "category": "coffee",
+      "minStock": 5,
+      "lastUpdated": "09/21/25"
+    },
+    {
+      "id": "S-7ce59",
+      "name": "Arabica Beans",
+      "quantity": 15,
+      "unit": "kg",
+      "category": "coffee",
+      "minStock": 5,
+      "lastUpdated": "09/21/25"
+    },
+    {
+      "id": "S-5cccb",
+      "name": "Whole Milk",
+      "quantity": 20,
+      "unit": "l",
+      "category": "dairy",
+      "minStock": 5,
+      "lastUpdated": "09/22/25"
     }
   ]
 }
