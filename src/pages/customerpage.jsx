@@ -15,6 +15,7 @@ import CustomerOrders from "../components/customerpageComponents/section/menuCom
 import ContactForm from "../components/customerpageComponents/contactform";
 import ManageCustomerOrder from "../components/customerpageComponents/section/customerordersComponents/customerorderModal/managecustomerorder";
 import EditProfile from "../components/customerpageComponents/section/settingsComponents/settingsModal/editProfile";
+import { AnimatePresence } from "framer-motion";
 const Customerpage = () => {
     const navigate = useNavigate()
     const { id, username } = useParams()
@@ -183,11 +184,13 @@ const Customerpage = () => {
                         </aside>
                     )
                 }
-                {(isOpen) && (
-                    <Modal>
-                        {modalComponents[modalName]}
-                    </Modal>
-                )}
+                <AnimatePresence>
+                    {(isOpen ) && (
+                        <Modal>
+                            {modalComponents[modalName]}
+                        </Modal>
+                    )}
+                </AnimatePresence>
                 <Main/>
             </div>
 

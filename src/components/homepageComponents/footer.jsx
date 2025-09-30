@@ -5,10 +5,7 @@ import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 
 const Footer = () => {
     return(
-        <footer className="flex justify-between items-center bg-[#8c6244] w-full  gap-2 py-1 px-3">
-            <div className="footerDetails">
-                tana at magKape
-            </div>
+        <footer className="flex justify-between items-center bg-[#8c6244] w-full  gap-2 py-1 px-3 border border-black">
             <div className="footerDetails">
                 © 2025 Kape Shop. All rights reserved.
             </div>

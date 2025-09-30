@@ -14,6 +14,7 @@ import Modal from "../components/modal";
 import ModalContext from "../context/modalContext";
 import AuthviewContext from "../context/autviewContext";
 import Modalicon from "../assets/icons/coffee-icon2.png"
+import { AnimatePresence } from "framer-motion";
 
 const Homepage = () => {
     const { isOpen } = useContext(ModalContext)
@@ -22,8 +23,8 @@ const Homepage = () => {
     const { isMobile } = useContext(MediaQueryContext)
     const { activeSection } = useContext(SectionContext)
     const [ IsOpen, setIsOpen ] = useState(false);
-    const buttonRef = useRef(null);
-    const toggleNavbar = () => setIsOpen(prev => !prev);
+    const containerRef = useRef(null);
+    const toggleNavbar = () => setIsOpen(prev => !prev)
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -35,17 +36,16 @@ const Homepage = () => {
 
     useEffect(() => {
         const handleClickAnywhere = (event) => {
-            if ( buttonRef.current && !buttonRef.current.contains(event.target)) {
-                setIsOpen(false);
+            if (containerRef.current && !containerRef.current.contains(event.target)) {
+            setIsOpen(false)
             }
         };
 
-        document.addEventListener("click", handleClickAnywhere);
-
+        document.addEventListener("mousedown", handleClickAnywhere)
         return () => {
-            document.removeEventListener("click", handleClickAnywhere);
-        };
-    }, []);
+            document.removeEventListener("mousedown", handleClickAnywhere)
+        }
+    }, [])
 
     const setView = {
         login : <Login/>,
@@ -57,22 +57,28 @@ const Homepage = () => {
         return(
             <>
                 {isMobile ? (
-                    <>
+                    <div ref={containerRef} className="relative">
                         <button
-                            ref={buttonRef}
-                            onClick={toggleNavbar}
-                            className="text-sm px-4 py-2 bg-gray-200 rounded cursor-pointer"
+                        onClick={toggleNavbar}
+                        className="text-sm px-4 py-2 bg-gray-200 rounded cursor-pointer"
                         >
-                            <Bars3Icon className="w-6 h-6 text-gray-700" />
+                        <Bars3Icon className="w-6 h-6 text-gray-700" />
                         </button>
+
                         {IsOpen && (
-                        <div className="absolute top-full right-0 mt-2 w-40 bg-[#8c6244] border rounded shadow z-10">
-                            <Navbar activeSection={activeSection}/>
+                        <div className="absolute top-full right-0 mt-2 w-[10rem] bg-[#8c6244] border rounded shadow z-10 p-1">
+                            <Navbar 
+                                activeSection={activeSection}
+                                toggleNavbar = {toggleNavbar}
+                            />
                         </div>
                         )}
-                    </>
+                    </div>
                     ) : (
-                        <Navbar activeSection={activeSection}/>
+                        <Navbar 
+                            activeSection={activeSection}
+                            toggleNavbar = {toggleNavbar}
+                        />
                     )
                 }
             </>
@@ -81,29 +87,30 @@ const Homepage = () => {
 
     if(delay) return
     return (
-        <>
+        <div>
             <Notification/>
-            { isOpen && (
-            <Modal>
-                <div className="w-[20%] h-auto">
-                    <img 
-                        src={Modalicon}
-                        alt="Coffe"
-                        className="w-full h-full m-1 p1"
-                        loading="lazy"
-                    />
-                </div>
-                {setView[authView]}
-                
-            </Modal>
-            )}
+            <AnimatePresence>
+                { isOpen && (
+                    <Modal>
+                        <div className="w-[20%] h-auto">
+                            <img 
+                                src={Modalicon}
+                                alt="Coffe"
+                                className="w-full h-full m-1 p1"
+                                loading="lazy"
+                            />
+                        </div>
+                        {setView[authView]}
+                    </Modal>
+                )}
+            </AnimatePresence>
             <Header
                 title="kape shop"
                 rightContent={<RightContent/>}
             />
             <Main/>
             <Footer/>
-        </>
+        </div>
     )
 };
 

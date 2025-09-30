@@ -18,6 +18,7 @@ import ManageEmployer from "../components/adminpageComponents/section/EmployerCo
 import ManageCustomer from "../components/adminpageComponents/section/CustomerCompoments/cutomerModal/manageCustomer";
 import AddStock from "../components/adminpageComponents/section/StockComponents/stockModal/addstock";
 import { Bars3Icon } from "@heroicons/react/24/outline";
+import { AnimatePresence } from "framer-motion";
 const Adminpage = () => {
     const navigate = useNavigate()
     const { fetchData } = useContext(FetchDataContext)
@@ -287,11 +288,13 @@ const Adminpage = () => {
                         </Aside>
                     </aside>
                 )}
-                {(isOpen ) && (
-                    <Modal>
-                        {modalComponents[modalName]}
-                    </Modal>
-                )}
+                <AnimatePresence>
+                    {(isOpen ) && (
+                        <Modal>
+                            {modalComponents[modalName]}
+                        </Modal>
+                    )}
+                </AnimatePresence>
                 <Main />
             </div>
         </div>

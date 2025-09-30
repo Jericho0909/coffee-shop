@@ -22,6 +22,7 @@ const ManageOrder = () => {
     const [ openItemId, setOpenItemId ] = useState(null)
 
     const selectedOrder = orderList.find(key => key.id === orderId)
+
     const currentCustomer = customerList.find(key => key.username === selectedOrder.customerName)
 
     const customerTotalSpent = currentCustomer.orders.reduce((sum, order) => sum + order.total, 0)
@@ -38,6 +39,28 @@ const ManageOrder = () => {
         else {
             setOpenItemId(id)
         }
+    }
+
+    const OrderStatusOption = (status) => {
+        return(
+            <div className="container-flex justify-center mb-0 p-1">
+                <input
+                    id={status.toLowerCase()}
+                    type="radio"
+                    value={status}
+                    checked={selectedOrder.status === status ? status : ""}
+                    onChange={(e) => {
+                        const newStatus = e.target.value
+                        setCurrentOrderData({...currentOrderData, [e.target.name]: e.target.value});
+                        handleUpdateStatus(newStatus)
+                    }}
+                    className="w-auto"
+                />
+                <label htmlFor="pending" className="w-auto">
+                    {status}
+                </label>
+            </div>
+        )
     }
 
     const handleOrderCount = async () => {
@@ -95,7 +118,7 @@ const ManageOrder = () => {
         <div 
             className="w-full h-full overflow-y-scroll scrollbar-hide"
         >
-            <div className="w-full text-center my-[2rem]">
+            <div className="w-full text-center my-[2rem] mb-[1rem] p-2">
                 <h1 className="w-full text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[1rem]"
                 >
                     Order Status
@@ -118,46 +141,21 @@ const ManageOrder = () => {
                         </div>
                     )
                     : (
-                        <select
-                            name="status"
-                            value={currentOrderData.status}
-                            onChange={(e) => {
-                                const newStatus = e.target.value
-                                setCurrentOrderData({...currentOrderData, [e.target.name]: e.target.value});
-                                handleUpdateStatus(newStatus)
-                            }}
-                            className="category w-auto h-auto p-1 font-opensans"
-                            style={{ fontVariant: "normal" }}
-                        >
-                            <option 
-                                className="category font-opensans"
-                                style={{ fontVariant: "normal" }}
-                            >
-                                Pending
-                            </option>
-                            <option 
-                                className="category font-opensans"
-                                style={{ fontVariant: "normal" }}
-                            >
-                                Processing
-                            </option>
-                            <option 
-                                className="category font-opensans"
-                                style={{ fontVariant: "normal" }}
-                            >
-                                Completed
-                            </option>
-                            <option 
-                                className="category font-opensans"
-                                style={{ fontVariant: "normal" }}
-                            >
-                                Cancelled
-                            </option>
-                        </select>
+                        <div className="container-flex justify-between w-auto h-auto mb-[1rem] p-2 gap-1 flex-wrap">
+                                {OrderStatusOption("Pending")}
+                                {OrderStatusOption("Processing")}
+                                {OrderStatusOption("Completed")}
+                                {OrderStatusOption("Cancelled")}
+                            </div>
                     )
                 }
+                <div className="w-full h-2 overflow-hidden bg-[#e5e5e5] rounded-[8px]">
+                    <div className={`${selectedOrder.status} h-full transition-all duration-500 ease-in-out`}>
+
+                    </div>
+                </div>
             </div>
-            <div className="flex justify-start items-start flex-col w-full h-auto mb-[1rem] p-2">
+            <div className="container-flex justify-start items-start flex-col w-full h-auto mb-[1rem] p-2">
                 <h1 className="w-full text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[1rem]"
                 >
                     Order Details

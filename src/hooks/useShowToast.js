@@ -8,7 +8,9 @@ const useShowToast = () => {
 
     const showToast = (type, message, timer) => {
         const fn = toastMap[type] || toastMap.default;
-        fn(<div className="Notification">{message}</div>, {
+        fn(
+            <div className="Notification">{message}</div>, 
+            {
             style: {
             width: "100%",
             backgroundColor: "white",

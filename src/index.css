@@ -105,15 +105,6 @@ html, body {
     @apply flex justify-start items-center font-semibold text-[clamp(0.78rem,2vw,1.10rem)]
   }
 
-  .storytelling {
-    @apply flex justify-center items-center flex-col m-1 p-2 font-nunito tracking-wide text-[clamp(0.78rem,2vw,1.10rem)] text-start font-semibold
-    w-full
-  }
-
-  .socialLink {
-    @apply flex items-center w-auto gap-1 p-1 
-  }
-
   .footerDetails {
     @apply w-auto px-0 py-2 text-white font-nunito tracking-wide text-[clamp(0.78rem,2vw,1rem)] font-semibold
   }
@@ -150,7 +141,7 @@ html, body {
       var(--_g) 50%  50%,
       var(--_g) 100% 50%;
     background-size: calc(100%/3) 50%;
-    animation: l3 1s infinite linear;
+    animation: l3 1s infinite linear
   }
 
   @keyframes l3 {
@@ -161,12 +152,34 @@ html, body {
   }
 
   .scrollbar-hide::-webkit-scrollbar {
-    display: none;
+    display: none
   }
 
   .scrollbar-hide {
     -ms-overflow-style: none; 
     scrollbar-width: none;  
+  }
+
+  .scrollbar-coffee {
+    scrollbar-width: thin; 
+    scrollbar-color: #8c6244 transparent;
+  }
+
+  .scrollbar-coffee::-webkit-scrollbar-button {
+    display: none;
+  }
+
+  .scrollbar-coffee::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .scrollbar-coffee::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-coffee::-webkit-scrollbar-thumb {
+    background-color: #8c6244;
+    border-radius: 10px;
   }
 
   .category {

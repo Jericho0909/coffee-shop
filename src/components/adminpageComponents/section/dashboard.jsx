@@ -8,11 +8,13 @@ import Loading from "../../loading"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserTie } from '@fortawesome/free-solid-svg-icons'
 import { Trophy } from "lucide-react";
+import { X } from 'lucide-react';
 const Dashboard = () => {
     const { id } = useParams()
     const { adminList, 
         productList,
         orderList,
+        stockList
     } = useContext(FetchDataContext)
     const [ chart, setChart ] = useState("dailysales")
     const [ loading, setLoading ] = useState(true)
@@ -28,6 +30,7 @@ const Dashboard = () => {
             (order.status === "Processing" || order.status === "Completed")
             )
     }).reduce((sum, order) => sum + order.total, 0)
+    const lowStock = stockList.filter(key => key.quantity <= 10)
 
     const colorTrophy = [
         "#FFD700",
@@ -53,10 +56,12 @@ const Dashboard = () => {
         )
     }
 
+    const validOrders = orderList.filter(order => order.status === "Completed")
+
     const chartView = {
-        dailysales: <DailySalesChart/>,
-        weeklysales: <WeeklySalesChart/>,
-        monthlysales: <MonthlySalesChart/>
+        dailysales: <DailySalesChart orders={validOrders}/>,
+        weeklysales: <WeeklySalesChart orders={validOrders}/>,
+        monthlysales: <MonthlySalesChart orders={validOrders}/>
     }
     return (
         <section className="flex justify-start items-center flex-col w-full p-2">
@@ -81,7 +86,7 @@ const Dashboard = () => {
                     <div 
                         className="w-auto h-auto border border-black bg-[#D9CBBF]"
                     >
-                        <div className="w-full h-[20rem] md:h-[25rem] p-2">
+                        <div className="w-full h-[20rem] md:h-[25rem]">
                             {chartView[chart]}
                         </div>
                         <div className="flex justify-between items-center gap-1 w-full h-auto p-1">
@@ -129,8 +134,16 @@ const Dashboard = () => {
                                     <span>
                                         {item.name.toLowerCase()}
                                     </span>
-                                    <span className="text-[#D4A373] text-[clamp(0.65rem,2vw,0.80rem)] font-medium italic">
-                                        ({item.orderCount}x)
+                                    <span className="container-flex justify-center mb-0 text-[#D4A373] text-[clamp(0.65rem,2vw,0.80rem)] font-medium italic">
+                                        (
+                                            <X 
+                                                size={15}
+                                                color="black"
+                                            />
+                                            <span>
+                                                {item.orderCount}
+                                            </span>
+                                        )
                                     </span>
                                 </li>
                             ))}
@@ -144,7 +157,7 @@ const Dashboard = () => {
                         <h1 className="text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-start">
                             total overview cards
                         </h1>
-                        <ul className="flex justify-center items-start flex-col w-auto h-auto">
+                        <ul className="container-flex justify-center flex-col w-auto h-auto mb-0 p-1">
                             <li className="font-opensans font-bold text-[clamp(1.05rem,2vw,1.20rem)]">
                                 total products -------- {productList.length}
                             </li>
@@ -160,13 +173,34 @@ const Dashboard = () => {
                         <h1 className="text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-start">
                             low stock
                         </h1>
-                        <ul className="flex justify-center items-start flex-col h-auto">
-                            <li className="font-opensans font-bold text-[clamp(1.05rem,2vw,1.20rem)]">
-                                - matcha latte (3)
-                            </li>
-                            <li className="font-opensans font-bold text-[clamp(1.05rem,2vw,1.20rem)]">
-                                - cold brew (out of stock)
-                            </li>
+                        <ul className="flex justify-start items-start flex-col max-h-[6.50rem] p-1 overflow-y-auto scrollbar-coffee">
+                            {lowStock.map((item, index) => (
+                                <li 
+                                    key={index}
+                                    className="container-flex justify-center w-full font-opensans font-bold text-[clamp(1.05rem,2vw,1.20rem)] p-[0.15rem] mb-0"
+                                >
+                                    <span>
+                                         -{item.name.toLowerCase()}
+                                    </span>
+                                    <span className="container-flex justify-center mb-0 text-[clamp(0.65rem,2vw,0.80rem)] font-medium italic">
+                                        {item.quantity === 0
+                                            ? "(out of stock)"
+                                            :   
+                                                <>
+                                                    (
+                                                        <X 
+                                                            size={15}
+                                                            color="black"
+                                                        />
+                                                        <span>
+                                                            {item.quantity}
+                                                        </span>
+                                                    )
+                                                </>
+                                        }
+                                    </span>
+                                </li>
+                            ))}
                         </ul>
                     </div>
                 </div>

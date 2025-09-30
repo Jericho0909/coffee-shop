@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AuthviewContext from "../../../context/autviewContext"
 import FetchDataContext from "../../../context/fetchdataContext"
 import ModalContext from "../../../context/modalContext";
+import ShowToastContext from "../../../context/showtoastContext";
 const Login = () =>{
     const { setAuthView } = useContext(AuthviewContext)
     const { 
@@ -12,6 +13,7 @@ const Login = () =>{
         setCustomersIsLoading 
     } = useContext(FetchDataContext)
     const { toggleModal } = useContext(ModalContext)
+    const { showToast } = useContext(ShowToastContext)
     const [ username, setUsername ] = useState("")
     const [ password, setPassword ] = useState("")
     const [ loginError, setLoginError ] = useState(false)
@@ -33,6 +35,10 @@ const Login = () =>{
             navigate(`/Adminpage/${admin.id}/${admin.username}`)
         }
         else if(customer){
+            if(customer.accountStatus === "Block"){
+                showToast("error", "Your account is currently restricted because it did not follow our guidelines.", 5000)
+                return
+            }
             setCustomersIsLoading(true)
             toggleModal(false)
             navigate(`/Customerpage/${customer.id}/${customer.username}`);

@@ -72,7 +72,7 @@ const StockList = ({stockList}) => {
             {stockList.map((item, value) => (
                 <div
                     key={value}
-                    className="container-flex justify-center w-full h-auto gap-1 mt-1 p-2 relative border border-gray-400"
+                    className="container-flex justify-start w-full h-auto gap-1 mt-1 p-2 relative border border-gray-400"
                 >
                     <div
                         className="container-flex w-[22rem] p-1 mb-0 gap-1"

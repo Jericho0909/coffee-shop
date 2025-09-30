@@ -47,7 +47,7 @@ const ManageCustomer = () => {
                 bg-[#fffdf9] border border-[#d3b89f] rounded-xl 
                 shadow-lg p-1 pb-[1rem] overflow-hidden"
             >
-                <div className="w-full h-[15rem] overflow-y-auto my-1">
+                <div className="w-full h-[15rem] overflow-y-auto scrollbar-coffee my-1">
                     {selectedProduct.items.map((item, index) => (
                         <div 
                             key={index}
@@ -64,7 +64,7 @@ const ManageCustomer = () => {
                                 x{item.quantity}
                             </span>
                             <span className="ml-auto font-medium text-[#8c6244]">
-                                ₱{item.price}
+                                ₱{item.subtotal}
                             </span>
                             </p>
                         </div>
@@ -245,7 +245,14 @@ const ManageCustomer = () => {
                 >
                     Orders Record
                 </h1>
-                <div className="overflow-x-auto w-[98%]">
+                {selectedCustomer.orders.length === 0
+                    ? (
+                        <p>
+                            No orders yet.
+                        </p>
+                    )
+                    : (
+                        <div className="overflow-x-auto w-[98%]">
                     <table className="table-auto border-collapse w-full min-w-[600px]">
                         <thead className="bg-gray-100">
                             <tr>
@@ -307,6 +314,8 @@ const ManageCustomer = () => {
                         </tbody>
                     </table>
                 </div>
+                    )
+                }
             </div>
             <AnimatePresence>
                 {showFullDetail && (

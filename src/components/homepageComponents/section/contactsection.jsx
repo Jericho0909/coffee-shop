@@ -7,7 +7,7 @@ import { faFacebook, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { toast } from "react-hot-toast";
 const Contact = () => {
                 
-    const { ref, inView } = useSectionInView(0.6);
+    const { ref, inView } = useSectionInView(0.7);
     const { setActiveSection } = useContext(SectionContext)
     const [ Gmail, setGmail ] = useState("")
     const [ Message, setMessage ] = useState()
@@ -98,21 +98,36 @@ const Contact = () => {
                     FOLLOW US
                 </h1>
                 <div className="flex justify-between items-center w-full h-auto p-2">
-                <div className="socialLink">
+                <div className="flex items-center w-auto gap-1 p-">
                         <FontAwesomeIcon 
                             icon={faFacebook} 
                             className="w-6 h-6 text-blue-600"
                         />
-                        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+                        <a 
+                            href="https://facebook.com" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="relative pb-1 transition-all duration-300 ease-in-out 
+                            before:content-[''] before:absolute before:left-0 before:bottom-0 
+                            before:w-0 before:h-[2px] before:bg-blue-600 
+                            before:transition-all before:duration-300 hover:before:w-full"
+                        >
                             facebook/ta kape
                         </a>
                 </div>
-                    <div className="socialLink">
+                    <div className="flex items-center w-auto gap-1 p-">
                         <FontAwesomeIcon 
                             icon={faInstagram} 
                             className="w-6 h-6 text-pink-500" 
                         />
-                        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
+                        <a 
+                            href="https://www.instagram.com/" target="_blank" 
+                            rel="noopener noreferrer"
+                            className="relative pb-1 transition-all duration-300 ease-in-out 
+                            before:content-[''] before:absolute before:left-0 before:bottom-0 
+                            before:w-0 before:h-[2px] before:bg-pink-500 
+                            before:transition-all before:duration-300 hover:before:w-full"
+                        >
                             instagram/ta kape
                         </a>
                     </div>

@@ -112,9 +112,9 @@
       "phone": "09129876543",
       "location": "bagong pook rosario batangas",
       "dateJoined": "08/27/25",
-      "totalOrders": 4,
-      "totalSpent": 900,
-      "lastOrderDate": "09/19/25",
+      "totalOrders": 11,
+      "totalSpent": 1795,
+      "lastOrderDate": "09/29/25",
       "orders": [
         {
           "orderId": "ORD-6cb99",
@@ -201,6 +201,60 @@
             }
           ],
           "total": 185
+        },
+        {
+          "orderId": "ORD-c4553",
+          "orderDate": "09/27/25",
+          "status": "Completed",
+          "paymentMethod": "Maya",
+          "items": [
+            {
+              "productId": "34fe6d03-653b-4ddf-84ee-0fe947392e47",
+              "name": "Matcha Latte",
+              "size": "Tall",
+              "quantity": 2,
+              "flavor": "",
+              "addOns": [
+                "Almond Milk"
+              ],
+              "price": 180,
+              "subtotal": 370
+            },
+            {
+              "productId": "11a8ae0a-3bb7-4075-bc55-17629c0feed1",
+              "name": "Cold Brew",
+              "size": "Grande",
+              "quantity": 1,
+              "flavor": "Vanilla",
+              "addOns": [
+                "Sweet Cream"
+              ],
+              "price": 170,
+              "subtotal": 175
+            }
+          ],
+          "total": 545
+        },
+        {
+          "orderId": "ORD-aaf69",
+          "orderDate": "09/29/25",
+          "status": "Pending",
+          "paymentMethod": "Cash",
+          "items": [
+            {
+              "productId": "11a8ae0a-3bb7-4075-bc55-17629c0feed1",
+              "name": "Cold Brew",
+              "size": "Grande",
+              "quantity": 2,
+              "flavor": "Caramel",
+              "addOns": [
+                "Sweet Cream"
+              ],
+              "price": 170,
+              "subtotal": 350
+            }
+          ],
+          "total": 350
         }
       ],
       "accountStatus": "Active"
@@ -248,7 +302,7 @@
       "description": "Earthy matcha green tea blended with steamed milk for a creamy treat.",
       "category": "Latte",
       "available": true,
-      "orderCount": 2
+      "orderCount": 4
     },
     {
       "id": "11a8ae0a-3bb7-4075-bc55-17629c0feed1",
@@ -281,7 +335,7 @@
       "description": "Slow-steeped coffee served over ice for a smooth, rich flavor.",
       "category": "Cold Brew",
       "available": true,
-      "orderCount": 0
+      "orderCount": 1
     },
     {
       "id": "96b65369-27ab-4354-b2c6-6f3e59096e71",
@@ -639,6 +693,64 @@
       "status": "Completed",
       "paymentMethod": "Gcash",
       "total": 185
+    },
+    {
+      "id": "ORD-c4553",
+      "customerName": "lame",
+      "customerContact": "09129876543",
+      "items": [
+        {
+          "productId": "34fe6d03-653b-4ddf-84ee-0fe947392e47",
+          "name": "Matcha Latte",
+          "size": "Tall",
+          "quantity": 2,
+          "flavor": "",
+          "addOns": [
+            "Almond Milk"
+          ],
+          "price": 180,
+          "subtotal": 370
+        },
+        {
+          "productId": "11a8ae0a-3bb7-4075-bc55-17629c0feed1",
+          "name": "Cold Brew",
+          "size": "Grande",
+          "quantity": 1,
+          "flavor": "Vanilla",
+          "addOns": [
+            "Sweet Cream"
+          ],
+          "price": 170,
+          "subtotal": 175
+        }
+      ],
+      "orderDate": "2025-09-27T07:58:48",
+      "status": "Completed",
+      "paymentMethod": "Maya",
+      "total": 545
+    },
+    {
+      "id": "ORD-aaf69",
+      "customerName": "lame",
+      "customerContact": "09129876543",
+      "items": [
+        {
+          "productId": "11a8ae0a-3bb7-4075-bc55-17629c0feed1",
+          "name": "Cold Brew",
+          "size": "Grande",
+          "quantity": 2,
+          "flavor": "Caramel",
+          "addOns": [
+            "Sweet Cream"
+          ],
+          "price": 170,
+          "subtotal": 350
+        }
+      ],
+      "orderDate": "2025-09-29T12:06:06",
+      "status": "Pending",
+      "paymentMethod": "Cash",
+      "total": 350
     }
   ],
   "employers": [
