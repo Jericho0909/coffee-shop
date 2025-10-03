@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react"
+import {ref, onValue} from "firebase/database"
+import { database } from "../firebase";
 import { useDebounce } from "@uidotdev/usehooks";
-import axios from "axios";
 const useSuggestion = () => {
     const [ list, setList ] = useState([])
     const [ filterData, setFilterData ] = useState([])
@@ -19,36 +20,37 @@ const useSuggestion = () => {
         )
     }
 
-    const fetchData = useCallback(async (url) => {
-        try {
-            const response = await axios.get(url)
-            const uniqueData = getUniqueList(response.data)
-            return uniqueData.slice(0, 4)
-        } catch(error){
-            console.log("Error", error)
-        }
+    const fetchData = useCallback((nodeName) => {
+        const listRef = ref(database, nodeName)
+        return onValue(listRef, snapshot => {
+            const data = snapshot.val()
+            const arr = data 
+            ? Object.keys(data).map(key => (
+                { 
+                    firebaseKey: key,
+                    ...data[key] 
+                })) 
+            : []
+            const uniqueData = getUniqueList(arr)
+            setList(uniqueData)
+        })
     }, []);
 
     useEffect(() => {
         if(keyList === "orderlist"){
-            fetchData("http://localhost:3500/orders")
-            .then((data) => setList(data));
+            fetchData("orders")
         }
         else if(keyList === "customerlist"){
-            fetchData("http://localhost:3500/customers")
-            .then((data) => setList(data));
+            fetchData("customers")
         }
         else if(keyList === "employerlist"){
-            fetchData("http://localhost:3500/employers")
-            .then((data) => setList(data));
+            fetchData("employers")
         }
         else if(keyList === "productlist"){
-            fetchData("http://localhost:3500/products")
-            .then((data) => setList(data));
+            fetchData("products")
         }
         else if(keyList === "stocklist"){
-            fetchData("http://localhost:3500/stocks")
-            .then((data) => setList(data));
+            fetchData("stocks")
         }
     }, [keyList, fetchData]);
 

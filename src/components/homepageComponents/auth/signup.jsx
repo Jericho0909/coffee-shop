@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import AuthviewContext from "../../../context/autviewContext";
-import ActionContext from "../../../context/actionContext";
-import FetchDataContext from "../../../context/fetchdataContext";
+import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext";
+import FirebaseActionContext from "../../../context/firebaseactionContext";
 import AuthValidationContext from "../../../context/authvalidationContext";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-hot-toast";
@@ -9,8 +9,8 @@ import { format } from "date-fns";
 
 const Signup = () => {
     const { setAuthView } = useContext(AuthviewContext);
-    const { customerList, setCustomerList } = useContext(FetchDataContext)
-    const { addAction } = useContext(ActionContext)
+    const { customerList, setCustomerList } = useContext(FirebaseFetchDataContext)
+    const { pushAction } = useContext(FirebaseActionContext)
     const { isUsernameExists,
             isPasswordValid,
             showPasswordValidationError,
@@ -81,7 +81,7 @@ const Signup = () => {
 
         if (!isUsernameOk || !isPasswordOk) return;
 
-        const response = await addAction("customers", formData);
+        const response = await pushAction("customers", formData);
         setCustomerList((prev) => [...prev, response]);
 
         toast.success(

@@ -5,7 +5,7 @@ import { CircleCheck } from 'lucide-react';
 import { CircleAlert } from 'lucide-react';
 import { TriangleAlert } from 'lucide-react';
 import { X } from 'lucide-react';
-const StockList = ({stockList}) => {
+const StockList = ({getDisplayList}) => {
     const { setStockList } = useContext(FetchDataContext)
     const { patchAction, deleteAction } = useContext(ActionContext)
     const [ editable, setEditable ] = useState(false);
@@ -13,19 +13,18 @@ const StockList = ({stockList}) => {
 
 
     const selectStock = (id) => {
-        const stock = stockList.find(key => key.id === id)
+        const stock = getDisplayList.find(key => key.id === id)
         setSelectedStock(stock)
     }
 
     const removeStock = async(id) => {
-        const updatedStockList = stockList.filter(key => key.id !== id)
+        const updatedStockList = getDisplayList.filter(key => key.id !== id)
         await deleteAction("stocks", id, [updatedStockList])
         setStockList(updatedStockList)
     }
 
     const handleSaveQuantity = async() => {
-        const response = await patchAction("stocks", selectedStock.id, 
-        selectedStock ) 
+        const response = await patchAction("stocks", selectedStock.id, selectedStock ) 
 
         setStockList((prev) =>
             prev.map((item) =>
@@ -69,7 +68,7 @@ const StockList = ({stockList}) => {
     
     return(
        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {stockList.map((item, value) => (
+            {getDisplayList.map((item, value) => (
                 <div
                     key={value}
                     className="container-flex justify-start w-full h-auto gap-1 mt-1 p-2 relative border border-gray-400"

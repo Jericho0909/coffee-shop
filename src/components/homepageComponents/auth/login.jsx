@@ -1,17 +1,15 @@
 import { useState, useEffect, useContext } from "react"
 import { useNavigate } from "react-router-dom";
+import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext";
 import AuthviewContext from "../../../context/autviewContext"
-import FetchDataContext from "../../../context/fetchdataContext"
 import ModalContext from "../../../context/modalContext";
 import ShowToastContext from "../../../context/showtoastContext";
-const Login = () =>{
+const Login = () => {
     const { setAuthView } = useContext(AuthviewContext)
     const { 
         adminList, 
-        setAdminsIsLoading, 
-        customerList, 
-        setCustomersIsLoading 
-    } = useContext(FetchDataContext)
+        customerList,
+    } = useContext(FirebaseFetchDataContext)
     const { toggleModal } = useContext(ModalContext)
     const { showToast } = useContext(ShowToastContext)
     const [ username, setUsername ] = useState("")
@@ -30,7 +28,6 @@ const Login = () =>{
         e.preventDefault()
 
         if(admin){
-            setAdminsIsLoading(true)
             toggleModal(false)
             navigate(`/Adminpage/${admin.id}/${admin.username}`)
         }
@@ -39,7 +36,6 @@ const Login = () =>{
                 showToast("error", "Your account is currently restricted because it did not follow our guidelines.", 5000)
                 return
             }
-            setCustomersIsLoading(true)
             toggleModal(false)
             navigate(`/Customerpage/${customer.id}/${customer.username}`);
         }

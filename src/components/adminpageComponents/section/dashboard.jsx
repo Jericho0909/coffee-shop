@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react"
-import FetchDataContext from "../../../context/fetchdataContext"
+import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext"
 import { useParams } from "react-router-dom"
 import DailySalesChart from "../charts/dailysaleschart"
 import WeeklySalesChart from "../charts/weeklysaleschart"
@@ -15,7 +15,7 @@ const Dashboard = () => {
         productList,
         orderList,
         stockList
-    } = useContext(FetchDataContext)
+    } = useContext(FirebaseFetchDataContext)
     const [ chart, setChart ] = useState("dailysales")
     const [ loading, setLoading ] = useState(true)
 

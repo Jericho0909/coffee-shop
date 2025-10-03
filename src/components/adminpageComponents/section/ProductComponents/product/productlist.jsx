@@ -1,21 +1,22 @@
 import { useContext } from "react"
-import FetchDataContext from "../../../../../context/fetchdataContext"
 import AddHighlightContext from "../../../../../context/addhighlightContext"
 import ItemCard from "../../../../itemcard"
-const ProductList = () => {
-    const { productList } = useContext(FetchDataContext)
+const ProductList = ({productList, itemList, hasResult}) => {
     const { containerRefs } = useContext(AddHighlightContext)
-
+    const getDisplayList = () => (itemList?.length > 0 
+        ? itemList 
+        : productList
+    )
     return (
         <>
-            {productList.length !== 0 
+            {(hasResult && productList.length !== 0)
                 ? (
                     <div 
                         className={`
                             grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 w-full 
                         `}
                     >
-                        {productList.map(item => (
+                        {getDisplayList().map(item => (
                             <div 
                                 key={item.id}
                                 ref={(el) => (containerRefs.current[item.id] = el)}

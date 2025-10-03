@@ -1,16 +1,18 @@
 import {  useContext, useState } from "react"
 import AuthviewContext from "../../../context/autviewContext"
-import FetchDataContext from "../../../context/fetchdataContext";
-import ActionContext from "../../../context/actionContext";
+import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext";
+import FirebaseActionContext from "../../../context/firebaseactionContext";
 import { toast } from "react-hot-toast";
 const Forgot = () =>{
     const { setAuthView } = useContext(AuthviewContext)
-    const { patchAction } = useContext(ActionContext)
-    const { adminList, setAdminList } = useContext(FetchDataContext)
+    const { updateAction } = useContext(FirebaseActionContext)
+    const { customerList, setCustomerList } = useContext(FirebaseFetchDataContext)
     const [ username, setUsername ] = useState("")
     const [ newPassword, setNewPassword] = useState("")
     const [ userFound, setUserFound ] = useState(true)
-    const [ showPasswordError, setShowPasswordError ] = useState(false);
+    const [ showPasswordError, setShowPasswordError ] = useState(false)
+
+    console.log(customerList)
 
     const Notify = () =>{
         toast.success(
@@ -55,14 +57,18 @@ const Forgot = () =>{
 
     const handleForgotPass = async (e) => {
         e.preventDefault()
-        const user = adminList.find(key => key.username === username)
+        const user = customerList.find(key => key.username === username)
 
         if(!checkUsernameExists(user) || !isPasswordValid(newPassword)) return
 
         Notify()
         const updatedPass = {...user, password: newPassword}
-        const response = await patchAction("admins", user.id, updatedPass)
-        setAdminList(prev => [...prev, response])
+        const response = await updateAction("customers", user.firebaseKey, updatedPass)
+        setCustomerList(prev =>
+            prev.map(item =>
+                item.id === response.id ? response : item
+            )
+        );
 
     }
 

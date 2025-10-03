@@ -1,68 +1,72 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import FetchDataContext from "../context/fetchdataContext";
-import axios from "axios";
-
+import { getDatabase, ref, query, orderByChild, equalTo, get } from "firebase/database";
 
 const useSearch = () => {
-    const { 
-        setOrderList, 
-        setCustomerList,
-        setEmployerList,
-        setProductList,
-        setStockList
-    } = useContext(FetchDataContext);
-    
+    const db = getDatabase();
     const [ key, setKey ] = useState("")
-    const [ url, setUrl ] = useState("")
+    const [ setter, setSetter ] = useState("")
+    const [ value, setValue ] = useState("")
     const [ , setSearchParams ] = useSearchParams()
-    const [ , setLoading ] = useState(false);
+    const [ , setLoading ] = useState(false)
+    const [ itemList, setItemList ] = useState([])
+    const [ hasResult, setHasResult ] = useState(true)
 
+    const getSearchResult = async (searchQuery) => {
+        const snapshot = await get(searchQuery);
+
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            const results = Object.keys(data).map(key => ({
+                firebaseKey: key,
+                ...data[key]
+            }))
+            setHasResult(true)
+            return results
+        } 
+        else {
+            setHasResult(false)
+            return []
+        }
+    }
     
-    const handleSearch = async (query) => {
-        if (!query){
+    const handleSearch = async (Query) => {
+        if (!Query){
+            setItemList([])
             resetSearchParams()
             return
         }
 
         try {
+            const listRef = ref(db, setter)
+            const searchQuery = query(listRef, orderByChild(value), equalTo(Query))
             setLoading(true)
-            setSearchParams({ q: query })
+            setSearchParams({ q: Query })
 
             if (key === "orderList"){
-                const response = await axios.get(!isNaN(query)
-                    ? `${url}?id=${query}`
-                    : `${url}?customerName=${query}`
-                )
-                setOrderList(response.data)
+                getSearchResult(searchQuery).then((response) => {
+                    setItemList(response)
+                })
             } 
             else if (key === "customerList"){
-                const response = await axios.get(!isNaN(query)
-                    ? `${url}?id=${query}`
-                    : `${url}?username=${query}`
-                )
-                setCustomerList(response.data)
+                getSearchResult(searchQuery).then((response) => {
+                    setItemList(response)
+                })
             }
             else if (key === "employerList"){
-                const response = await axios.get(!isNaN(query)
-                    ? `${url}?id=${query}`
-                    : `${url}?name=${query}`
-                )
-                setEmployerList(response.data)
+                getSearchResult(searchQuery).then((response) => {
+                    setItemList(response)
+                })
             }
             else if (key === "productList"){
-                const response = await axios.get(!isNaN(query)
-                    ? `${url}?id=${query}`
-                    : `${url}?name=${query}`
-                )
-                setProductList(response.data)
+                getSearchResult(searchQuery).then((response) => {
+                    setItemList(response)
+                })
             }
             else if (key === "stockList"){
-                const response = await axios.get(!isNaN(query)
-                    ? `${url}?id=${query}`
-                    : `${url}?name=${query}`
-                )
-                setStockList(response.data)
+                getSearchResult(searchQuery).then((response) => {
+                    setItemList(response)
+                })
             }
         } 
         catch(error) {
@@ -73,29 +77,10 @@ const useSearch = () => {
         }
     }
 
-    const Reset = async () => {
+    const Reset = () => {
         resetSearchParams()
-        try{
-            const response = await axios.get(url)
-
-            if(key === "orderList"){
-                setOrderList(response.data);
-            } 
-            else if (key === "customerList"){
-                setCustomerList(response.data)
-            } 
-            else if (key === "employerList"){
-                setEmployerList(response.data)
-            }
-            else if (key === "productList"){
-                setProductList(response.data)
-            }
-            else if (key === "stockList"){
-                setStockList(response.data)
-            }
-        }catch(error) {
-            console.error("Fetch error:", error)
-        }
+        setHasResult(true)
+        setItemList([])
     }
 
     const resetSearchParams = () => {
@@ -104,10 +89,14 @@ const useSearch = () => {
 
 
     return {
+        itemList,
+        setItemList,
         setKey,
-        setUrl,
+        setSetter,
+        setValue,
         handleSearch,
-        Reset
+        Reset,
+        hasResult
     }
 }
 

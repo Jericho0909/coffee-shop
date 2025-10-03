@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react"
-import FetchDataContext from "../../../context/fetchdataContext"
+import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext"
 import ContainerContext from "../../../context/containerContext"
 import SearchContext from "../../../context/searchContext"
 import SuggestionContext from "../../../context/suggestionContext"
@@ -7,10 +7,16 @@ import SectionHeder from "../../sectionheader"
 import Loading from "../../loading"
 import CustomerTable from "./CustomerCompoments/customer/customertable"
 const Customers = () => {
-    const { customerList } = useContext(FetchDataContext)
+    const { customerList } = useContext(FirebaseFetchDataContext)
     const { container } = useContext(ContainerContext)
     const [ loading, setLoading ] = useState(true)
-    const { setKey, setUrl } = useContext(SearchContext)
+    const { setKey,
+        setSetter,
+        setValue,
+        itemList,
+        setItemList,
+        hasResult
+    } = useContext(SearchContext)
     const { setKeyList } = useContext(SuggestionContext)
 
     useEffect(() => {
@@ -19,13 +25,19 @@ const Customers = () => {
         }, 2000)
 
         return () => clearTimeout(timer)
-    })
+    },[])
 
     useEffect(() => {
+        setItemList([])
         setKey("customerList")
-        setUrl("http://localhost:3500/customers")
+        setSetter("customers")
+        setValue("username")
         setKeyList("customerlist")
-    }, [setKey, setUrl, setKeyList])
+    }, [setKey, setSetter, setValue,  setKeyList, setItemList])
+
+    const getDisplayOnTable = () => itemList?.length > 0 
+        ? [...itemList].reverse() 
+        : [...customerList].reverse()
 
 
     if(loading){
@@ -40,14 +52,14 @@ const Customers = () => {
                 title="products" 
                 haveExtraBtn={false}
             />
-            {customerList.length !== 0 
+            {(hasResult && customerList.length !== 0) 
                 ? (
                     <div 
                         ref={container}
                         className="w-full flex-1"
                     >
                         <CustomerTable
-                            customerList={[...customerList].reverse()}
+                            getDisplayOnTable = {getDisplayOnTable()}
                         />
                     </div>
                 )

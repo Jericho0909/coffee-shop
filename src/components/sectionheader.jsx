@@ -88,7 +88,7 @@ const SectionHeder = ({title, haveExtraBtn, btnContent}) => {
                         <button
                             onClick={() => {
                                 Reset();
-                                setSearch("")
+                                setSearch("");
                                 setShowResetBTn(false)
                             }}
                         >

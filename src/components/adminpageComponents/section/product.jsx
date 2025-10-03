@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect} from "react"
 import SectionHeder from "../../sectionheader"
+import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext"
 import ModalContext from "../../../context/modalContext"
 import SearchContext from "../../../context/searchContext"
 import SuggestionContext from "../../../context/suggestionContext"
@@ -7,8 +8,15 @@ import ContainerContext from "../../../context/containerContext"
 import ProductList from "./ProductComponents/product/productlist"
 import Loading from "../../loading"
 const Products = () => {
+    const { productList } = useContext(FirebaseFetchDataContext)
     const { toggleModal, setModalName } = useContext(ModalContext)
-    const { setKey, setUrl } = useContext(SearchContext)
+    const { setKey,
+        setSetter,
+        setValue,
+        itemList,
+        setItemList,
+        hasResult
+    } = useContext(SearchContext)
     const { setKeyList } = useContext(SuggestionContext)
     const { container } = useContext(ContainerContext)
     const [ loading, setLoading ] = useState(true)
@@ -21,17 +29,13 @@ const Products = () => {
         return () => clearTimeout(timer)
     }, [])
 
-    useEffect(() => { 
-        setKey("productList") 
-        setUrl("http://localhost:3500/products") 
-        setKeyList("productlist") 
-    }, [setKey, setUrl, setKeyList])
-    
-    if(loading){
-        return(
-            <Loading/>
-        )
-    }
+    useEffect(() => {
+        setItemList([])
+        setKey("productList")
+        setSetter("products")
+        setValue("name")
+        setKeyList("productlist")
+    }, [setKey, setSetter, setValue, setKeyList, setItemList])
 
     const openModal = () => {
         setModalName("addProuct")
@@ -47,6 +51,11 @@ const Products = () => {
         )
     }
 
+    if(loading){
+        return(
+            <Loading/>
+        )
+    }
 
     return(
         <section className="container-flex justify-start items-center flex-col w-full p-2 mb-0 min-h-screen">
@@ -59,7 +68,11 @@ const Products = () => {
                 ref={container}
                 className="w-full flex-1"
             >
-                <ProductList/>
+                <ProductList 
+                    productList={productList}
+                    itemList ={itemList}
+                    hasResult ={hasResult}
+                />
             </div>
         </section>
     )

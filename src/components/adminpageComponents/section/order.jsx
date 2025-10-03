@@ -1,5 +1,5 @@
-import { useContext, useState, useEffect, useCallback } from "react"
-import FetchDataContext from "../../../context/fetchdataContext"
+import { useContext, useState, useEffect } from "react"
+import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext"
 import ContainerContext from "../../../context/containerContext"
 import SearchContext from "../../../context/searchContext"
 import SuggestionContext from "../../../context/suggestionContext"
@@ -8,13 +8,19 @@ import Loading from "../../loading"
 import OrderTable from "./OrderComponents/order/ordertable"
 
 const Orders = () => {
-    const { orderList } = useContext(FetchDataContext)
+    const { orderList } = useContext(FirebaseFetchDataContext)
     const { container } = useContext(ContainerContext)
-    const { setKey, setUrl } = useContext(SearchContext)
+    const { setKey,
+        setSetter,
+        setValue,
+        itemList,
+        setItemList,
+        hasResult
+    } = useContext(SearchContext)
     const { setKeyList } = useContext(SuggestionContext)
     const [ loading, setLoading ] = useState(true)
-    const [ orders, setOrders ] = useState([])
     const [ table, setTable ] = useState("currentOrders")
+    console.log(itemList)
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -25,36 +31,17 @@ const Orders = () => {
     },[])
 
     useEffect(() => {
+        setItemList([])
         setKey("orderList")
-        setUrl("http://localhost:3500/orders")
+        setSetter("orders")
+        setValue("customerName")
         setKeyList("orderlist")
-    }, [setKey, setUrl, setKeyList])
-
-
-    const checkOrders = useCallback((table) => {
-        const completedOrders = orderList.filter(order => order.status.includes("Completed") || order.status.includes("Cancelled"))
-
-        if (table === "ordersHistory") {
-            return completedOrders
-        }
-
-        const currentOrders = orderList.filter(order => !order.status.includes("Completed") && !order.status.includes("Cancelled"))
-
-        return currentOrders;
-    }, [orderList])
-
-    useEffect(() => {
-        const initalOrders = checkOrders()
-        setOrders(initalOrders)
-    },[checkOrders])
+    }, [setKey, setSetter, setValue, setKeyList, setItemList])
 
 
     const switchTableBTn = (table) => {
         setTable(table)
-        const ordersData = checkOrders(table)
-        setOrders(ordersData)
     }
-
 
     const SwitchTableBtn = () => {
         return(
@@ -94,14 +81,17 @@ const Orders = () => {
                 haveExtraBtn={true}
                 btnContent={<SwitchTableBtn/>}
             />
-            {orders.length !== 0 
+            {(hasResult && orderList.length !== 0) 
                 ? (
                     <div 
                         ref={container}
                         className="w-full flex-1"
                     >
                         <OrderTable 
-                            orders={[...orders].reverse()}
+                            table={table}
+                            orderList={orderList} 
+                            itemList={itemList}
+                            
                         />
                     </div>
                 )

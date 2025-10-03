@@ -27,123 +27,129 @@ import { ShowToastProvider } from "./context/showtoastContext";
 import { SearchProvider } from "./context/searchContext";
 import { SuggestionProvider } from "./context/suggestionContext";
 import { HandleKeyProvider } from "./context/handlekeyContext";
+import { FirebaseFetchDataProvider } from "./context/firebasefetchdataContext";
+import { FirebaseActionProvider } from "./context/firebaseactionContext";
 
 function App() {
   return (
     <div className="App">
       <FetchDataProvider>
         <ActionProvider>
-          <WindowSizeProvider>
-            <MediaQueryProvider>
-              <ModalProvider>
-                <AuthValidationProvider>
-                  <AuthviewProvider>
-                    <ShowToastProvider>
-                      <Routes>
-                        <Route 
-                          path="/" 
-                          element={
-                            <SectionProvider>
-                              <Homepage/>
-                            </SectionProvider>
-                          }
-                        />
-                        <Route 
-                          path="/Adminpage/:id/:username" element={
-                            <ImageProvider>
-                              <ContainerProvider>
-                                <AddHighlightProvider>
-                                    <SearchProvider>
-                                      <Adminpage/>
-                                    </SearchProvider>
-                                </AddHighlightProvider>
-                              </ContainerProvider>
-                            </ImageProvider>
-                          }
-                        >
-                          <Route index element={
-                          <Navigate to="Dashboard" replace />} />
-                          <Route path="Dashboard" element={<Dashboard/>}/>
-                          <Route path="Products" element={
-                            <SearchProvider>
-                              <SuggestionProvider>
-                                <HandleKeyProvider>
-                                  <Products/>
-                                </HandleKeyProvider>
-                              </SuggestionProvider>
-                            </SearchProvider>
-                          }/>
-                          <Route path="Customers" element={
-                            <SearchProvider>
-                              <SuggestionProvider>
-                                <HandleKeyProvider>
-                                  <Customers/>
-                                </HandleKeyProvider>
-                              </SuggestionProvider>
-                            </SearchProvider>
-                          }/>
-                          <Route path="Orders" element={
-                            <SearchProvider>
-                              <SuggestionProvider>
-                                <HandleKeyProvider>
-                                  <Orders/>
-                                </HandleKeyProvider>
-                              </SuggestionProvider>
-                            </SearchProvider>
-                          }/>
-                          <Route path="Employers" element={
-                            <SearchProvider>
-                              <SuggestionProvider>
-                                <HandleKeyProvider>
-                                  <Employers/>
-                                </HandleKeyProvider>
-                              </SuggestionProvider>
-                            </SearchProvider>
-                          }/>
-                          <Route path="Stocks" element={
-                            <SearchProvider>
-                              <SuggestionProvider>
-                                <HandleKeyProvider>
-                                  <Stocks/>
-                                </HandleKeyProvider>
-                              </SuggestionProvider>
-                            </SearchProvider>
-                          }/>
-                        </Route>
-                        <Route
-                          path="/Customerpage/:id/:username"
-                          element={
-                            <ImageProvider>
-                              <AddHighlightProvider>
-                                <CustomerOrderProvider>
-                                  <Customerpage/>
-                                </CustomerOrderProvider>
-                              </AddHighlightProvider>
-                            </ImageProvider>
-                          }
-                        >
-                          <Route index element={
-                            <Navigate to="Menu" replace />} 
-                          />
-                          <Route path="Menu" element={
-                            <SearchProvider>
-                              <SuggestionProvider>
-                                <HandleKeyProvider>
-                                  <Menu/>
-                                </HandleKeyProvider>
-                              </SuggestionProvider>
-                            </SearchProvider>
-                          }/>
-                          <Route path="CustomerOrders" element={<CustomerOrders/>}/>
-                          <Route path="Settings" element={<Settings/>}/>
-                        </Route>
-                      </Routes>
-                    </ShowToastProvider>
-                  </AuthviewProvider>
-                </AuthValidationProvider>
-              </ModalProvider>
-            </MediaQueryProvider>
-        </WindowSizeProvider>
+          <FirebaseFetchDataProvider>
+            <FirebaseActionProvider>
+              <WindowSizeProvider>
+                <MediaQueryProvider>
+                  <ModalProvider>
+                    <AuthValidationProvider>
+                      <AuthviewProvider>
+                        <ShowToastProvider>
+                          <Routes>
+                            <Route 
+                              path="/" 
+                              element={
+                                <SectionProvider>
+                                  <Homepage/>
+                                </SectionProvider>
+                              }
+                            />
+                            <Route 
+                              path="/Adminpage/:id/:username" element={
+                                <ImageProvider>
+                                  <ContainerProvider>
+                                    <AddHighlightProvider>
+                                        <SearchProvider>
+                                          <Adminpage/>
+                                        </SearchProvider>
+                                    </AddHighlightProvider>
+                                  </ContainerProvider>
+                                </ImageProvider>
+                              }
+                            >
+                              <Route index element={
+                              <Navigate to="Dashboard" replace />} />
+                              <Route path="Dashboard" element={<Dashboard/>}/>
+                              <Route path="Products" element={
+                                <SearchProvider>
+                                  <SuggestionProvider>
+                                    <HandleKeyProvider>
+                                      <Products/>
+                                    </HandleKeyProvider>
+                                  </SuggestionProvider>
+                                </SearchProvider>
+                              }/>
+                              <Route path="Customers" element={
+                                <SearchProvider>
+                                  <SuggestionProvider>
+                                    <HandleKeyProvider>
+                                      <Customers/>
+                                    </HandleKeyProvider>
+                                  </SuggestionProvider>
+                                </SearchProvider>
+                              }/>
+                              <Route path="Orders" element={
+                                <SearchProvider>
+                                  <SuggestionProvider>
+                                    <HandleKeyProvider>
+                                      <Orders/>
+                                    </HandleKeyProvider>
+                                  </SuggestionProvider>
+                                </SearchProvider>
+                              }/>
+                              <Route path="Employers" element={
+                                <SearchProvider>
+                                  <SuggestionProvider>
+                                    <HandleKeyProvider>
+                                      <Employers/>
+                                    </HandleKeyProvider>
+                                  </SuggestionProvider>
+                                </SearchProvider>
+                              }/>
+                              <Route path="Stocks" element={
+                                <SearchProvider>
+                                  <SuggestionProvider>
+                                    <HandleKeyProvider>
+                                      <Stocks/>
+                                    </HandleKeyProvider>
+                                  </SuggestionProvider>
+                                </SearchProvider>
+                              }/>
+                            </Route>
+                            <Route
+                              path="/Customerpage/:id/:username"
+                              element={
+                                <ImageProvider>
+                                  <AddHighlightProvider>
+                                    <CustomerOrderProvider>
+                                      <Customerpage/>
+                                    </CustomerOrderProvider>
+                                  </AddHighlightProvider>
+                                </ImageProvider>
+                              }
+                            >
+                              <Route index element={
+                                <Navigate to="Menu" replace />} 
+                              />
+                              <Route path="Menu" element={
+                                <SearchProvider>
+                                  <SuggestionProvider>
+                                    <HandleKeyProvider>
+                                      <Menu/>
+                                    </HandleKeyProvider>
+                                  </SuggestionProvider>
+                                </SearchProvider>
+                              }/>
+                              <Route path="CustomerOrders" element={<CustomerOrders/>}/>
+                              <Route path="Settings" element={<Settings/>}/>
+                            </Route>
+                          </Routes>
+                        </ShowToastProvider>
+                      </AuthviewProvider>
+                    </AuthValidationProvider>
+                  </ModalProvider>
+                </MediaQueryProvider>
+              </WindowSizeProvider>
+          </FirebaseActionProvider>
+          </FirebaseFetchDataProvider>
       </ActionProvider>
       </FetchDataProvider>
     </div>

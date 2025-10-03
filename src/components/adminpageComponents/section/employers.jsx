@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from "react"
-import FetchDataContext from "../../../context/fetchdataContext"
+import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext"
 import ModalContext from "../../../context/modalContext"
 import EmployerTable from "./EmployerComponents/Employer/employertable"
 import ContainerContext from "../../../context/containerContext"
@@ -8,11 +8,17 @@ import SuggestionContext from "../../../context/suggestionContext"
 import SectionHeder from "../../sectionheader"
 import Loading from "../../loading"
 const Employers = () => {
-    const { employerList } = useContext(FetchDataContext)
+    const { employerList } = useContext(FirebaseFetchDataContext)
     const { toggleModal, setModalName } = useContext(ModalContext)
     const { container } = useContext(ContainerContext)
     const [ loading, setLoading ] = useState(true)
-    const { setKey, setUrl } = useContext(SearchContext)
+    const { setKey,
+        setSetter,
+        setValue,
+        itemList,
+        setItemList,
+        hasResult
+    } = useContext(SearchContext)
     const { setKeyList } = useContext(SuggestionContext)
 
     useEffect(() => {
@@ -21,13 +27,15 @@ const Employers = () => {
         }, 2000)
 
         return () => clearTimeout(timer)
-    })
+    },[])
 
     useEffect(() => {
+        setItemList([])
         setKey("employerList")
-        setUrl("http://localhost:3500/employers")
+        setSetter("employers")
+        setValue("name")
         setKeyList("employerlist")
-    }, [setKey, setUrl, setKeyList])
+    }, [setKey, setSetter, setValue, setKeyList, setItemList])
 
     const openModal = () => {
         setModalName("addEmployer")
@@ -45,6 +53,10 @@ const Employers = () => {
         )
     }
 
+    const getDisplayOnTable = () => itemList?.length > 0 
+        ? [...itemList].reverse() 
+        : [...employerList].reverse()
+
     if(loading){
         return(
             <Loading/>
@@ -58,14 +70,14 @@ const Employers = () => {
                     haveExtraBtn={true}
                     btnContent={<AddEmployerBtn/>}
                 />
-                {employerList.length !== 0 
+                {(hasResult &&  employerList.length !== 0) 
                     ? (
                         <div 
                             ref={container}
                             className="w-full flex-1"
                         >
                             <EmployerTable
-                                employerList={employerList}
+                                getDisplayOnTable={getDisplayOnTable()}
                             />
                         </div>
                     )

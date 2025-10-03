@@ -1,6 +1,6 @@
 import { useContext, useState, useRef } from "react";
 import { useNavigate, NavLink, useParams } from "react-router-dom";
-import FetchDataContext from "../context/fetchdataContext";
+import FirebaseFetchDataContext from "../context/firebasefetchdataContext";
 import MediaQueryContext from "../context/mediaqueryContext"
 import WindowSizeContext from "../context/windowsizeContext";
 import ModalContext from "../context/modalContext";
@@ -19,7 +19,7 @@ import { AnimatePresence } from "framer-motion";
 const Customerpage = () => {
     const navigate = useNavigate()
     const { id, username } = useParams()
-    const { customerList, fetchData } = useContext(FetchDataContext)
+    const { customerList, fetchData } = useContext(FirebaseFetchDataContext)
     const { isMobile: mediaQueryMobile, 
         isMediumDevice, 
         isLargeDevice 
@@ -151,6 +151,7 @@ const Customerpage = () => {
     }
 
     if(!customer) return
+
 
     return (
         <div className="flex flex-col">

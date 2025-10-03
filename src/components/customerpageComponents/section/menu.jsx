@@ -1,4 +1,5 @@
 import { useEffect, useState, useContext, useRef } from "react"
+import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext"
 import CustomerorderContext from "../../../context/customerorderContext"
 import ModalContext from "../../../context/modalContext"
 import SearchContext from "../../../context/searchContext"
@@ -8,8 +9,15 @@ import CoffeeCupIcon from "../../../assets/icons/coffee-icon3.png"
 import Loading from "../../loading"
 import SectionHeder from "../../sectionheader"
 const Menu = () => {
+    const { productList } = useContext(FirebaseFetchDataContext)
     const { customerOrders } = useContext(CustomerorderContext)
-    const { setKey, setUrl } = useContext(SearchContext)
+    const { setKey,
+        setSetter,
+        setValue,
+        itemList,
+        setItemList,
+        hasResult
+    } = useContext(SearchContext)
     const { setKeyList } = useContext(SuggestionContext)
     const { setIsOpen, setModalName } = useContext(ModalContext)
     const [ loading, setLoading ] = useState(true)
@@ -23,11 +31,13 @@ const Menu = () => {
         return () => clearTimeout(timer)
     }, [])
 
-    useEffect(() => { 
-        setKey("productList") 
-        setUrl("http://localhost:3500/products") 
+    useEffect(() => {
+        setItemList([])
+        setKey("productList")
+        setSetter("products")
+        setValue("name")
         setKeyList("productlist") 
-    }, [setKey, setUrl, setKeyList])
+    }, [setKey, setSetter, setValue, setKeyList, setItemList])
 
     useEffect(() => {
         bounce()
@@ -82,7 +92,11 @@ const Menu = () => {
            <div 
                 className="w-full flex-1"
             >
-                <MenuList/>
+                <MenuList 
+                    productList={productList}
+                    itemList ={itemList}
+                    hasResult ={hasResult}
+                />
             </div>
         </section>
     )

@@ -1,6 +1,5 @@
 import { useEffect, useState, useContext, useRef } from "react"
 import { useNavigate, NavLink, useParams } from "react-router-dom";
-import FetchDataContext from "../context/fetchdataContext";
 import WindowSizeContext from "../context/windowsizeContext"
 import ModalContext from "../context/modalContext"
 import Header from "../components/header";
@@ -21,7 +20,6 @@ import { Bars3Icon } from "@heroicons/react/24/outline";
 import { AnimatePresence } from "framer-motion";
 const Adminpage = () => {
     const navigate = useNavigate()
-    const { fetchData } = useContext(FetchDataContext)
     const { isMobile } = useContext(WindowSizeContext)
     const { isOpen, modalName } = useContext(ModalContext)
     const { id, username } = useParams()
@@ -72,6 +70,7 @@ const Adminpage = () => {
 
     const saveSection = (section) => {
         sessionStorage.setItem("section", section)
+        
     }
 
     const Logout = () => {
@@ -128,9 +127,8 @@ const Adminpage = () => {
                         to={`/Adminpage/${id}/${username}/Products`} 
                         onClick={() => {
                             onToggleSidebar();
-                            setActive("productsection");
-                            saveSection("productsection");
-                            fetchData("http://localhost:3500/products", "productList")
+                            setActive("productsection")
+                            saveSection("productsection")
                         }}
                         className={`
                             relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
@@ -150,7 +148,7 @@ const Adminpage = () => {
                             onToggleSidebar();
                             setActive("ordersection");
                             saveSection("ordersection");
-                            fetchData("http://localhost:3500/orders", "orderList")
+                            
                         }}
                         className={`
                             relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
@@ -168,10 +166,10 @@ const Adminpage = () => {
                     <NavLink 
                         to={`/Adminpage/${id}/${username}/Customers`} 
                         onClick={() => {
-                            onToggleSidebar();
-                            setActive("customersection");
-                            saveSection("customersection");
-                            fetchData("http://localhost:3500/customers", "customerList")
+                            onToggleSidebar()
+                            setActive("customersection")
+                            saveSection("customersection")
+                            
                         }}
                         className={`
                             relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
@@ -189,10 +187,9 @@ const Adminpage = () => {
                     <NavLink 
                         to={`/Adminpage/${id}/${username}/Employers`} 
                         onClick={() => {
-                            onToggleSidebar();
-                            setActive("employersection");
-                            saveSection("employersection");
-                            fetchData("http://localhost:3500/employers", "employerList")
+                            onToggleSidebar()
+                            setActive("employersection")
+                            saveSection("employersection")
                         }}
                         className={`
                             relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
@@ -209,10 +206,10 @@ const Adminpage = () => {
                 <li>
                     <NavLink 
                         to={`/Adminpage/${id}/${username}/Stocks`} onClick={() => {
-                            onToggleSidebar();
+                            onToggleSidebar()
                             setActive("stocksection")
-                            saveSection("stocksection");
-                            fetchData("http://localhost:3500/stocks", "stockList")
+                            saveSection("stocksection")
+                            
                         }}
                         className={`
                             relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 

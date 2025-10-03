@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react"
-import FetchDataContext from "../../../context/fetchdataContext"
+import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext"
 import ModalContext from "../../../context/modalContext"
 import ContainerContext from "../../../context/containerContext"
 import SearchContext from "../../../context/searchContext"
@@ -8,10 +8,16 @@ import SectionHeder from "../../sectionheader"
 import Loading from "../../loading"
 import StockList from "./StockComponents/stocks/stockList"
 const Stocks = () => {
-    const { stockList } = useContext(FetchDataContext)
+    const { stockList } = useContext(FirebaseFetchDataContext)
     const { toggleModal, setModalName } = useContext(ModalContext)
     const { container } = useContext(ContainerContext)
-    const { setKey, setUrl } = useContext(SearchContext)
+    const { setKey,
+        setSetter,
+        setValue,
+        itemList,
+        setItemList,
+        hasResult
+    } = useContext(SearchContext)
     const { setKeyList } = useContext(SuggestionContext)
     const [ loading, setLoading ] = useState(true)
 
@@ -24,10 +30,12 @@ const Stocks = () => {
     }, [])
 
     useEffect(() => {
+        setItemList([])
         setKey("stockList")
-        setUrl("http://localhost:3500/stocks")
+        setSetter("stocks")
+        setValue("name")
         setKeyList("stocklist")
-    }, [setKey, setUrl, setKeyList])
+    }, [setKey, setSetter, setValue, setKeyList, setItemList])
 
     const openModal = () => {
         setModalName("addStock")
@@ -45,6 +53,10 @@ const Stocks = () => {
         )
     }
 
+    const getDisplayList = () => itemList?.length > 0 
+        ? itemList 
+        : stockList
+
     if(loading){
         return(
             <Loading/>
@@ -57,14 +69,14 @@ const Stocks = () => {
                 haveExtraBtn={true}
                 btnContent={<AddStockBtn/>}
             />
-            {stockList.length !== 0 
+            {(hasResult && stockList.length !== 0)
                 ? (
                     <div 
                         ref={container}
                         className="w-full flex-1"
                     >
                         <StockList
-                            stockList={stockList}
+                            getDisplayList = {getDisplayList()}
                         />
                     </div>
                 )

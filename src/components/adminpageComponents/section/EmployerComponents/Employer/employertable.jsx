@@ -2,7 +2,7 @@ import { useContext } from "react"
 import ModalContext from "../../../../../context/modalContext"
 import Table from "../../../../table"
 
-const EmployerTable = ({employerList}) => {
+const EmployerTable = ({getDisplayOnTable}) => {
     const { toggleModal, setModalName } = useContext(ModalContext)
     const tableHeader = [
         {label: "Id", key: "id"},
@@ -24,7 +24,7 @@ const EmployerTable = ({employerList}) => {
     return(
         <Table
             tableHeader = {tableHeader}
-            tableData= {employerList}
+            tableData= {getDisplayOnTable}
             openModal = {openModal}
         />
     )

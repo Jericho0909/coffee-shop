@@ -1,7 +1,7 @@
 import { useContext } from "react"
 import ModalContext from "../../../../../context/modalContext"
 import Table from "../../../../table"
-const OrderTable = ({orders}) => {
+const OrderTable = ({table, orderList, itemList}) => {
     const { toggleModal, setModalName } = useContext(ModalContext)
     const tableHeader = [
         {label: "OrderID", key: "id"},
@@ -11,7 +11,21 @@ const OrderTable = ({orders}) => {
         {label: "Status", key: "status"},
     ]
 
+    const data = () => (itemList?.length > 0 
+        ? itemList
+        : orderList
+    )
 
+    const filterOrders = () => {
+        if(table === "ordersHistory"){
+            const completedOrders = data().filter(order => order.status.includes("Completed") || order.status.includes("Cancelled"))
+            return completedOrders.reverse()
+        }
+        else{
+            const currentOrders = data().filter(order => !order.status.includes("Completed") && !order.status.includes("Cancelled"))
+            return currentOrders.reverse()
+        }
+    }
 
     const openModal = (row) => {
         sessionStorage.setItem("orderID", row.id)
@@ -22,7 +36,7 @@ const OrderTable = ({orders}) => {
     return (
         <Table
             tableHeader = {tableHeader}
-            tableData = {orders}
+            tableData = {filterOrders()}
             openModal = {openModal}
         />
     )

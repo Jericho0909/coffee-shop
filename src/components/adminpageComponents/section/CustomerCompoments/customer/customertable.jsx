@@ -1,7 +1,7 @@
 import { useContext } from "react"
 import ModalContext from "../../../../../context/modalContext"
 import Table from "../../../../table"
-const CustomerTable = ({customerList}) => {
+const CustomerTable = ({getDisplayOnTable}) => {
     const { toggleModal, setModalName } = useContext(ModalContext)
 
     const tableHeader = [
@@ -21,7 +21,7 @@ const CustomerTable = ({customerList}) => {
     return (
         <Table
             tableHeader = {tableHeader}
-            tableData = {customerList}
+            tableData = {getDisplayOnTable}
             openModal = {openModal}
         />
     )
