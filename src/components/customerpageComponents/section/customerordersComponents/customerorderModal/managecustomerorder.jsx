@@ -1,6 +1,6 @@
 import { useState, useContext } from "react"
-import FetchDataContext from "../../../../../context/fetchdataContext"
-import ActionContext from "../../../../../context/actionContext"
+import FirebaseFetchDataContext from "../../../../../context/firebasefetchdataContext"
+import FirebaseActionContext from "../../../../../context/firebaseactionContext"
 import Cart from "../../../../cart"
 import ModalContext from "../../../../../context/modalContext"
 import PaymentMethod from "../../../../paymentmethod"
@@ -8,74 +8,88 @@ import ShowToastContext from "../../../../../context/showtoastContext"
 import { v4 as uuidv4 } from "uuid";
 import { format } from "date-fns";
 const ManageCustomerOrder = ({customer}) => {
-    const { orderList, setCustomerList } = useContext(FetchDataContext)
-    const { patchAction } = useContext(ActionContext)
+    const { orderList } = useContext(FirebaseFetchDataContext)
+    const { pushAction, updateAction } = useContext(FirebaseActionContext)
     const { toggleModal } = useContext(ModalContext)
     const { showToast } = useContext(ShowToastContext)
-
     const [ customerOrder, ] = useState( JSON.parse(sessionStorage.getItem("customerOrder")))
     const [ method, setMethod ] = useState("")
     const [ isPaymentSelected, setIsPaymentSelected ] = useState(true)
     const [ isReOrder, setIsOrder ] = useState(false)
     const orderID = "ORD-" + uuidv4().slice(0, 5)
 
+    const removeFirebasekey = (arr) => {
+        const { firebaseKey, ...safeData } = arr
+        return safeData
+    }
+
+    console.log(customerOrder)
+
     const cancelOrder = async(id) => {
         const order = orderList.find(key => key.id === id)
+        const safeOrderData = removeFirebasekey(order)
         const updatedOrder = {
-            ...order,
+            ...safeOrderData,
             status: "Cancelled"
         }
 
-        await patchAction("orders", id, updatedOrder)
+        await updateAction("orders", order.firebaseKey, updatedOrder)
 
         const customerOrderList = customer.orders.filter(key => key.orderId !== id)
-        
         const updatedCustomerOrderList = {
             ...customer,
-            totalOrders: customer.totalOrders - 1,
-            totalSpent: customerOrderList.reduce((sum, o) => sum + o.total, 0),
             orders: customerOrderList
         }
 
-        const response = await patchAction("customers", customer.id, updatedCustomerOrderList)
-        setCustomerList(prev => (
-            prev.map(item => item.id === customer.id ? response : item)
-        ))
+        await updateAction("customers", customer.firebaseKey, updatedCustomerOrderList)
 
         showToast("success", "Your order has been successfully cancelled.", 2000)
         toggleModal()
     }
 
-    const reOrder = {
-        orderId: orderID,
-        orderDate: format(new Date(), "MM/dd/yy"),
-        status: "Pending",
-        paymentMethod: method,
-        items: [...customerOrder.items],
-        total: customerOrder.total
-     }
 
     const orderAgain = () => {
         setIsOrder(true)
     }
 
     const checkOut = async() => {
+        const reOrder = {
+            orderId: orderID,
+            orderDate: format(new Date(), "MM/dd/yy"),
+            status: "Pending",
+            paymentMethod: method,
+            items: [...customerOrder.items],
+            total: customerOrder.total
+        }
+
+        const { orderId, ...reOrderWithoutId } = reOrder;
+
+        const newOrder = {
+            id: reOrder.orderId,
+            customerName: customer.username,
+            customerContact: customer.phone,
+            customerLocation: customer.location,
+            customerEmail: customer.email,
+            ...reOrderWithoutId
+        }
+
         if(method === ""){
             showToast("error", "Please select payment method.", 2000)
             setIsPaymentSelected(false)
             return
         }
+
+        const safeCustomerData = removeFirebasekey(customer)
         
-        const newOrder = {
-            ...customer,
+        const customerNewOrder = {
+            ...safeCustomerData,
             orders: [...customer.orders, reOrder]
         }
 
-        const response = await patchAction("customers", customer.id, newOrder)
+        await pushAction("orders", newOrder)
 
-        setCustomerList(prev => (
-            prev.map(item => item.id === customer.id ? response : item)
-        ))
+        await updateAction("customers", customer.firebaseKey, customerNewOrder)
+
 
         showToast("success", "Order placed successfully", 2000)
     }
@@ -112,7 +126,7 @@ const ManageCustomerOrder = ({customer}) => {
                 </div>
             </div>
             <div className="container-flex justify-center w-full h-auto p-1 mt-[1rem]">
-                {customerOrder.status === "Pending" || customerOrder.status === "Processing"
+                {customerOrder.status === "Pending"
                     ? (
                         <button
                             className={`bg-red-500 text-white px-4 py-2 rounded shadow-md w-[35%] sm:w-[45%] h-auto

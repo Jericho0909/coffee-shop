@@ -48,7 +48,9 @@ function App() {
                               path="/" 
                               element={
                                 <SectionProvider>
-                                  <Homepage/>
+                                  <ImageProvider>
+                                    <Homepage/>
+                                  </ImageProvider>
                                 </SectionProvider>
                               }
                             />

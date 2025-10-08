@@ -1,15 +1,33 @@
-    import { useContext } from "react";
+    import { useContext, useEffect } from "react";
     import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
     import { faXmark } from '@fortawesome/free-solid-svg-icons';
     import { motion } from "framer-motion";
     import ModalContext from "../context/modalContext";
     import AuthviewContext from "../context/autviewContext";
     import AuthValidationContext from "../context/authvalidationContext";
+    import ImageContext from "../context/imageContext";
 
     const Modal = ({ children }) => {
-        const { toggleModal } = useContext(ModalContext);
-        const { setAuthView } = useContext(AuthviewContext);
-        const { clearValidationErrors } = useContext(AuthValidationContext);
+        const { isOpen, toggleModal } = useContext(ModalContext)
+        const { setAuthView } = useContext(AuthviewContext)
+        const { clearValidationErrors } = useContext(AuthValidationContext)
+        const { setPreview } = useContext(ImageContext)
+        
+        useEffect(() => {
+            if(isOpen) {
+                document.documentElement.style.overflow = "hidden"
+                document.body.style.overflow = "hidden"
+            } 
+            else{
+                document.documentElement.style.overflow = ""
+                document.body.style.overflow = ""
+            }
+
+            return () => {
+                document.documentElement.style.overflow = ""
+                document.body.style.overflow = ""
+            }
+        }, [isOpen])
 
         return (
             <motion.div
@@ -18,7 +36,7 @@
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="flex justify-center items-center fixed inset-0 z-[50] bg-transparent backdrop-blur-[5px] w-full h-full min-h-full"
+                className="flex justify-center items-center fixed inset-0 z-[50] bg-black/50 w-full h-full min-h-full"
                 >
                 <motion.div
                     initial={{ scale: 0.8, opacity: 0, y: -50 }}
@@ -33,9 +51,10 @@
                         toggleModal();
                         setAuthView("login");
                         clearValidationErrors();
+                        setPreview(null)
                     }}
                     >
-                    <FontAwesomeIcon icon={faXmark} className="w-6 h-6" />
+                        <FontAwesomeIcon icon={faXmark} className="w-6 h-6" />
                     </button>
                     {children}
                 </motion.div>

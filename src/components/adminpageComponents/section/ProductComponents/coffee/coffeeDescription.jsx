@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-const CoffeeDescription = ({formData, setFormData}) => {
+const CoffeeDescription = ({formData, setFormData, formType}) => {
     
     useEffect(() => {
         const storeDescription = sessionStorage.getItem("description")
@@ -11,7 +11,9 @@ const CoffeeDescription = ({formData, setFormData}) => {
 
     const handleSaved = (e) => {
         const value = e.target.value
-        sessionStorage.setItem("description", value)
+        if(formType === "AddProduct"){
+            sessionStorage.setItem("description", value)
+        }
     }
 
     return (

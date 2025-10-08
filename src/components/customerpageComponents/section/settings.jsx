@@ -1,11 +1,11 @@
 import { useContext, useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
-import FetchDataContext from "../../../context/fetchdataContext"
+import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext"
 import UserSettings from "./settingsComponents/settings/usersettings"
 import Loading from "../../loading"
 const Settings = () => {
     const { id } = useParams()
-    const { customerList } = useContext(FetchDataContext)
+    const { customerList } = useContext(FirebaseFetchDataContext)
     const [ loading, setLoading ] = useState(true)
 
     const user = customerList.find(key => key.id === id)

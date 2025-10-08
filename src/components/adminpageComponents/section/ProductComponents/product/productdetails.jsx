@@ -1,8 +1,8 @@
 import { useContext, useState } from "react"
-import FetchDataContext from "../../../../../context/fetchdataContext"
-
+import FirebaseFetchDataContext from "../../../../../context/firebasefetchdataContext"
+import NoImg from '../../../../../assets/images/no-img.jpeg'
 const ProductDetails = () => {
-    const { productList } = useContext(FetchDataContext)
+    const { productList } = useContext(FirebaseFetchDataContext)
     const [ id,] = useState(sessionStorage.getItem("productId"))
 
     const product = productList.find(item => item.id === id)
@@ -21,18 +21,21 @@ const ProductDetails = () => {
                     >
                         <img
                             className="w-full h-full object-fill border border-[#D4A373]"
-                            src={product.image}
+                            src={product.image !== "__empty__"
+                                ? product.image
+                                : NoImg
+                            }
                             alt={product.name}
                         />
                     </div>
                 </div>
                 <div className="container-flex justify-center">
-                    <p
+                    <span
                         className="font-nunito font-bold tracking-wide
                         text-[clamp(0.90rem,2vw,1rem)] " 
                     >
                         {product.name}
-                    </p>
+                    </span>
                 </div>
                 <div 
                     className="container-flex justify-start px-[2rem]"
@@ -157,13 +160,16 @@ const ProductDetails = () => {
                             </p>
                         </div>
                         <div className="flex flex-wrap gap-3">
-                            {product.flavors.map((flavor, index) => (
+                            {(product.flavors ?? []).map((flavor, index) => (
                                 <p
                                     key={index}
                                     className="font-opensans tracking-wide text-[clamp(0.78rem,2vw,1rem)]"
                                 >
                                     <span>
-                                        {flavor}
+                                        {flavor !== "__empty__"
+                                            ? flavor
+                                            : "None"
+                                        }
                                     </span>
                                 </p>
                             ))}
@@ -182,13 +188,16 @@ const ProductDetails = () => {
                             </p>
                         </div>
                         <div className="flex flex-wrap gap-3">
-                            {product.addOns.map((add, index) => (
+                            {(product.addOns ?? []).map((add, index) => (
                                 <p
                                     key={index}
                                     className="font-opensans tracking-wide text-[clamp(0.78rem,2vw,1rem)]"
                                 >
                                     <span>
-                                        {add}
+                                        {add !== "__empty__"
+                                            ? add
+                                            : "None"
+                                        }
                                     </span>
                                 </p>
                             ))}

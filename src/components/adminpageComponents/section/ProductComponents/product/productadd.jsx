@@ -1,6 +1,5 @@
 import { useContext, useState } from "react"
-import ActionContext from "../../../../../context/actionContext"
-import FetchDataContext from "../../../../../context/fetchdataContext"
+import FirebaseActionContext from "../../../../../context/firebaseactionContext"
 import ImageContext from "../../../../../context/imageContext"
 import ModalContext from "../../../../../context/modalContext"
 import ContainerContext from "../../../../../context/containerContext"
@@ -8,8 +7,7 @@ import Form from "./form"
 import { toast } from "react-hot-toast"
 import { v4 as uuidv4 } from 'uuid'
 const ProductAdd = () => {
-    const { addAction } = useContext(ActionContext)
-    const { setProductList } = useContext(FetchDataContext)
+    const { pushAction } = useContext(FirebaseActionContext)
     const { preview, setPreview } = useContext(ImageContext)
     const { toggleModal } = useContext(ModalContext)
     const { container } = useContext(ContainerContext)
@@ -37,8 +35,13 @@ const ProductAdd = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const response = await addAction("products", formData)
-        setProductList(prev => ([...prev, response]))
+        const safeData = {
+            ...formData,
+            image: formData.image ?? "__empty__",
+            flavors: formData.flavors.length > 0 ? formData.flavors : ["__empty__"],
+            addOns: formData.addOns.length > 0 ? formData.addOns : ["__empty__"],
+        }
+        await pushAction("products", safeData)
         sessionStorage.clear()
         setFormData(defaultFormData)
         setPreview(null)
@@ -78,8 +81,10 @@ const ProductAdd = () => {
                 add
             </h1>
             <Form
-                formData = {formData}
-                setFormData = {setFormData}
+                defaultFormData={defaultFormData}
+                formData={formData}
+                setFormData={setFormData}
+                formType={"AddProduct"}
             />
         </form>
     )

@@ -1,13 +1,11 @@
 import { useState, useContext, useEffect } from "react"
-import FetchDataContext from "../../../../../context/fetchdataContext";
-import ActionContext from "../../../../../context/actionContext";
+import FirebaseActionContext from "../../../../../context/firebaseactionContext";
 import ShowToastContext from "../../../../../context/showtoastContext";
 import ModalContext from "../../../../../context/modalContext";
 import { v4 as uuidv4 } from "uuid";
 import { format } from "date-fns";
 const AddStock = () => {
-    const { setStockList } = useContext(FetchDataContext)
-    const { addAction } = useContext(ActionContext)
+    const { pushAction } = useContext(FirebaseActionContext)
     const { showToast } = useContext(ShowToastContext)
     const { toggleModal } = useContext(ModalContext)
     const [ quantity, setQuantity ] = useState(1)
@@ -33,8 +31,7 @@ const AddStock = () => {
     const handleSubmit = async(e) => {
         e.preventDefault()
 
-        await addAction("stocks", stock)
-        setStockList(prev => [...prev, {...stock}])
+        await pushAction("stocks", stock)
         showToast("success", "New stock has been added successfully.", 2000)
         toggleModal()
     }

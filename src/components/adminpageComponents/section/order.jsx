@@ -20,7 +20,6 @@ const Orders = () => {
     const { setKeyList } = useContext(SuggestionContext)
     const [ loading, setLoading ] = useState(true)
     const [ table, setTable ] = useState("currentOrders")
-    console.log(itemList)
 
     useEffect(() => {
         const timer = setTimeout(() => {

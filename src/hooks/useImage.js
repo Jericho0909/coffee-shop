@@ -18,7 +18,6 @@ const useImage = () => {
 
             if (response.data.secure_url) {
                 const imageUrl = response.data.secure_url;
-                sessionStorage.setItem("image", JSON.stringify(imageUrl));
                 setPreview(imageUrl);
             }
         } catch (err) {

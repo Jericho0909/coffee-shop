@@ -1,8 +1,9 @@
+import { useContext } from "react";
 import { useParams } from "react-router-dom";
 import { useIntersectionObserver } from "@uidotdev/usehooks";
 import ModalContext from "../context/modalContext";
-import FetchDataContext from "../context/fetchdataContext";
-import ActionContext from "../context/actionContext";
+import FirebaseFetchDataContext from "../context/firebasefetchdataContext";
+import FirebaseActionContext from "../context/firebaseactionContext";
 import ImageContext from "../context/imageContext";
 import AddHighlightContext from "../context/addhighlightContext";
 import { motion } from "framer-motion";
@@ -10,15 +11,17 @@ import { SunSnow } from 'lucide-react';
 import { Coffee } from 'lucide-react';
 import { Snowflake } from 'lucide-react';
 import { PhilippinePeso } from 'lucide-react';
-import { useContext } from "react";
+import NoImg from '../../src/assets/images/no-img.jpeg'
+import ShowToastContext from "../context/showtoastContext";
 
 const ItemCard = ({ item }) => {
     const { username } = useParams()
     const { toggleModal, setModalName } = useContext(ModalContext)
-    const { deleteAction } = useContext(ActionContext)
-    const { productList, setProductList } = useContext(FetchDataContext)
+    const { removeAction } = useContext(FirebaseActionContext)
+    const { productList } = useContext(FirebaseFetchDataContext)
     const { setPreview  } = useContext(ImageContext)
     const { saveIndex } = useContext(AddHighlightContext)
+    const { showToast } = useContext(ShowToastContext)
     const [ref, entry] = useIntersectionObserver({
         threshold: 0.1,
         root: null,
@@ -86,8 +89,9 @@ const ItemCard = ({ item }) => {
         e.preventDefault()
         const updatedProductList = productList.filter(key => key.id !== item.id)
 
-        await deleteAction("products", item.id, updatedProductList)
-        setProductList(updatedProductList)
+        await removeAction("products", item.firebaseKey, updatedProductList)
+
+        showToast("success", "Successfully deleted the product.", 2000)
 
     }
 
@@ -123,11 +127,6 @@ const ItemCard = ({ item }) => {
                 </div>
             )
         }
-        else(
-            <p>
-                asdasd
-            </p>
-        )
     }
 
   return (
@@ -143,7 +142,10 @@ const ItemCard = ({ item }) => {
             {isVisible && (
                 <>
                     <motion.img
-                    src={item.image}
+                    src={item.image !== "__empty__"
+                        ? item.image
+                        : NoImg
+                    }
                     alt={item.name}
                     className={`
                         w-full h-full object-cover

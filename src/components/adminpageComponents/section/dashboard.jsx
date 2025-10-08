@@ -26,10 +26,13 @@ const Dashboard = () => {
         .filter(order => {
             const orderDate = order.orderDate.split("T")[0]
             return (
-            orderDate === today && 
-            (order.status === "Processing" || order.status === "Completed")
+                orderDate === today && 
+                (order.status === "Processing" || order.status === "Completed")
             )
     }).reduce((sum, order) => sum + order.total, 0)
+    const totalOrderToday = orderList.filter(order => order.orderDate.split("T")[0] === today).length
+
+
     const lowStock = stockList.filter(key => key.quantity <= 10)
 
     const colorTrophy = [
@@ -162,7 +165,7 @@ const Dashboard = () => {
                                 total products -------- {productList.length}
                             </li>
                             <li className="font-opensans font-bold text-[clamp(1.05rem,2vw,1.20rem)]">
-                                total orders today -------- {orderList.length}
+                                total orders today -------- { totalOrderToday}
                             </li>
                             <li className="font-opensans font-bold text-[clamp(1.05rem,2vw,1.20rem)]">
                                 total sales today -------- {totalSalesToday}

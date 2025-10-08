@@ -1,14 +1,14 @@
 import { useContext, useRef, useEffect } from "react"
 import ImageContext from "../../../../../context/imageContext"
 
-const CoffeeImage = ({formData, setFormData}) => {
+const CoffeeImage = ({formData, setFormData, formType}) => {
     const { preview, loadingimg, handleUpload } = useContext(ImageContext)
-    const fileInputRef = useRef(null);
+    const fileInputRef = useRef(null)
 
     useEffect(() => {
         setFormData(prev => ({
             ...prev,
-            image: JSON.parse(sessionStorage.getItem("image")) || prev.image
+            image: prev.image || preview 
         }));
     }, [preview, setFormData]);
     
@@ -35,9 +35,9 @@ const CoffeeImage = ({formData, setFormData}) => {
                         >
                             Uploading...
                         </p>
-                        ) : (preview && formData.image) || formData.image ? (
+                        ) : formData.image ? (
                             <img 
-                                src={preview || JSON.parse(sessionStorage.getItem("image")) || formData.image} alt="Preview" 
+                                src={ preview || formData.image} alt="Preview" 
                                 className="w-full h-full object-fill"
                             />
                         ) : (
@@ -53,7 +53,7 @@ const CoffeeImage = ({formData, setFormData}) => {
                     accept="image/*"
                     ref={fileInputRef}
                     className="hidden"
-                    onChange={handleUpload}
+                    onChange={(e) => handleUpload(e, formType)}
                 />  
             </div>
         </div>

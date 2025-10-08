@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-const CoffeeFlavors = ({formData, setFormData}) => {
+const CoffeeFlavors = ({formData, setFormData, formType}) => {
     const [ flavors, setFlavors ] = useState("")
     const flavorContainerRef = useRef(null);
     const inputFlavorRef = useRef(null);
@@ -14,11 +14,18 @@ const CoffeeFlavors = ({formData, setFormData}) => {
     }, [setFormData])
 
     const addFlavors = (flavor) => {
-        if (!flavor.trim()) return;
+        if(!flavor.trim()) return;
+
+        if (formData.flavors[0] === "__empty__"){
+            const removeEmpty = formData.flavors.filter((_, index) => index !== 0)
+            formData.flavors = removeEmpty
+        }
 
         const updatedFlavors = [...formData.flavors, flavor]
         setFormData({ ...formData, flavors: updatedFlavors })
-        sessionStorage.setItem("storeFlavors", JSON.stringify(updatedFlavors))
+        if(formType === "AddProduct"){
+            sessionStorage.setItem("storeFlavors", JSON.stringify(updatedFlavors))
+        }
         setFlavors("")
 
         setTimeout(() => {
@@ -31,8 +38,10 @@ const CoffeeFlavors = ({formData, setFormData}) => {
 
     const removeFlavors = (index) => {
         const updatedFlavors = formData.flavors.filter((_, i) => i !== index)
-        setFormData({ ...formData, flavors: updatedFlavors });
-        sessionStorage.setItem("storeFlavors", JSON.stringify(updatedFlavors))
+        setFormData({ ...formData, flavors: updatedFlavors })
+        if(formType === "AddProduct"){
+            sessionStorage.setItem("storeFlavors", JSON.stringify(updatedFlavors))
+        }
     }
 
     const handleFocus = () => {
@@ -55,26 +64,29 @@ const CoffeeFlavors = ({formData, setFormData}) => {
                     ref={flavorContainerRef}
                     className="grid grid-cols-3 gap-4 w-full max-h-full items-start overflow-y-scroll p-2 scrollbar-hide border border-black bg-white"
                 >
-                    {formData.flavors?.map((item, index) => (
-                        <div 
-                            key={index} 
-                            className="truncate p-1 border border-black relative"
-                        >
-                            <span className="truncate block pr-6">
-                                {item}
-                            </span> 
-                            <div 
-                                className="flex justify-center items-center absolute top-0 right-0 rounded-[50%] p-1 cursor-pointer"
-                                onClick={() => removeFlavors(index)}
-                            >
-                                <FontAwesomeIcon
-                                    icon={faXmark}
-                                    className="w-3 h-3 text-red-600"
-                                />
-                            </div>
-                        </div>
-                        
-                    ))}
+                    {formData.flavors[0] !== "__empty__" 
+                        && (
+                            formData.flavors?.map((item, index) => (
+                                <div 
+                                    key={index} 
+                                    className="truncate p-1 border border-black relative"
+                                >
+                                    <span className="truncate block pr-6">
+                                        {item}
+                                    </span> 
+                                    <div 
+                                        className="flex justify-center items-center absolute top-0 right-0 rounded-[50%] p-1 cursor-pointer"
+                                        onClick={() => removeFlavors(index)}
+                                    >
+                                        <FontAwesomeIcon
+                                            icon={faXmark}
+                                            className="w-3 h-3 text-red-600"
+                                        />
+                                    </div>
+                                </div>
+                            ))
+                        )
+                    }
                 </div>
                 <div className="flex justify-center items-center flex-col w-auto h-auto p-1 gap-1">
                     <label

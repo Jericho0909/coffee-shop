@@ -1,6 +1,6 @@
 import { useState, useContext } from "react"
-import FetchDataContext from "../../../../../context/fetchdataContext"
-import ActionContext from "../../../../../context/actionContext"
+import FirebaseFetchDataContext from "../../../../../context/firebasefetchdataContext"
+import FirebaseActionContext from "../../../../../context/firebaseactionContext"
 import ModalContext from "../../../../../context/modalContext"
 import ContainerContext from "../../../../../context/containerContext"
 import AddHighlightContext from "../../../../../context/addhighlightContext"
@@ -8,12 +8,10 @@ import ShowToastContext from "../../../../../context/showtoastContext"
 import { format } from "date-fns";
 const ManageOrder = () => {
     const { orderList, 
-        setOrderList, 
         customerList, 
-        setCustomerList,
         productList 
-    } = useContext(FetchDataContext)
-    const { patchAction } = useContext(ActionContext)
+    } = useContext(FirebaseFetchDataContext)
+    const { updateAction } = useContext(FirebaseActionContext)
     const { toggleModal } = useContext(ModalContext)
     const { container } = useContext(ContainerContext)
     const { highlightUpdated } = useContext(AddHighlightContext)
@@ -56,28 +54,40 @@ const ManageOrder = () => {
                     }}
                     className="w-auto"
                 />
-                <label htmlFor="pending" className="w-auto">
+                <label htmlFor={status.toLowerCase()} className="w-auto">
                     {status}
                 </label>
             </div>
         )
     }
 
+    const removeFirebasekey = (arr) => {
+        const { firebaseKey, ...safeData } = arr
+        return safeData
+    }
+
     const handleOrderCount = async () => {
         try {
-            for (let i = 0; i < selectedOrderItemIds.length; i++) {
-            const product = productList.find(key => key.id === selectedOrderItemIds[i])
+        const updatePromises = selectedOrderItemIds.map((id, i) => {
+            const product = productList.find(key => key.id === id);
 
             if (product) {
-                await patchAction("products", selectedOrderItemIds[i], {
-                ...product,
-                orderCount: product.orderCount + selectedOrderItemQuantity[i]
+            const safeProductData = removeFirebasekey(product)
+
+                return updateAction("products", product.firebaseKey, {
+                    ...safeProductData,
+                    orderCount: product.orderCount + selectedOrderItemQuantity[i]
                 })
             }
-            }
+
+            return null
+        }).filter(Boolean)
+        await Promise.all(updatePromises)
+
         } catch (error) {
-            console.error("Error updating products:", error)
+        console.error("Error updating products:", error)
         }
+
     }
 
     const handleUpdateStatus = async(newStatus) => {
@@ -85,21 +95,27 @@ const ManageOrder = () => {
             await handleOrderCount()
         }
 
-        const response = await patchAction("orders", selectedOrder.id, {...currentOrderData, status: newStatus})
-        setOrderList(prev => (
-            prev.map(order => order.id === selectedOrder.id ? response : order)
-        ))
-        
-        const customerOrderResponse = await patchAction("customers", currentCustomer.id, {
-            ...currentCustomer,
-            totalOrders: currentCustomer.totalOrders + 1,
-            totalSpent: customerTotalSpent,
-            lastOrderDate: format(new Date(), "MM/dd/yy"),
-            orders: currentCustomer.orders.map(item => item.orderId === currentOrderData.id ? {...item, status:newStatus} : item)
+        const safeCurrentOrderData = removeFirebasekey(currentOrderData)
+        const safeCurrentCustomerData = removeFirebasekey(currentCustomer)
+
+        await updateAction("orders", selectedOrder.firebaseKey, {...safeCurrentOrderData, status: newStatus})
+        await updateAction("customers", currentCustomer.firebaseKey, {
+            ...safeCurrentCustomerData,
+            totalOrders: newStatus === "Completed"
+                ? currentCustomer.totalOrders + 1
+                : currentCustomer.totalOrders,
+            totalSpent: newStatus === "Completed"
+                ? customerTotalSpent
+                : currentCustomer.totalSpent,
+            lastOrderDate: newStatus === "Completed"
+                ? format(new Date(), "MM/dd/yy")
+                : currentCustomer.lastOrderDate,
+            orders: currentCustomer.orders.map(item =>
+                item.orderId === currentOrderData.id
+                ? { ...item, status: newStatus }
+                : item
+            )
         })
-        setCustomerList(prev => (
-            prev.map(customer => customer.id === currentCustomer.id ? customerOrderResponse : customer)
-        ))
 
         toggleModal()
         setTimeout(() => {
@@ -112,6 +128,25 @@ const ManageOrder = () => {
         showToast("success", "Order status updated successfully!", 2000)
 
         highlightUpdated(selectedOrder.id)
+    }
+
+    const InfoRow = (title, value) => {
+        return(
+            <div className="container-flex justify-center px-[2rem] mb-[0.50rem]">
+                <p
+                    className="flex gap-1 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]"
+                >
+                    <span 
+                        className="text-[#D4A373] font-semibold"
+                    >
+                        {title}
+                    </span>
+                    <span>
+                        {value}
+                    </span>
+                </p>
+            </div>
+        )
     }
 
     return (
@@ -160,90 +195,14 @@ const ManageOrder = () => {
                 >
                     Order Details
                 </h1>
-                <div className="container-flex justify-center px-[2rem] mb-[0.50rem]">
-                    <p
-                        className="flex gap-1 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]"
-                    >
-                        <span 
-                            className="text-[#D4A373] font-semibold"
-                        >
-                            OrderId: 
-                        </span>
-                        <span>
-                            {currentOrderData.id}
-                        </span>
-                    </p>
-                </div>
-                <div className="container-flex justify-center px-[2rem] mb-[0.50rem]">
-                    <p
-                        className="flex gap-1 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]"
-                    >
-                        <span 
-                            className="text-[#D4A373] font-semibold"
-                        >
-                            Customer Name: 
-                        </span>
-                        <span>
-                            {currentOrderData.customerName}
-                        </span>
-                    </p>
-                </div>
-                <div className="container-flex justify-center px-[2rem] mb-[0.50rem]">
-                    <p
-                        className="flex gap-1 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]"
-                    >
-                        <span 
-                            className="text-[#D4A373] font-semibold"
-                        >
-                            Customer Number: 
-                        </span>
-                        <span>
-                            {currentOrderData.customerContact}
-                        </span>
-                    </p>
-                </div>
-                <div className="container-flex justify-center px-[2rem] mb-[0.50rem]">
-                    <p
-                        className="flex gap-1 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]"
-                    >
-                        <span 
-                            className="text-[#D4A373] font-semibold"
-                        >
-                            OrderDate: 
-                        </span>
-                        <span>
-                            {currentOrderData.orderDate}
-                        </span>
-                    </p>
-                </div>
-                <div className="container-flex justify-center px-[2rem]  mb-[0.50rem]">
-                    <p
-                       className="flex gap-1font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]"
-                    >
-                        <span 
-                            className="text-[#D4A373] font-semibold"
-                        >
-                            Payment Method: 
-                        </span>
-                        <span>
-                            {currentOrderData.paymentMethod}
-                        </span>
-                    </p>
-                </div>
-                <div className="container-flex justify-center px-[2rem] mb-[0.50rem]">
-                    <p
-                        className="flex gap-1 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]"
-                    >
-                        <span 
-                            className="text-[#D4A373] font-semibold"
-                        >
-                            Total: 
-                        </span>
-                        <span>
-                            {currentOrderData.total}
-                        </span>
-                    </p>
-                </div>
+                {InfoRow("OrderId:", currentOrderData.id)}
+                {InfoRow("Customer Name:", currentOrderData.customerName)}
+                {InfoRow("Customer Email:", currentOrderData.customerEmail)}
+                {InfoRow("Customer Number:", currentOrderData.customerContact)}
+                {InfoRow("Customer Location:", currentOrderData.customerLocation)}
+                {InfoRow("OrderDate:", currentOrderData.orderDate)}
+                {InfoRow("Payment Method:", currentOrderData.paymentMethod)}
+                {InfoRow("Total:", currentOrderData.total)}
             </div>
             <div className="flex justify-start items-start flex-col w-full min-h-[10rem] max-h-auto mb-[1rem] p-2">
                 <h1 className="w-full text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[1rem]"

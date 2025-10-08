@@ -1,6 +1,5 @@
 import { useContext, useState } from "react"
-import FetchDataContext from "../../../../../context/fetchdataContext";
-import ActionContext from "../../../../../context/actionContext";
+import FirebaseActionContext from "../../../../../context/firebaseactionContext";
 import CustomerorderContext from "../../../../../context/customerorderContext"
 import ModalContext from "../../../../../context/modalContext";
 import Cart from "../../../../cart";
@@ -10,8 +9,7 @@ import { PhilippinePeso } from 'lucide-react';
 import { v4 as uuidv4 } from "uuid";
 import { format } from "date-fns";
 const CustomerOrders = ({customer}) => {
-    const { setCustomerList } = useContext(FetchDataContext)
-    const { addAction, patchAction } = useContext(ActionContext)
+    const { pushAction, updateAction } = useContext(FirebaseActionContext)
     const { toggleModal } = useContext(ModalContext)
     const { customerOrders, 
         setCustomerOrders 
@@ -47,6 +45,8 @@ const CustomerOrders = ({customer}) => {
             id: orderID,
             customerName: customer.username,
             customerContact: customer.phone,
+            customerLocation: customer.location,
+            customerEmail: customer.email,
             items: customerOrders,
             orderDate: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
             status: "Pending",
@@ -55,20 +55,24 @@ const CustomerOrders = ({customer}) => {
 
         }
 
-        const updatedOrders = [...customer.orders, customerNewOrder]
+        if (customer.orders[0] === "__empty__"){
+            const removeEmpty = customer.orders.filter((_, index) => index !== 0)
+            customer.orders = removeEmpty
+        }
+
+        const {firebaseKey, ...safeData} = customer
+
+        const updatedOrders = [...safeData.orders, customerNewOrder]
 
         const updatedCustomerData = {
-            ...customer,
+            ...safeData,
             orders: updatedOrders
         }
 
-        const response = await patchAction("customers", customer.id, updatedCustomerData)
+        await updateAction("customers", customer.firebaseKey, updatedCustomerData)
         
-        await addAction("orders", newOrder)
+        await pushAction("orders", newOrder)
 
-        setCustomerList(prev => (
-            prev.map(order => order.id === customer.id ? response : order)
-        ))
         setCustomerOrders([])
         sessionStorage.removeItem("customerOrders");
         toggleModal()

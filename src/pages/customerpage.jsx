@@ -19,7 +19,7 @@ import { AnimatePresence } from "framer-motion";
 const Customerpage = () => {
     const navigate = useNavigate()
     const { id, username } = useParams()
-    const { customerList, fetchData } = useContext(FirebaseFetchDataContext)
+    const { customerList } = useContext(FirebaseFetchDataContext)
     const { isMobile: mediaQueryMobile, 
         isMediumDevice, 
         isLargeDevice 
@@ -61,7 +61,6 @@ const Customerpage = () => {
                             onToggleSidebar();
                             setActive("menusection")
                             saveSection("menusection")
-                            fetchData("http://localhost:3500/products", "productList")
                         }}
                         className={`
                             relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 

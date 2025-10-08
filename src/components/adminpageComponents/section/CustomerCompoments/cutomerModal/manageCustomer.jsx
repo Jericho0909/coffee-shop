@@ -1,14 +1,14 @@
 import { useState, useContext, useRef } from "react"
-import FetchDataContext from "../../../../../context/fetchdataContext"
-import ActionContext from "../../../../../context/actionContext"
+import FirebaseFetchDataContext from "../../../../../context/firebasefetchdataContext"
+import FirebaseActionContext from "../../../../../context/firebaseactionContext"
 import ModalContext from "../../../../../context/modalContext"
 import ContainerContext from "../../../../../context/containerContext"
 import AddHighlightContext from "../../../../../context/addhighlightContext"
 import { motion, AnimatePresence } from "framer-motion"
 import { toast } from "react-hot-toast"
 const ManageCustomer = () => {
-    const { customerList, setCustomerList } = useContext(FetchDataContext)
-    const { patchAction } = useContext(ActionContext)
+    const { customerList,  } = useContext(FirebaseFetchDataContext)
+    const { updateAction } = useContext(FirebaseActionContext)
     const { container } = useContext(ContainerContext)
     const { toggleModal } = useContext(ModalContext)
     const { highlightUpdated } = useContext(AddHighlightContext)
@@ -85,11 +85,8 @@ const ManageCustomer = () => {
     const updateCustomerStatus = async() => {
         const updatedStatus = {...selectedCustomer, accountStatus: ref.current.innerText}
 
-        const response = await patchAction("customers", selectedCustomer.id, updatedStatus)
+        await updateAction("customers", selectedCustomer.firebaseKey, updatedStatus)
 
-        setCustomerList(prev => (
-            prev.map(item => item.id === selectedCustomer.id ? response : item )
-        ))
         setStatus()
         toggleModal()
         setTimeout(() => {
@@ -245,7 +242,7 @@ const ManageCustomer = () => {
                 >
                     Orders Record
                 </h1>
-                {selectedCustomer.orders.length === 0
+                {selectedCustomer.orders[0] === "__empty__" 
                     ? (
                         <p>
                             No orders yet.

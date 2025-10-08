@@ -1,6 +1,6 @@
 import { useContext, useState } from "react"
-import FetchDataContext from "../../../../../context/fetchdataContext"
-import ActionContext from "../../../../../context/actionContext"
+import FirebaseFetchDataContext from "../../../../../context/firebasefetchdataContext"
+import FirebaseActionContext from "../../../../../context/firebaseactionContext"
 import ModalContext from "../../../../../context/modalContext"
 import AddHighlightContext from "../../../../../context/addhighlightContext"
 import EmployerForm from "../Employer/employerformjsx"
@@ -8,15 +8,13 @@ import toast from "react-hot-toast"
 const ManageEmployer = () => {
     const { 
         adminList,
-        setAdminList,
         employerList, 
-        setEmployerList
-    } = useContext(FetchDataContext)
+    } = useContext(FirebaseFetchDataContext)
     const { 
-        addAction, 
-        patchAction, 
-        deleteAction 
-    } = useContext(ActionContext)
+        pushAction, 
+        updateAction, 
+        removeAction 
+    } = useContext(FirebaseActionContext)
     const { toggleModal } = useContext(ModalContext)
     const { highlightUpdated } = useContext(AddHighlightContext)
     const [ employerID, ] = useState(sessionStorage.getItem("employerID"))
@@ -25,18 +23,16 @@ const ManageEmployer = () => {
     const selectedAdmin = adminList.find(key => 
         (key.name === employerName && key.role === "Admin")
     )
-
+ 
     const selectedEmployer = employerList.find(key => key.id === employerID)
-
-
 
     const [ editableAdminData, setEditableAdminData ] = useState(selectedAdmin)
     const [ editableEmployerData, setEditableEmployerData ] = useState(selectedEmployer)
 
     const removeAdminFromList = async() => {
         const updatedAdminList = adminList.filter(key => key.id !== selectedAdmin.id)
-        await deleteAction("admins", selectedAdmin.id, updatedAdminList)
-        setAdminList(updatedAdminList)
+        await removeAction("admins", selectedAdmin.firebaseKey
+        , updatedAdminList)
     }
 
     const handleSubmit = async (e) => {
@@ -45,7 +41,7 @@ const ManageEmployer = () => {
             removeAdminFromList()
         }
         else{
-             const checkAdminExist = adminList.find(key => key.id === employerID || key.name === employerName)
+            const checkAdminExist = adminList.find(key => key.id === employerID || key.name === employerName)
             if(editableEmployerData.role === "Admin" && !checkAdminExist){
                 const promotetoAdmin = {
                     id: editableEmployerData.id,
@@ -55,27 +51,18 @@ const ManageEmployer = () => {
                     role: "Admin",
                 }
 
-                const response = await addAction("admins", promotetoAdmin)
-                setAdminList(prev => (
-                    [...prev, response]
-                ))
+                await pushAction("admins", promotetoAdmin)
             }
             else{
                 if(selectedAdmin){
-                    const response = await patchAction("admins", selectedAdmin.id, editableAdminData)
-                    setAdminList(prev => (
-                    prev.map(item => item.id === selectedAdmin.id ? response : item)))
+                    await updateAction("admins", selectedAdmin.firebaseKey, editableAdminData)
                 }
             }
 
         }
 
-        const response = await patchAction("employers", selectedEmployer.id, editableEmployerData)
-        setEmployerList(prev =>
-            prev.map(item =>
-                item.id === selectedEmployer.id ? response : item
-            )
-        )
+        await updateAction("employers", selectedEmployer.firebaseKey
+        , editableEmployerData)
         toggleModal()
         toast.success(
             <div className="Notification">
@@ -102,8 +89,8 @@ const ManageEmployer = () => {
         }
 
         const updatedEmployerList = employerList.filter(key => key.id !== selectedEmployer.id)
-        await deleteAction("employers", selectedEmployer.id, updatedEmployerList)
-        setEmployerList(updatedEmployerList)
+        await removeAction("employers", selectedEmployer.firebaseKey
+        , updatedEmployerList)
         toggleModal()
         toast.success(
             <div className="Notification">

@@ -1,13 +1,11 @@
 import { useContext, useState } from "react";
-import FetchDataContext from "../../../../../context/fetchdataContext";
-import ActionContext from "../../../../../context/actionContext";
+import FirebaseActionContext from "../../../../../context/firebaseactionContext";
 import { CircleCheck } from 'lucide-react';
 import { CircleAlert } from 'lucide-react';
 import { TriangleAlert } from 'lucide-react';
 import { X } from 'lucide-react';
 const StockList = ({getDisplayList}) => {
-    const { setStockList } = useContext(FetchDataContext)
-    const { patchAction, deleteAction } = useContext(ActionContext)
+    const { updateAction, removeAction } = useContext(FirebaseActionContext)
     const [ editable, setEditable ] = useState(false);
     const [ selectedStock, setSelectedStock ] = useState()
 
@@ -19,17 +17,11 @@ const StockList = ({getDisplayList}) => {
 
     const removeStock = async(id) => {
         const updatedStockList = getDisplayList.filter(key => key.id !== id)
-        await deleteAction("stocks", id, [updatedStockList])
-        setStockList(updatedStockList)
+        await removeAction("stocks", id, [updatedStockList])
     }
 
     const handleSaveQuantity = async() => {
-        const response = await patchAction("stocks", selectedStock.id, selectedStock ) 
-
-        setStockList((prev) =>
-            prev.map((item) =>
-            item.id === selectedStock.id ? response : item)
-        )
+        await updateAction("stocks", selectedStock.firebaseKey, selectedStock ) 
     }
 
     const signIcon = (quantity) => {
@@ -113,7 +105,7 @@ const StockList = ({getDisplayList}) => {
                     </div>
                     <div className="absolute top-0 right-0 w-auto h-auto p-1 cursor-pointer">
                         <button
-                            onClick={() => removeStock(item.id)}
+                            onClick={() => removeStock(item.firebaseKey)}
                         >
                             <X 
                                 size={15}

@@ -1,12 +1,12 @@
 import { useState, useContext, useEffect } from "react"
-import FetchDataContext from "../../../../../context/fetchdataContext"
+import FirebaseFetchDataContext from "../../../../../context/firebasefetchdataContext";
 import CustomerorderContext from "../../../../../context/customerorderContext";
 import ModalContext from "../../../../../context/modalContext";
 import ShowToastContext from "../../../../../context/showtoastContext";
 import { PhilippinePeso } from 'lucide-react';
 
 const PlaceOrder = ({customer}) => {
-    const { productList } = useContext(FetchDataContext)
+    const { productList } = useContext(FirebaseFetchDataContext)
     const { customerOrders, setCustomerOrders } = useContext(CustomerorderContext)
     const { setIsOpen, setModalName } = useContext(ModalContext)
     const { showToast } = useContext(ShowToastContext)
@@ -160,7 +160,7 @@ const PlaceOrder = ({customer}) => {
                         flavors
                     </h1>
                     <div className="container-flex justify-around w-full h-auto p-1 gap-2 mb-[0.50rem]">
-                        {item.flavors.length === 0 
+                        {item.flavors[0] === "__empty__"
                             ? (
                                 <p className="font-nunito tracking-wide text-[clamp(0.85rem,2vw,1.05rem)] font-semibold">
                                     none
@@ -199,7 +199,7 @@ const PlaceOrder = ({customer}) => {
                         addons
                     </h1>
                     <div className="container-flex justify-around w-full h-auto p-1 gap-2 mb-[0.50rem]">
-                        {item.addOns.length === 0 
+                        {item.addOns[0] === "__empty__" 
                             ? (
                                 <p className="font-nunito tracking-wide text-[clamp(0.85rem,2vw,1.05rem)] font-semibold">none</p>
                             ) 

@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 
-const CoffeeAvailable = ({formData, setFormData}) => {
+const CoffeeAvailable = ({formData, setFormData, formType}) => {
 
     useEffect(() => {
         const storeAvailable = JSON.parse(sessionStorage.getItem("available"))
@@ -10,7 +10,9 @@ const CoffeeAvailable = ({formData, setFormData}) => {
     }, [setFormData])
 
     const handleSaved = (isAvailable) => {
-        sessionStorage.setItem("available", JSON.stringify(isAvailable));
+        if(formType === "AddProduct"){
+            sessionStorage.setItem("available", JSON.stringify(isAvailable))
+        }
     }
 
     return (

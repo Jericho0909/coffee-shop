@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
-import FetchDataContext from "../../../../../context/fetchdataContext";
-import ActionContext from "../../../../../context/actionContext";
+import FirebaseFetchDataContext from "../../../../../context/firebasefetchdataContext";
+import FirebaseActionContext from "../../../../../context/firebaseactionContext";
 import ModalContext from "../../../../../context/modalContext";
 import ContainerContext from "../../../../../context/containerContext";
 import AuthValidationContext from "../../../../../context/authvalidationContext";
@@ -9,10 +9,9 @@ import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-hot-toast";
 
 const AddEmployer = () => {
-    const { setEmployerList, adminList, setAdminList } =
-    useContext(FetchDataContext);
-    const { addAction } = useContext(ActionContext);
-    const { toggleModal } = useContext(ModalContext);
+    const { adminList} = useContext(FirebaseFetchDataContext)
+    const { pushAction } = useContext(FirebaseActionContext)
+    const { toggleModal } = useContext(ModalContext)
     const {isUsernameExists,
             isPasswordValid,
             setShowPasswordValidationError,
@@ -85,12 +84,11 @@ const AddEmployer = () => {
             const isAdminValid = await validateAdminData(adminData.username);
             if (!isAdminValid) return;
 
-            const newAdmin = await addAction("admins", adminData);
-            setAdminList((prev) => [...prev, newAdmin]);
+            await pushAction("admins", adminData);
         }
 
-        const newEmployer = await addAction("employers", employerData);
-        setEmployerList((prev) => [...prev, newEmployer]);
+        await pushAction("employers", employerData);
+
 
         setEmployerData(initialEmployerData);
         setAdminData(initialAdminData)

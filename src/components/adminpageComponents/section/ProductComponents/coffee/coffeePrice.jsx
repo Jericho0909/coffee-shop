@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-const CoffeePrice = ({formData, setFormData}) => {
+const CoffeePrice = ({formData, setFormData, formType}) => {
 
     useEffect(() => {
         const storedBasedP = JSON.parse(sessionStorage.getItem("basedPrice") || 0)
@@ -34,7 +34,9 @@ const CoffeePrice = ({formData, setFormData}) => {
 
     const handleSaved = (e, size) => {
         const value = Number(e.target.value)
-        sessionStorage.setItem(size, JSON.stringify(value))
+        if(formType === "AddProduct"){
+            sessionStorage.setItem(size, JSON.stringify(value))
+        }
     }
 
     return(

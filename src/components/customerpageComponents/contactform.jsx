@@ -1,31 +1,25 @@
-import { useParams } from "react-router-dom"
 import { useContext, useState } from "react"
-import FetchDataContext from "../../context/fetchdataContext"
-import ActionContext from "../../context/actionContext"
+import FirebaseActionContext from "../../context/firebaseactionContext";
 import ModalContext from "../../context/modalContext"
 import { toast } from "react-hot-toast";
 const ContactForm = ({customer}) => {
-    const { id } = useParams()
-    const { setCustomerList } = useContext(FetchDataContext)
-    const { patchAction } = useContext(ActionContext)
+    const { updateAction } = useContext(FirebaseActionContext)
     const { setIsOpen } = useContext(ModalContext)
     const [ phone, setPhone ] = useState("")
     const [ email, setEmail ] = useState("")
     const [ location, setLocation ] = useState("")
 
+    const { firebaseKey, ...customerWithoutFirebaseKey } = customer
+
     const handleSubmit = async(e) => {
         e.preventDefault();
         const updatedCustomerContact = {
-            ...customer,
+            ...customerWithoutFirebaseKey,
             phone: phone,
             email: email,
             location: location
         }
-        const response = await patchAction("customers", id, updatedCustomerContact)
-
-        setCustomerList(prev => (
-            prev.map(customer => customer.id === id ? response : customer )
-        ))
+        await updateAction("customers", customer.firebaseKey, updatedCustomerContact)
 
         toast.success(
             <div className="Notification">

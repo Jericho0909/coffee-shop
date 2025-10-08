@@ -1,17 +1,18 @@
 import { useContext, useState } from "react"
-import FetchDataContext from "../../../../../context/fetchdataContext"
-import ActionContext from "../../../../../context/actionContext"
+import FirebaseFetchDataContext from "../../../../../context/firebasefetchdataContext"
+import FirebaseActionContext from "../../../../../context/firebaseactionContext"
 import ModalContext from "../../../../../context/modalContext"
 import ImageContext from "../../../../../context/imageContext"
 import AddHighlightContext from "../../../../../context/addhighlightContext"
+import ShowToastContext from "../../../../../context/showtoastContext"
 import Form from "./form"
-import toast from "react-hot-toast"
 const ProductUpdate = () => {
-    const { productList, setProductList } = useContext(FetchDataContext)
-    const { patchAction } = useContext(ActionContext)
+    const { productList } = useContext(FirebaseFetchDataContext)
+    const { updateAction } = useContext(FirebaseActionContext)
     const { toggleModal } = useContext(ModalContext)
     const { setPreview  } = useContext(ImageContext)
     const { highlightUpdated } = useContext(AddHighlightContext)
+    const { showToast } = useContext(ShowToastContext)
     const [ id,] = useState(sessionStorage.getItem("productId"))
     const product = productList.find(item => item.id === id)
 
@@ -33,31 +34,17 @@ const ProductUpdate = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const response = await patchAction("products", product.id, formData)
-        setProductList(prev =>
-            prev.map(item =>
-                item.id === product.id ? response : item
-            )
-        )
+        const safeData = {
+            ...formData,
+            image: formData.image ?? "__empty__",
+            flavors: formData.flavors.length > 0 ? formData.flavors : ["__empty__"],
+            addOns: formData.addOns.length > 0 ? formData.addOns : ["__empty__"],
+        }
+        await updateAction("products", product.firebaseKey, safeData)
         setPreview(null)
         sessionStorage.clear()
         toggleModal()
-        toast.success(
-            <div className="Notification">
-                Product updated successfully!
-            </div>,
-            {
-                style: {
-                width: "100%",
-                backgroundColor: "white",
-                color: "#8c6244",
-                padding: "12px 16px",
-                borderRadius: "8px",
-                },
-                duration: 2000,
-            }
-        )
-
+        showToast("success", "Product updated successfully!", 2000)
         highlightUpdated(product.id)
     }
     
@@ -70,8 +57,10 @@ const ProductUpdate = () => {
                 update
             </h1>
             <Form
-                formData = {formData}
-                setFormData = {setFormData}
+                defaultFormData={selectedProduct}
+                formData={formData}
+                setFormData={setFormData}
+                formType={"Update"}
             />
         </form>
     )

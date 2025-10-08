@@ -1,13 +1,13 @@
 import { useState, useEffect, useContext } from "react"
 import { useParams } from "react-router-dom"
-import FetchDataContext from "../../../context/fetchdataContext"
+import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext"
 import MediaQueryContext from "../../../context/mediaqueryContext"
 import Loading from "../../loading"
 import CustomerOrderTable from "./customerordersComponents/customerorder/customerordertable"
 import CustomerOrderCards from "./customerordersComponents/customerorder/customerordercards"
 const CustomerOrders = () => {
     const { id } = useParams()
-    const { customerList } = useContext(FetchDataContext)
+    const { customerList } = useContext(FirebaseFetchDataContext)
     const { isMobile } = useContext(MediaQueryContext)
     const [ loading, setLoading ] = useState(true)
 

@@ -26,9 +26,9 @@ const useFirebaseAction = () => {
 
     const removeAction = async (endpoint, id) => {
         try {
-        const dbRef = ref(database, `${endpoint}/${id}`);
-        await remove(dbRef);
-        return id;
+            const dbRef = ref(database, `${endpoint}/${id}`);
+            await remove(dbRef)
+            return id
         } catch (err) {
         console.error("Delete failed:", err.message);
         return null;

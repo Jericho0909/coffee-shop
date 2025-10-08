@@ -49,7 +49,7 @@ const Customers = () => {
     return(
         <section className="container-flex justify-start items-center flex-col w-full p-2 mb-0 min-h-screen">
             <SectionHeder 
-                title="products" 
+                title="customers" 
                 haveExtraBtn={false}
             />
             {(hasResult && customerList.length !== 0) 

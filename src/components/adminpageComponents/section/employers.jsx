@@ -66,7 +66,7 @@ const Employers = () => {
     return(
         <section className="container-flex justify-start items-center flex-col w-full p-2 mb-0 min-h-screen">
             <SectionHeder 
-                    title="products" 
+                    title="employers" 
                     haveExtraBtn={true}
                     btnContent={<AddEmployerBtn/>}
                 />

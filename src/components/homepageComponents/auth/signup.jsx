@@ -9,7 +9,7 @@ import { format } from "date-fns";
 
 const Signup = () => {
     const { setAuthView } = useContext(AuthviewContext);
-    const { customerList, setCustomerList } = useContext(FirebaseFetchDataContext)
+    const { customerList,  } = useContext(FirebaseFetchDataContext)
     const { pushAction } = useContext(FirebaseActionContext)
     const { isUsernameExists,
             isPasswordValid,
@@ -36,7 +36,8 @@ const Signup = () => {
         totalOrders: 0,
         totalSpent: 0,
         lastOrderDate: "",
-        orders: []
+        orders: [],
+        accountStatus: "Active"
     };
 
     const [formData, setFormData] = useState(initialFormData);
@@ -79,10 +80,14 @@ const Signup = () => {
         const isUsernameOk = await checkUsernameAvailability(formData.username);
         const isPasswordOk = validatePassword(formData.password);
 
-        if (!isUsernameOk || !isPasswordOk) return;
+        if (!isUsernameOk || !isPasswordOk) return
 
-        const response = await pushAction("customers", formData);
-        setCustomerList((prev) => [...prev, response]);
+        const safeData = {
+            ...formData,
+            orders: formData.orders.length > 0 ? formData.orders : ["__empty__"]
+        }
+
+        await pushAction("customers", safeData)
 
         toast.success(
         <div className="Notification">Successfully signed up!</div>,
