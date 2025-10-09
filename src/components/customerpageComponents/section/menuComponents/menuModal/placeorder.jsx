@@ -77,14 +77,7 @@ const PlaceOrder = ({customer}) => {
             onSubmit={(e) => placeOrder(e)}
         >
             <div className="w-full p-2">
-                <div className="float-left mr-4 mb-[1rem]">
-                    <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-[8rem] h-[8rem] border border-black"
-                    loading="lazy"
-                    />
-                </div>
+               
                 <div className="w-full h-auto p-1">
                     <p className="font-nunito tracking-wide text-[clamp(0.85rem,2vw,1.05rem)] font-semibold"
                     >
