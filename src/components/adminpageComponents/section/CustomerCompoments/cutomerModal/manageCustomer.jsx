@@ -5,7 +5,8 @@ import ModalContext from "../../../../../context/modalContext"
 import ContainerContext from "../../../../../context/containerContext"
 import AddHighlightContext from "../../../../../context/addhighlightContext"
 import { motion, AnimatePresence } from "framer-motion"
-import { toast } from "react-hot-toast"
+import showToast from "../../../../../utils/showToast"
+import removeFireBaseKey from "../../../../../utils/removeFirebaseKey"
 const ManageCustomer = () => {
     const { customerList,  } = useContext(FirebaseFetchDataContext)
     const { updateAction } = useContext(FirebaseActionContext)
@@ -17,23 +18,24 @@ const ManageCustomer = () => {
     const [ orderID, setOrderId ] = useState("")
     const containerRef = useRef(null)
     const ref = useRef(null)
+    const { Toast } = showToast()
 
     const selectedCustomer = customerList.find(key => key.id === customerId)
 
     const [ status, setStatus ] = useState(selectedCustomer.accountStatus)
 
     const handleScrollToTop = () => {
-    if (containerRef.current) {
+        if (containerRef.current) {
 
-        const timer = setTimeout(() => {
-            containerRef.current.scrollTo({
-            top: 0,
-            behavior: "smooth",
-        })
-        },100)
-        return () => clearTimeout(timer)
+            const timer = setTimeout(() => {
+                containerRef.current.scrollTo({
+                top: 0,
+                behavior: "smooth",
+            })
+            },100)
+            return () => clearTimeout(timer)
+        }
     }
-  };
 
     const orderDetails = (id) => {
         const selectedProduct = selectedCustomer.orders.find(key => key.orderId === id)
@@ -83,7 +85,12 @@ const ManageCustomer = () => {
     }
 
     const updateCustomerStatus = async() => {
-        const updatedStatus = {...selectedCustomer, accountStatus: ref.current.innerText}
+        const safeCustomerData = removeFireBaseKey(selectedCustomer)
+
+        const updatedStatus = {
+            ...safeCustomerData, 
+            accountStatus: ref.current.innerText
+        }
 
         await updateAction("customers", selectedCustomer.firebaseKey, updatedStatus)
 
@@ -94,26 +101,32 @@ const ManageCustomer = () => {
             if (customersContainer) {
                 customersContainer.scrollTop = customersContainer.scrollHeight;
             }
-        },0);
+        },0)
 
-        toast.success(
-            <div className="Notification">
-                Successfully updated the Status!
-            </div>,
-            {
-                style: {
-                    width: '100%',
-                    backgroundColor: 'white',
-                    color: '#8c6244',
-                    padding: '12px 16px',
-                    borderRadius: '8px',
-                },
-                duration: 2000,
-            }
-        )
+        Toast("success", "Successfully updated the Status!", 2000)
 
         highlightUpdated(selectedCustomer.id)
     }
+
+    const infoRow = (title, value) => {
+        return(
+            <div className="container-flex justify-start px-[2rem] mb-[0.50rem]">
+                <p
+                    className="flex gap-1 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]"
+                >
+                    <span 
+                        className="text-[#D4A373] font-semibold"
+                    >
+                        {title}
+                    </span>
+                    <span>
+                        {value}
+                    </span>
+                </p>
+            </div>
+        )
+    }
+
     return(
         <div 
             ref={containerRef}
@@ -124,118 +137,14 @@ const ManageCustomer = () => {
                 >
                     Customer Details
                 </h1>
-                <div className="container-flex justify-start px-[2rem] mb-[0.50rem]">
-                    <p
-                        className="flex gap-1 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]"
-                    >
-                        <span 
-                            className="text-[#D4A373] font-semibold"
-                        >
-                            Name:
-                        </span>
-                        <span>
-                            {selectedCustomer.username}
-                        </span>
-                    </p>
-                </div>
-                <div className="container-flex justify-start px-[2rem] mb-[0.50rem]">
-                    <p
-                        className="flex gap-1 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]"
-                    >
-                        <span 
-                            className="text-[#D4A373] font-semibold"
-                        >
-                            Contact:
-                        </span>
-                        <span>
-                            {selectedCustomer.phone}
-                        </span>
-                    </p>
-                </div>
-                <div className="container-flex justify-start px-[2rem] mb-[0.50rem]">
-                    <p
-                        className="flex gap-1 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]"
-                    >
-                        <span 
-                            className="text-[#D4A373] font-semibold"
-                        >
-                            Email:
-                        </span>
-                        <span>
-                            {selectedCustomer.email}
-                        </span>
-                    </p>
-                </div>
-                <div className="container-flex justify-start px-[2rem] mb-[0.50rem]">
-                    <p
-                        className="flex gap-1 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]"
-                    >
-                        <span 
-                            className="text-[#D4A373] font-semibold"
-                        >
-                            Location:
-                        </span>
-                        <span>
-                            {selectedCustomer.location}
-                        </span>
-                    </p>
-                </div>
-                <div className="container-flex justify-start px-[2rem] mb-[0.50rem]">
-                    <p
-                        className="flex gap-1 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]"
-                    >
-                        <span 
-                            className="text-[#D4A373] font-semibold"
-                        >
-                            Date Joined:
-                        </span>
-                        <span>
-                            {selectedCustomer.dateJoined}
-                        </span>
-                    </p>
-                </div>
-                <div className="container-flex justify-start px-[2rem] mb-[0.50rem]">
-                    <p
-                        className="flex gap-1 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]"
-                    >
-                        <span 
-                            className="text-[#D4A373] font-semibold"
-                        >
-                            Total Orders:
-                        </span>
-                        <span>
-                            {selectedCustomer.totalOrders}
-                        </span>
-                    </p>
-                </div>
-                <div className="container-flex justify-start px-[2rem] mb-[0.50rem]">
-                    <p
-                        className="flex gap-1 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]"
-                    >
-                        <span 
-                            className="text-[#D4A373] font-semibold"
-                        >
-                            Total Spent:
-                        </span>
-                        <span>
-                            {selectedCustomer.totalSpent}
-                        </span>
-                    </p>
-                </div>
-                <div className="container-flex justify-start px-[2rem] mb-[0.50rem]">
-                    <p
-                        className="flex gap-1 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]"
-                    >
-                        <span 
-                            className="text-[#D4A373] font-semibold"
-                        >
-                            Last Order Date: 
-                        </span>
-                        <span>
-                            {selectedCustomer.lastOrderDate}
-                        </span>
-                    </p>
-                </div>
+                {infoRow("Name:", selectedCustomer.username)}
+                {infoRow("Contact:", selectedCustomer.phone)}
+                {infoRow("Email:", selectedCustomer.email)}
+                {infoRow("Location:", selectedCustomer.location)}
+                {infoRow("Date Joined", selectedCustomer.dateJoined)}
+                {infoRow("Total Orders:", selectedCustomer.totalOrders)}
+                {infoRow("Total Spent:", selectedCustomer.totalSpent)}
+                {infoRow("Last Order Date:", selectedCustomer.lastOrderDate)}
             </div>
             <div className="w-full text-center my-[2rem]">
                 <h1 className="w-full text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[1rem]"
@@ -319,7 +228,7 @@ const ManageCustomer = () => {
                 orderDetails(orderID)
             )}
             </AnimatePresence>
-            <div>
+            <div className="w-full text-center my-[2rem]">
                 <h1 className="w-full text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[1rem]"
                 >
                     Customer Status

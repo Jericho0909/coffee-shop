@@ -3,8 +3,8 @@ import AuthviewContext from "../../../context/autviewContext";
 import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext";
 import FirebaseActionContext from "../../../context/firebaseactionContext";
 import AuthValidationContext from "../../../context/authvalidationContext";
+import showToast from "../../../utils/showToast";
 import { v4 as uuidv4 } from "uuid";
-import { toast } from "react-hot-toast";
 import { format } from "date-fns";
 
 const Signup = () => {
@@ -18,7 +18,7 @@ const Signup = () => {
             isUsernameAvailable,
             setIsUsernameAvailable
     } = useContext(AuthValidationContext)
-
+    const { Toast } = showToast()
     const [ confirmPassword, setConfirmPassword ] = useState("");
     const [ isPasswordMismatch, setIsPasswordMismatch ] = useState(false)
     const [ date,  ] = useState(new Date())
@@ -40,7 +40,7 @@ const Signup = () => {
         accountStatus: "Active"
     };
 
-    const [formData, setFormData] = useState(initialFormData);
+    const [ formData, setFormData ] = useState(initialFormData);
 
     const checkUsernameAvailability = async (username) => {
         const usernameExists = await isUsernameExists(username, customerList);
@@ -88,20 +88,9 @@ const Signup = () => {
         }
 
         await pushAction("customers", safeData)
-
-        toast.success(
-        <div className="Notification">Successfully signed up!</div>,
-        {
-            style: {
-            width: "100%",
-            backgroundColor: "white",
-            color: "#8c6244",
-            padding: "12px 16px",
-            borderRadius: "8px",
-            },
-            duration: 2000,
-        }
-        );
+        setFormData(initialFormData)
+        setConfirmPassword("")
+        Toast("success", "Successfully signed up", 2000)
     };
 
   return (

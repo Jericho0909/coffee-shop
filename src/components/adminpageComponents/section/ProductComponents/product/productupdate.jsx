@@ -4,15 +4,16 @@ import FirebaseActionContext from "../../../../../context/firebaseactionContext"
 import ModalContext from "../../../../../context/modalContext"
 import ImageContext from "../../../../../context/imageContext"
 import AddHighlightContext from "../../../../../context/addhighlightContext"
-import ShowToastContext from "../../../../../context/showtoastContext"
 import Form from "./form"
+import showToast from "../../../../../utils/showToast"
+
 const ProductUpdate = () => {
     const { productList } = useContext(FirebaseFetchDataContext)
     const { updateAction } = useContext(FirebaseActionContext)
     const { toggleModal } = useContext(ModalContext)
     const { setPreview  } = useContext(ImageContext)
     const { highlightUpdated } = useContext(AddHighlightContext)
-    const { showToast } = useContext(ShowToastContext)
+    const { Toast } = showToast()
     const [ id,] = useState(sessionStorage.getItem("productId"))
     const product = productList.find(item => item.id === id)
 
@@ -44,7 +45,7 @@ const ProductUpdate = () => {
         setPreview(null)
         sessionStorage.clear()
         toggleModal()
-        showToast("success", "Product updated successfully!", 2000)
+        Toast("success", "Product updated successfully!", 2000)
         highlightUpdated(product.id)
     }
     

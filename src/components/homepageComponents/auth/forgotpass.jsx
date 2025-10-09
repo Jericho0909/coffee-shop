@@ -2,35 +2,17 @@ import {  useContext, useState } from "react"
 import AuthviewContext from "../../../context/autviewContext"
 import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext";
 import FirebaseActionContext from "../../../context/firebaseactionContext";
-import { toast } from "react-hot-toast";
+import showToast from "../../../utils/showToast";
+import removeFireBaseKey from "../../../utils/removeFirebaseKey";
 const Forgot = () =>{
     const { setAuthView } = useContext(AuthviewContext)
     const { updateAction } = useContext(FirebaseActionContext)
-    const { customerList, setCustomerList } = useContext(FirebaseFetchDataContext)
+    const { customerList } = useContext(FirebaseFetchDataContext)
+    const { Toast } = showToast()
     const [ username, setUsername ] = useState("")
     const [ newPassword, setNewPassword] = useState("")
     const [ userFound, setUserFound ] = useState(true)
     const [ showPasswordError, setShowPasswordError ] = useState(false)
-
-    console.log(customerList)
-
-    const Notify = () =>{
-        toast.success(
-            <div className="Notification">
-                Password updated successfully!
-            </div>,
-            {
-                style: {
-                    width: '100%',
-                    backgroundColor: 'white',
-                    color: '#8c6244',
-                    padding: '12px 16px',
-                    borderRadius: '8px',
-                },
-                duration: 2000,
-            }
-        );
-    }
     
     const checkUsernameExists = (user) => {
         if(user){
@@ -61,15 +43,11 @@ const Forgot = () =>{
 
         if(!checkUsernameExists(user) || !isPasswordValid(newPassword)) return
 
-        Notify()
-        const updatedPass = {...user, password: newPassword}
-        const response = await updateAction("customers", user.firebaseKey, updatedPass)
-        setCustomerList(prev =>
-            prev.map(item =>
-                item.id === response.id ? response : item
-            )
-        );
+        const safeUserData = removeFireBaseKey(user)
 
+        const updatedPass = {...safeUserData, password: newPassword}
+        await updateAction("customers", user.firebaseKey, updatedPass)
+        Toast("success", "Password updated successfully!", 2000)
     }
 
     return(

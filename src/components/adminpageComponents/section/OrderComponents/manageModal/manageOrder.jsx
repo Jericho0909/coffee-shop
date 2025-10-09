@@ -4,8 +4,9 @@ import FirebaseActionContext from "../../../../../context/firebaseactionContext"
 import ModalContext from "../../../../../context/modalContext"
 import ContainerContext from "../../../../../context/containerContext"
 import AddHighlightContext from "../../../../../context/addhighlightContext"
-import ShowToastContext from "../../../../../context/showtoastContext"
 import { format } from "date-fns";
+import showToast from "../../../../../utils/showToast"
+import removeFireBaseKey from "../../../../../utils/removeFirebaseKey"
 const ManageOrder = () => {
     const { orderList, 
         customerList, 
@@ -15,9 +16,9 @@ const ManageOrder = () => {
     const { toggleModal } = useContext(ModalContext)
     const { container } = useContext(ContainerContext)
     const { highlightUpdated } = useContext(AddHighlightContext)
-    const { showToast } = useContext(ShowToastContext)
     const [ orderId, ] = useState(sessionStorage.getItem("orderID"))
     const [ openItemId, setOpenItemId ] = useState(null)
+    const { Toast } = showToast()
 
     const selectedOrder = orderList.find(key => key.id === orderId)
 
@@ -61,10 +62,6 @@ const ManageOrder = () => {
         )
     }
 
-    const removeFirebasekey = (arr) => {
-        const { firebaseKey, ...safeData } = arr
-        return safeData
-    }
 
     const handleOrderCount = async () => {
         try {
@@ -72,7 +69,7 @@ const ManageOrder = () => {
             const product = productList.find(key => key.id === id);
 
             if (product) {
-            const safeProductData = removeFirebasekey(product)
+            const safeProductData = removeFireBaseKey(product)
 
                 return updateAction("products", product.firebaseKey, {
                     ...safeProductData,
@@ -95,8 +92,8 @@ const ManageOrder = () => {
             await handleOrderCount()
         }
 
-        const safeCurrentOrderData = removeFirebasekey(currentOrderData)
-        const safeCurrentCustomerData = removeFirebasekey(currentCustomer)
+        const safeCurrentOrderData = removeFireBaseKey(currentOrderData)
+        const safeCurrentCustomerData = removeFireBaseKey(currentCustomer)
 
         await updateAction("orders", selectedOrder.firebaseKey, {...safeCurrentOrderData, status: newStatus})
         await updateAction("customers", currentCustomer.firebaseKey, {
@@ -125,7 +122,7 @@ const ManageOrder = () => {
             }
         },0)
 
-        showToast("success", "Order status updated successfully!", 2000)
+        Toast("success", "Order status updated successfully!", 2000)
 
         highlightUpdated(selectedOrder.id)
     }

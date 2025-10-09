@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext";
 import AuthviewContext from "../../../context/autviewContext"
 import ModalContext from "../../../context/modalContext";
-import ShowToastContext from "../../../context/showtoastContext";
+import showToast from "../../../utils/showToast";
 const Login = () => {
     const { setAuthView } = useContext(AuthviewContext)
     const { 
@@ -11,10 +11,10 @@ const Login = () => {
         customerList,
     } = useContext(FirebaseFetchDataContext)
     const { toggleModal } = useContext(ModalContext)
-    const { showToast } = useContext(ShowToastContext)
     const [ username, setUsername ] = useState("")
     const [ password, setPassword ] = useState("")
     const [ loginError, setLoginError ] = useState(false)
+    const { Toast } = showToast()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -33,7 +33,7 @@ const Login = () => {
         }
         else if(customer){
             if(customer.accountStatus === "Block"){
-                showToast("error", "Your account is currently restricted because it did not follow our guidelines.", 5000)
+                Toast("error", "Your account is currently restricted because it did not follow our guidelines.", 5000)
                 return
             }
             toggleModal(false)

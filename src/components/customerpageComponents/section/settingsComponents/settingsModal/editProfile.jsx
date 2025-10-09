@@ -1,12 +1,13 @@
 import { useState, useContext } from "react"
-import FetchDataContext from "../../../../../context/fetchdataContext"
-import ActionContext from "../../../../../context/actionContext"
+import FirebaseFetchDataContext from "../../../../../context/firebasefetchdataContext"
+import FirebaseActionContext from "../../../../../context/firebaseactionContext"
 import AuthValidationContext from "../../../../../context/authvalidationContext"
-import ShowToastContext from "../../../../../context/showtoastContext"
 import ModalContext from "../../../../../context/modalContext"
+import showToast from "../../../../../utils/showToast"
+import removeFireBaseKey from "../../../../../utils/removeFirebaseKey"
 const EditProfile = ({customer}) => {
-    const { customerList, setCustomerList } = useContext(FetchDataContext)
-    const { patchAction } = useContext(ActionContext)
+    const { customerList } = useContext(FirebaseFetchDataContext)
+    const { updateAction } = useContext(FirebaseActionContext)
     const { 
         isUsernameExists, 
         isPasswordValid,
@@ -15,17 +16,20 @@ const EditProfile = ({customer}) => {
         showPasswordValidationError, 
         setShowPasswordValidationError
     } = useContext(AuthValidationContext)
-    const { showToast } = useContext(ShowToastContext)
     const { toggleModal } = useContext(ModalContext)
     const [ editProfile, setEditProfile ] = useState(customer)
     const [ retypePass, setRetypePass ] = useState("")
     const [ isPasswordMismatch, setIsPasswordMismatch ] = useState(false)
+    const [ currentUserName, ] = useState(customer.username)
+    const { Toast } = showToast()
 
     const isUsernameTaken = async(username) => {
         const istaken = await isUsernameExists(username, customerList)
-        if(istaken){
-            setIsUsernameAvailable(false)
-            return false
+        if(currentUserName !== username){
+            if(istaken){
+                setIsUsernameAvailable(false)
+                return false
+            }
         }
 
         setIsUsernameAvailable(true)
@@ -42,12 +46,14 @@ const EditProfile = ({customer}) => {
             setShowPasswordValidationError(false)
         }
 
-        if(editProfile.password !== retypePass && retypePass.length !== 0){
-            setIsPasswordMismatch(true)
-            return false
-        }
-        else{
-            setIsPasswordMismatch(false)
+        if(retypePass.length !== 0){
+            if(editProfile.password !== retypePass){
+                setIsPasswordMismatch(true)
+                return false
+            }
+            else{
+                setIsPasswordMismatch(false)
+            }
         }
         return true
     }
@@ -72,22 +78,21 @@ const EditProfile = ({customer}) => {
             return
         }
 
+        const safeCustomerData = removeFireBaseKey(editProfile)
+
         const editedProfile = {
-            ...editProfile
+            ...safeCustomerData
         }
 
-        const response = await patchAction("customers", customer.id, editedProfile)
+        await updateAction("customers", customer.firebaseKey, editedProfile)
 
-        setCustomerList(prev => (
-            prev.map(c => c.id === customer.id ? response : c)
-        ))
         
         toggleModal()
-        showToast("success", "Profile updated successfully.", 2000)
+        Toast("success", "Profile updated successfully.", 2000)
 
     }
 
-    const Layout = (title, type, name, value ) => {
+    const inputRow = (title, type, name, value ) => {
         return(
             <div className="container-flex w-full h-auto p-1 gap-1 mb-0">
                 <label htmlFor={`edit-${title}`} className="w-[44%]">
@@ -102,6 +107,8 @@ const EditProfile = ({customer}) => {
                     onChange={(e) => setEditProfile({
                         ...editProfile, [e.target.name]: e.target.value
                     })}
+                    
+                    spellcheck="false"
                 />
             </div>
         )
@@ -117,13 +124,13 @@ const EditProfile = ({customer}) => {
             >
                 edit profile
             </h1>
-            {Layout("Username:", "text", "username", editProfile.username || "")}
+            {inputRow("Username:", "text", "username", editProfile.username || "")}
             {!isUsernameAvailable && (
                 <p className="text-center text-red-600 text-[0.75rem] w-full">
                     Username already exists.
                 </p>
             )}
-            {Layout("Password:", "password", "password", editProfile.password || "")}
+            {inputRow("Password:", "password", "password", editProfile.password || "")}
             {showPasswordValidationError && (
                 <p className="text-center text-red-600 text-[0.75rem] w-full">
                     Password must be at least 8 characters and include an uppercase
@@ -152,7 +159,7 @@ const EditProfile = ({customer}) => {
                     )}
                 </>
             )}
-            {Layout("Email:", "email", "email", editProfile.email || "")}
+            {inputRow("Email:", "email", "email", editProfile.email || "")}
             <div className="container-flex w-full h-auto p-1 gap-1 mb-0">
                 <label htmlFor="edit-phone" className="w-[44%] whitespace-nowrap">
                     Phone Number:
@@ -171,7 +178,7 @@ const EditProfile = ({customer}) => {
                     })}
                 />
             </div>
-            {Layout("Location:", "text", "location", editProfile.location || "")}
+            {inputRow("Location:", "text", "location", editProfile.location || "")}
             <div className="container-flex justify-around w-full h-auto p-1 mb-0 mt-[1rem]">
                 <button
                     className="bg-[#88A550] text-white px-4 py-2 rounded shadow-md w-[35%]  h-auto

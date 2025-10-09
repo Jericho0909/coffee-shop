@@ -6,7 +6,7 @@ import ContainerContext from "../../../../../context/containerContext";
 import AuthValidationContext from "../../../../../context/authvalidationContext";
 import EmployerForm from "../Employer/employerformjsx";
 import { v4 as uuidv4 } from "uuid";
-import { toast } from "react-hot-toast";
+import showToast from "../../../../../utils/showToast";
 
 const AddEmployer = () => {
     const { adminList} = useContext(FirebaseFetchDataContext)
@@ -19,6 +19,7 @@ const AddEmployer = () => {
             setEndsWithAdmin
     } = useContext(AuthValidationContext)
     const { container } = useContext(ContainerContext)
+    const { Toast } = showToast()
 
     const shortAdminId = "A-" + uuidv4().slice(0, 5)
     const shortEmployerId = "E-" + uuidv4().slice(0, 5)
@@ -99,23 +100,9 @@ const AddEmployer = () => {
             if (employersContainer) {
                 employersContainer.scrollTop = employersContainer.scrollHeight;
             }
-        },0);
+        },0)
 
-        toast.success(
-            <div className="Notification">
-                New employer has been successfully added!
-            </div>,
-            {
-                style: {
-                width: "100%",
-                backgroundColor: "white",
-                color: "#8c6244",
-                padding: "12px 16px",
-                borderRadius: "8px",
-                },
-                duration: 2000,
-            }
-        );
+        Toast("success", "New employer has been successfully added!", 2000)
     };
 
   return (

@@ -4,17 +4,18 @@ import CustomerorderContext from "../../../../../context/customerorderContext"
 import ModalContext from "../../../../../context/modalContext";
 import Cart from "../../../../cart";
 import PaymentMethod from "../../../../paymentmethod";
-import ShowToastContext from "../../../../../context/showtoastContext";
 import { PhilippinePeso } from 'lucide-react';
 import { v4 as uuidv4 } from "uuid";
 import { format } from "date-fns";
+import showToast from "../../../../../utils/showToast";
+import removeFireBaseKey from "../../../../../utils/removeFirebaseKey";
 const CustomerOrders = ({customer}) => {
     const { pushAction, updateAction } = useContext(FirebaseActionContext)
     const { toggleModal } = useContext(ModalContext)
     const { customerOrders, 
         setCustomerOrders 
     } = useContext(CustomerorderContext)
-    const { showToast } = useContext(ShowToastContext)
+    const { Toast } = showToast()
     const [ method, setMethod ] = useState("")
     const [ isPaymentSelected, setIsPaymentSelected ] = useState(true)
     const total = customerOrders.reduce((sum, order) => sum + order.subtotal, 0)
@@ -60,12 +61,12 @@ const CustomerOrders = ({customer}) => {
             customer.orders = removeEmpty
         }
 
-        const {firebaseKey, ...safeData} = customer
+        const safeCustomerData = removeFireBaseKey(customer)
 
-        const updatedOrders = [...safeData.orders, customerNewOrder]
+        const updatedOrders = [...safeCustomerData.orders, customerNewOrder]
 
         const updatedCustomerData = {
-            ...safeData,
+            ...safeCustomerData,
             orders: updatedOrders
         }
 
@@ -76,7 +77,7 @@ const CustomerOrders = ({customer}) => {
         setCustomerOrders([])
         sessionStorage.removeItem("customerOrders");
         toggleModal()
-        showToast("success", "Order placed successfully, check your order in ORDERSECTION", 6000)
+        Toast("success", "Order placed successfully, check your order in ORDERSECTION", 6000)
     }
 
     return(

@@ -82,6 +82,7 @@ const PlaceOrder = ({customer}) => {
                     src={item.image}
                     alt={item.name}
                     className="w-[8rem] h-[8rem] border border-black"
+                    loading="lazy"
                     />
                 </div>
                 <div className="w-full h-auto p-1">

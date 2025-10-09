@@ -4,7 +4,9 @@ import FirebaseActionContext from "../../../../../context/firebaseactionContext"
 import ModalContext from "../../../../../context/modalContext"
 import AddHighlightContext from "../../../../../context/addhighlightContext"
 import EmployerForm from "../Employer/employerformjsx"
+import showToast from "../../../../../utils/showToast"
 import toast from "react-hot-toast"
+import removeFireBaseKey from "../../../../../utils/removeFirebaseKey"
 const ManageEmployer = () => {
     const { 
         adminList,
@@ -19,10 +21,9 @@ const ManageEmployer = () => {
     const { highlightUpdated } = useContext(AddHighlightContext)
     const [ employerID, ] = useState(sessionStorage.getItem("employerID"))
     const [ employerName, ] = useState(sessionStorage.getItem("employerName"))
+    const { Toast } = showToast()
 
-    const selectedAdmin = adminList.find(key => 
-        (key.name === employerName && key.role === "Admin")
-    )
+    const selectedAdmin = adminList.find(key => key.name === employerName && key.role === "Admin")
  
     const selectedEmployer = employerList.find(key => key.id === employerID)
 
@@ -55,14 +56,17 @@ const ManageEmployer = () => {
             }
             else{
                 if(selectedAdmin){
-                    await updateAction("admins", selectedAdmin.firebaseKey, editableAdminData)
+                    const safeAdminData = removeFireBaseKey(editableAdminData)
+                    await updateAction("admins", selectedAdmin.firebaseKey, safeAdminData)
                 }
             }
 
         }
 
+        const safeEmployerData = removeFireBaseKey(editableEmployerData)
+
         await updateAction("employers", selectedEmployer.firebaseKey
-        , editableEmployerData)
+        , safeEmployerData)
         toggleModal()
         toast.success(
             <div className="Notification">
@@ -92,21 +96,7 @@ const ManageEmployer = () => {
         await removeAction("employers", selectedEmployer.firebaseKey
         , updatedEmployerList)
         toggleModal()
-        toast.success(
-            <div className="Notification">
-                Employer deleted successfully!
-            </div>,
-            {
-                style: {
-                width: "100%",
-                backgroundColor: "white",
-                color: "#8c6244",
-                padding: "12px 16px",
-                borderRadius: "8px",
-                },
-                duration: 2000,
-            }
-        );
+        Toast("success", "Employer deleted successfully!", 2000)
     }
 
     return (
@@ -126,15 +116,6 @@ const ManageEmployer = () => {
             />
             <div className="flex justify-around items-center w-full h-auto ">
                 <button
-                    type="submit"
-                    className="bg-[#6F4E37] text-white px-4 py-2 rounded shadow-md w-[40%] h-auto
-                    hover:bg-[#5a3f2c] hover:scale-105
-                    active:scale-95 active:shadow-none
-                    transition-all duration-300 ease-in-out"
-                >
-                    Update
-                </button>
-                <button
                     type="button"
                     className="bg-[#8B3A2B] text-white px-4 py-2 rounded shadow-md w-[40%] h-auto
                     hover:bg-[#732f23] hover:scale-105
@@ -144,6 +125,15 @@ const ManageEmployer = () => {
                     onClick={(e) => handleDelete(e)}
                     >
                     Delete
+                </button>
+                <button
+                    type="submit"
+                    className="bg-[#6F4E37] text-white px-4 py-2 rounded shadow-md w-[40%] h-auto
+                    hover:bg-[#5a3f2c] hover:scale-105
+                    active:scale-95 active:shadow-none
+                    transition-all duration-300 ease-in-out"
+                >
+                    Update
                 </button>
             </div>
         </form>

@@ -68,7 +68,7 @@ const StockList = ({getDisplayList}) => {
                     <div
                         className="container-flex w-[22rem] p-1 mb-0 gap-1"
                     >
-                        <span className="truncate block min-w-0 max-w-[8rem]">
+                        <span className="truncate block min-w-0 w-[10rem] text-right">
                                 {item.name}:
                         </span>
                         <input

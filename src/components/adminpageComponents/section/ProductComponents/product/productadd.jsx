@@ -4,14 +4,15 @@ import ImageContext from "../../../../../context/imageContext"
 import ModalContext from "../../../../../context/modalContext"
 import ContainerContext from "../../../../../context/containerContext"
 import Form from "./form"
-import { toast } from "react-hot-toast"
 import { v4 as uuidv4 } from 'uuid'
+import showToast from "../../../../../utils/showToast"
 const ProductAdd = () => {
     const { pushAction } = useContext(FirebaseActionContext)
     const { preview, setPreview } = useContext(ImageContext)
     const { toggleModal } = useContext(ModalContext)
     const { container } = useContext(ContainerContext)
     const id = uuidv4()
+    const { Toast } = showToast()
 
     const defaultFormData = {
         id: id,
@@ -51,23 +52,8 @@ const ProductAdd = () => {
             if (productContainer) {
                 productContainer.scrollTop = productContainer.scrollHeight;
             }
-        },0);
-
-        toast.success(
-            <div className="Notification">
-                ☕ Coffee added successfully!
-            </div>,
-            {
-                style: {
-                    width: '100%',
-                    backgroundColor: 'white',
-                    color: '#8c6244',
-                    padding: '12px 16px',
-                    borderRadius: '8px',
-                },
-                duration: 2000,
-            }
-        );
+        },0)
+        Toast("success", "☕ Coffee added successfully!", 2000)
 
     }
 

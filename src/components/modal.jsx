@@ -54,7 +54,7 @@
                         setPreview(null)
                     }}
                     >
-                        <FontAwesomeIcon icon={faXmark} className="w-6 h-6" />
+                        <FontAwesomeIcon icon={faXmark} className="w-7 h-7" />
                     </button>
                     {children}
                 </motion.div>

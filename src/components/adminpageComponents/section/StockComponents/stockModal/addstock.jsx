@@ -1,14 +1,14 @@
 import { useState, useContext, useEffect } from "react"
 import FirebaseActionContext from "../../../../../context/firebaseactionContext";
-import ShowToastContext from "../../../../../context/showtoastContext";
 import ModalContext from "../../../../../context/modalContext";
+import showToast from "../../../../../utils/showToast";
 import { v4 as uuidv4 } from "uuid";
 import { format } from "date-fns";
 const AddStock = () => {
     const { pushAction } = useContext(FirebaseActionContext)
-    const { showToast } = useContext(ShowToastContext)
     const { toggleModal } = useContext(ModalContext)
     const [ quantity, setQuantity ] = useState(1)
+    const { Toast } = showToast()
     const shortStockId = "S-" + uuidv4().slice(0, 5)
 
     const stockFormat = {
@@ -32,7 +32,7 @@ const AddStock = () => {
         e.preventDefault()
 
         await pushAction("stocks", stock)
-        showToast("success", "New stock has been added successfully.", 2000)
+        Toast("success", "New stock has been added successfully.", 2000)
         toggleModal()
     }
     return(
