@@ -11,6 +11,10 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addVariant }) {
+      addVariant('hoverable', '@media (hover: hover) and (pointer: fine)');
+    },
+  ],
 }
 
