@@ -2,6 +2,7 @@ import { useContext, useState } from "react"
 import FirebaseActionContext from "../../context/firebaseactionContext";
 import ModalContext from "../../context/modalContext"
 import { toast } from "react-hot-toast";
+import toTitleCase from "../../utils/toTitleCase";
 const ContactForm = ({customer}) => {
     const { updateAction } = useContext(FirebaseActionContext)
     const { setIsOpen } = useContext(ModalContext)
@@ -48,7 +49,7 @@ const ContactForm = ({customer}) => {
             <h1 
                 className="text-[clamp(2rem,2vw,2.50rem)] font-nunito tracking-wide font-black text-center"
             >
-                contact
+                complete the information
             </h1>
             <form 
                 className="flex justify-center items-center flex-col w-[90%] mb-4"
@@ -95,7 +96,10 @@ const ContactForm = ({customer}) => {
                     placeholder="Enter your location:"
                     required
                     value={location}
-                    onChange={(e) => setLocation(e.target.value)}
+                    onChange={(e) => {
+                        const formatted = toTitleCase(e.target.value)
+                        setLocation(formatted)
+                    }}
                 />
                 <button
                     type="submit"

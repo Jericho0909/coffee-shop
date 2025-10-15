@@ -1,13 +1,13 @@
 import { useContext, useState } from "react"
 import FirebaseFetchDataContext from "../../../../../context/firebasefetchdataContext";
 import ModalContext from "../../../../../context/modalContext"
-import ShowToastContext from "../../../../../context/showtoastContext";
+import showToast from "../../../../../utils/showToast";
 import { Eye } from 'lucide-react';
 import { EyeClosed } from 'lucide-react';
 const UserSettings = ({user}) => {
     const { orderList } = useContext(FirebaseFetchDataContext)
-    const { showToast } = useContext(ShowToastContext)
     const { setIsOpen, setModalName } = useContext(ModalContext)
+    const { Toast } = showToast()
     const [ showPassword, setShowPassword ] = useState(false)
 
     const editProfile = () => {
@@ -16,7 +16,7 @@ const UserSettings = ({user}) => {
         .some(o => o.status === "Pending" || o.status === "Processing")
 
         if(hasActiveOrder){
-            showToast("error", "You cannot edit your profile while you have a pending order in progress.", 4000)
+            Toast("error", "You cannot edit your profile while you have a pending order in progress.", 4000)
             return
         }
         setModalName("editProfile")

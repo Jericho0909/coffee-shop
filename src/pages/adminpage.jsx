@@ -1,7 +1,9 @@
-import { useEffect, useState, useContext, useRef } from "react"
+import { useEffect, useState, useContext, useRef } from "react";
 import { useNavigate, NavLink, useParams } from "react-router-dom";
-import WindowSizeContext from "../context/windowsizeContext"
-import ModalContext from "../context/modalContext"
+import { useOrdersListener } from "../hooks/useOrderListener";
+import FirebaseFetchDataContext from "../context/firebasefetchdataContext";
+import WindowSizeContext from "../context/windowsizeContext";
+import ModalContext from "../context/modalContext";
 import Header from "../components/header";
 import Main from "../components/main";
 import Aside from "../components/aside";
@@ -18,15 +20,20 @@ import ManageCustomer from "../components/adminpageComponents/section/CustomerCo
 import AddStock from "../components/adminpageComponents/section/StockComponents/stockModal/addstock";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import { AnimatePresence } from "framer-motion";
+import showToast from "../utils/showToast";
 const Adminpage = () => {
     const navigate = useNavigate()
+    const { orderList } = useContext(FirebaseFetchDataContext)
     const { isMobile } = useContext(WindowSizeContext)
     const { isOpen, modalName } = useContext(ModalContext)
     const { id, username } = useParams()
+    const { hasNewOrder, setHasNewOrder } = useOrdersListener()
+    const { Toast } = showToast()
     const [ loading, setLoading ] = useState(true)
     const [ opensidebar, setOpenSiderBar ] = useState(false)
     const [ active, setActive ] = useState(sessionStorage.getItem("section") || "dashboardsection")
     const sidebarRef = useRef(null)
+    const orderPendingAndProccessing = orderList.filter(key => key.status.includes("Processing") || key.status.includes("Pending"))
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -50,7 +57,17 @@ const Adminpage = () => {
         return () => {
           document.removeEventListener("click", handleClickAnywhere);
         };
-    }, [isMobile]);
+    }, [isMobile])
+
+    useEffect(() => {
+        if(hasNewOrder){
+            Toast("success", "You Have NewOrder!", 2000)
+            const timer = setTimeout(() => {
+            setHasNewOrder(false);
+            }, 2100);
+            return () => clearTimeout(timer)
+        }
+    }, [hasNewOrder, Toast, setHasNewOrder])
 
 
     const modalComponents = {
@@ -160,6 +177,9 @@ const Adminpage = () => {
                         `}
                     >
                         orders
+                        <div className="container-flex justify-center mb-0 absolute -top-2 -right-4 w-6 h-6 rounded-[50%] text-[0.85rem] border border-red-500">
+                            {orderPendingAndProccessing.length}
+                        </div>
                     </NavLink>
                 </li>
                 <li>

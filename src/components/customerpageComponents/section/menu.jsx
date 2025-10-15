@@ -58,24 +58,6 @@ const Menu = () => {
             }, 1500)
         }
     }
-
-    const CartBtn = () => {
-        return(
-            <button 
-                ref={bounceRef}
-                className="container-flex justify-center w-12 h-12 p-1 mb-0 cursor-pointer"
-                onClick={() => orderList()}
-                
-            >
-                <img
-                    src={CoffeeCupIcon}
-                    className="w-[80%] h-[80%]"
-                    alt="CoffeeCup-Icon"
-                    loading="lazy"
-                />
-            </button>
-        )
-    }
     
     if(loading){
         return(
@@ -86,10 +68,30 @@ const Menu = () => {
         <section className="container-flex justify-start items-center flex-col w-full p-2 mb-0 min-h-screen">
             <SectionHeder 
                 title="products" 
-                haveExtraBtn={true}
-                btnContent={<CartBtn/>}
+                haveExtraBtn={false}
             />
-           <div 
+            <div className="fixed top-[12rem] right-[1.50rem] z-10">
+                <button 
+                    ref={bounceRef}
+                    className="container-flex justify-center w-12 h-12 p-1 mb-0 cursor-pointer relative transition-transform duration-300  hoverable:hover:scale-125"
+                    onClick={() => orderList()}
+                    
+                >
+                    <img
+                        src={CoffeeCupIcon}
+                        className="w-[95%] h-[95%]"
+                        alt="CoffeeCup-Icon"
+                        loading="lazy"
+                    />
+                    <span className="absolute -top-2 right-1 font-opensans font-semibold border border-[#6F4E37] w-[1.45rem] rounded-[50%]">
+                        {customerOrders.length !== 0
+                            ? customerOrders.length
+                            : "0"
+                        }
+                    </span>
+                </button>
+            </div>
+            <div 
                 className="w-full flex-1"
             >
                 <MenuList 

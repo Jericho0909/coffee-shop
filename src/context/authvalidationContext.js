@@ -1,10 +1,8 @@
 import { createContext, useState } from "react";
-import useAuthValidation from "../hooks/useAuthValidation";
 
 const AuthValidationContext = createContext()
 
 export const AuthValidationProvider = ({children}) => {
-    const { isUsernameExists, isPasswordValid } = useAuthValidation()
     const [ showPasswordValidationError, setShowPasswordValidationError ] =
         useState(false)
     const [ isUsernameAvailable, setIsUsernameAvailable ] = useState(true)
@@ -19,8 +17,6 @@ export const AuthValidationProvider = ({children}) => {
     return(
         <AuthValidationContext.Provider
             value={{
-                isUsernameExists,
-                isPasswordValid,
                 showPasswordValidationError,
                 setShowPasswordValidationError,
                 isUsernameAvailable,

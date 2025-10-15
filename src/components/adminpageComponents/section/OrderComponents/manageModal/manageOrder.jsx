@@ -31,6 +31,8 @@ const ManageOrder = () => {
 
     const [ currentOrderData, setCurrentOrderData ] = useState(selectedOrder)
 
+    console.log(currentOrderData.type)
+
     const toggleDetails = (id) => {
         if (openItemId === id) {
             setOpenItemId(null)
@@ -146,6 +148,22 @@ const ManageOrder = () => {
         )
     }
 
+    const orderDetailsRow = (title, value) => {
+        return(
+            <div className="container-flex w-full gap-1 mb-0">
+                <p className="flex gap-1 font-opensans italic tracking-wide text-[clamp(0.70rem,2vw,0.90rem)]">
+                    <span className="text-[#D4A373] font-semibold"
+                    >
+                        {title}
+                    </span>
+                    <span>
+                        {value}
+                    </span>
+                </p>
+            </div>
+        )
+    }
+
     return (
         <div 
             className="w-full h-full overflow-y-scroll scrollbar-hide"
@@ -230,19 +248,9 @@ const ManageOrder = () => {
                                     : "max-h-0 opacity-0 -translate-y-2 mb-[0rem]"
                                 }`}
                             >
-                                <div className="container-flex w-full gap-1 mb-0">
-                                    
-                                    <p className="flex gap-1 font-opensans italic tracking-wide text-[clamp(0.70rem,2vw,0.90rem)]">
-                                        <span className="text-[#D4A373] font-semibold">Size:</span>
-                                        <span>{item.size}</span>
-                                    </p>
-                                    </div>
-                                    <div className="container-flex w-full gap-1 mb-0">
-                                    <p className="flex gap-1 font-opensans italic tracking-wide text-[clamp(0.70rem,2vw,0.90rem)]">
-                                        <span className="text-[#D4A373] font-semibold">Price:</span>
-                                        <span>{item.price}</span>
-                                    </p>
-                                </div>
+                                {orderDetailsRow("Size:", item.size)}
+                                {orderDetailsRow("Price:", item.price)}
+                                {orderDetailsRow("Type:", item.type)}
                             </div>
                             </>
                         </div>

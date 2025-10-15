@@ -1,4 +1,4 @@
-import { useContext, useState, useRef } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 import { useNavigate, NavLink, useParams } from "react-router-dom";
 import FirebaseFetchDataContext from "../context/firebasefetchdataContext";
 import MediaQueryContext from "../context/mediaqueryContext"
@@ -15,7 +15,9 @@ import CustomerOrders from "../components/customerpageComponents/section/menuCom
 import ContactForm from "../components/customerpageComponents/contactform";
 import ManageCustomerOrder from "../components/customerpageComponents/section/customerordersComponents/customerorderModal/managecustomerorder";
 import EditProfile from "../components/customerpageComponents/section/settingsComponents/settingsModal/editProfile";
+import Thankyou from "../components/customerpageComponents/thankYou";
 import { AnimatePresence } from "framer-motion";
+import { useOrdersListener } from "../hooks/useOrderListener";
 const Customerpage = () => {
     const navigate = useNavigate()
     const { id, username } = useParams()
@@ -24,14 +26,25 @@ const Customerpage = () => {
         isMediumDevice, 
         isLargeDevice 
     }  = useContext(MediaQueryContext)
-
     const { isMobile: windowSizeMobile } = useContext(WindowSizeContext)
-    const { isOpen, modalName } = useContext(ModalContext)
+    const { isOpen, 
+        setIsOpen, 
+        modalName,
+        setModalName
+    } = useContext(ModalContext)
+    const {orderComplete } = useOrdersListener()
     const [ opensidebar, setOpenSiderBar ] = useState(false)
     const [ active, setActive ] = useState(sessionStorage.getItem("customerSection") || "menusection")
     const sidebarRef = useRef(null)
 
     const customer = customerList.find(key => key.id === id)
+
+    useEffect(() => {
+        if(customer.username === orderComplete.customerName && orderComplete.status === "Completed"){
+            setIsOpen(true)
+            setModalName("thankYou")
+        }
+    }, [customer, orderComplete, setIsOpen, setModalName])
 
     const onToggleSidebar = () => {
         setTimeout(() => setOpenSiderBar(prev => !prev))
@@ -137,7 +150,8 @@ const Customerpage = () => {
         placeorder: <PlaceOrder customer={customer}/>,
         customerorder: <CustomerOrders customer={customer}/>,
         manageCustomerOrder: <ManageCustomerOrder customer={customer}/>,
-        editProfile: <EditProfile  customer={customer}/>
+        editProfile: <EditProfile  customer={customer}/>,
+        thankYou: <Thankyou/>
     }
 
     const saveSection = (section) => {

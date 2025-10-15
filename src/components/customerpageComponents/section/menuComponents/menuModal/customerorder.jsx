@@ -79,7 +79,7 @@ const CustomerOrders = ({customer}) => {
         toggleModal()
         Toast("success", "Order placed successfully, check your order in ORDERSECTION", 6000)
     }
-
+    
     return(
         <div 
             className="container-flex justify-center sm:justify-start flex-col w-full h-full py-[1rem] px-1 overflow-y-auto scrollbar-hide"

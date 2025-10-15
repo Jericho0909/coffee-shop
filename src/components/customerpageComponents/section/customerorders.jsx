@@ -40,7 +40,7 @@ const CustomerOrders = () => {
                 <div 
                     className="w-full flex-1"
                 >
-                    {customerData.orders.length === 0 
+                    {customerData.orders[0] === "__empty__"
                         ? (
                             <div className="container-flex justify-center w-full h-[90%]">
                                 <p>

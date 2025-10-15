@@ -2,15 +2,14 @@ import { useState, useContext, useEffect } from "react"
 import FirebaseFetchDataContext from "../../../../../context/firebasefetchdataContext";
 import CustomerorderContext from "../../../../../context/customerorderContext";
 import ModalContext from "../../../../../context/modalContext";
-import ShowToastContext from "../../../../../context/showtoastContext";
 import { PhilippinePeso } from 'lucide-react';
-
+import showToast from "../../../../../utils/showToast";
 const PlaceOrder = ({customer}) => {
     const { productList } = useContext(FirebaseFetchDataContext)
     const { customerOrders, setCustomerOrders } = useContext(CustomerorderContext)
     const { setIsOpen, setModalName } = useContext(ModalContext)
-    const { showToast } = useContext(ShowToastContext)
     const [ productId ] = useState(sessionStorage.getItem("productId"))
+    const { Toast } = showToast()
     const [ count, setCount ] = useState(1)
 
     const item = productList.find(key => key.id === productId)
@@ -23,7 +22,8 @@ const PlaceOrder = ({customer}) => {
         flavor: "",
         addOns: [],
         price: 0,
-        subtotal: 0
+        subtotal: 0,
+        type: item.type
         
     }
 
@@ -59,7 +59,7 @@ const PlaceOrder = ({customer}) => {
         if(isMissingContact){
             setModalName("contactform")
             setIsOpen(true)
-            showToast("error", "We need your contact details before we can process your order.",2000)
+            Toast("error", "We need your contact details before we can process your order.",2000)
             return
         }
         showToast("success", "Your order has been placed successfully.",2000)
@@ -229,6 +229,55 @@ const PlaceOrder = ({customer}) => {
                         }
                     </div>
                 </div>
+                {item.type.includes("/") && (
+                    <div className="w-full h-auto p-1 mb-[1rem]">
+                        <h1 className="text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[0.50rem]">
+                            type
+                        </h1>
+                        <div className="container-flex justify-around w-full h-auto p-1 gap-2 mb-[0.50rem]">
+                            <>
+                                <div className="container-flex w-auto h-auto p-1 gap-2 mb-[0.50rem]">
+                                    <input
+                                        id="Hot"
+                                        type="radio"
+                                        name="type"
+                                        required
+                                        value="Hot"
+                                        onChange={(e) => {
+                                            setOrder({...order, [e.target.name]: e.target.value})
+                                        }}
+                                        className="w-auto"
+                                    />
+                                    <label 
+                                        htmlFor="Hot"
+                                        className="container-flex justify-center w-auto h-full gap-1 mb-0"
+                                        >
+                                        <span>Hot</span>
+                                    </label>
+                                </div>
+                                <div className="container-flex w-auto h-auto p-1 gap-2 mb-[0.50rem]">
+                                    <input
+                                        id="Cold"
+                                        type="radio"
+                                        name="type"
+                                        required
+                                        value="Cold"
+                                        onChange={(e) => {
+                                            setOrder({...order, [e.target.name]: e.target.value})
+                                        }}
+                                        className="w-auto"
+                                    />
+                                    <label 
+                                        htmlFor="Cold"
+                                        className="container-flex justify-center w-full h-full gap-1 mb-0"
+                                        >
+                                        <span>Cold</span>
+                                    </label>
+                                </div>
+                            </>
+                        </div>
+                    </div>
+                )}
                 <div className="container-flex justify-center flex-col  w-full h-auto p-1">
                     <h1 className="text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[0.50rem]">
                         how many order  

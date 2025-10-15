@@ -12,7 +12,7 @@ import { Coffee } from 'lucide-react';
 import { Snowflake } from 'lucide-react';
 import { PhilippinePeso } from 'lucide-react';
 import NoImg from '../../src/assets/images/no-img.jpeg'
-import ShowToastContext from "../context/showtoastContext";
+import showToast from "../utils/showToast";
 
 const ItemCard = ({ item }) => {
     const { username } = useParams()
@@ -21,7 +21,7 @@ const ItemCard = ({ item }) => {
     const { productList } = useContext(FirebaseFetchDataContext)
     const { setPreview  } = useContext(ImageContext)
     const { saveIndex } = useContext(AddHighlightContext)
-    const { showToast } = useContext(ShowToastContext)
+    const { Toast } = showToast()
     const [ref, entry] = useIntersectionObserver({
         threshold: 0.1,
         root: null,
@@ -91,7 +91,7 @@ const ItemCard = ({ item }) => {
 
         await removeAction("products", item.firebaseKey, updatedProductList)
 
-        showToast("success", "Successfully deleted the product.", 2000)
+        Toast("success", "Successfully deleted the product.", 2000)
 
     }
 

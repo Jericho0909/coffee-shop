@@ -1,12 +1,15 @@
-import { useContext, useState } from "react"
+import { useContext, useState, useCallback, useEffect } from "react"
 import FirebaseFetchDataContext from "../../../../../context/firebasefetchdataContext"
 import FirebaseActionContext from "../../../../../context/firebaseactionContext"
 import ModalContext from "../../../../../context/modalContext"
 import AddHighlightContext from "../../../../../context/addhighlightContext"
+import AuthValidationContext from "../../../../../context/authvalidationContext"
 import EmployerForm from "../Employer/employerformjsx"
 import showToast from "../../../../../utils/showToast"
 import toast from "react-hot-toast"
 import removeFireBaseKey from "../../../../../utils/removeFirebaseKey"
+import authValidation from "../../../../../utils/authValidation"
+import { useDebounce } from "@uidotdev/usehooks";
 const ManageEmployer = () => {
     const { 
         adminList,
@@ -17,11 +20,18 @@ const ManageEmployer = () => {
         updateAction, 
         removeAction 
     } = useContext(FirebaseActionContext)
+    const {setShowPasswordValidationError,
+            setIsUsernameAvailable,
+            setEndsWithAdmin
+    } = useContext(AuthValidationContext)
     const { toggleModal } = useContext(ModalContext)
     const { highlightUpdated } = useContext(AddHighlightContext)
+    const { isUsernameExists, isPasswordValid } = authValidation()
+    const { Toast } = showToast()
+    const [ type, setType ] = useState("")
     const [ employerID, ] = useState(sessionStorage.getItem("employerID"))
     const [ employerName, ] = useState(sessionStorage.getItem("employerName"))
-    const { Toast } = showToast()
+    const debouncedType = useDebounce(type, 300)
 
     const selectedAdmin = adminList.find(key => key.name === employerName && key.role === "Admin")
  
@@ -30,6 +40,47 @@ const ManageEmployer = () => {
     const [ editableAdminData, setEditableAdminData ] = useState(selectedAdmin)
     const [ editableEmployerData, setEditableEmployerData ] = useState(selectedEmployer)
 
+    const isUsernameChanged = selectedAdmin?.username !== editableAdminData?.username
+
+    const validateAdminUsername = useCallback((username) => {
+        const runCheck = () => {
+            const usernameExists = isUsernameExists(username, adminList)
+            if(usernameExists){
+                setIsUsernameAvailable(false)
+                return false;
+            }
+            else{
+                setIsUsernameAvailable(true);
+            }
+
+            if((!username.endsWith(".admin") && isUsernameChanged)){
+                setEndsWithAdmin(false)
+                return false
+            }
+            else{
+                setEndsWithAdmin(true)
+            }
+            return true;
+        }
+        return runCheck()
+    }, [adminList, isUsernameExists, setEndsWithAdmin, setIsUsernameAvailable, isUsernameChanged])
+
+    const validateAdminPassword = useCallback((password) => {
+        const runCheck = () => {
+
+            const isValidPassword = isPasswordValid(password)
+            if (!isValidPassword){
+                setShowPasswordValidationError(true)
+                return false;
+            }
+            else{
+                setShowPasswordValidationError(false)
+            }
+            return true
+        }
+        return runCheck()
+    }, [isPasswordValid, setShowPasswordValidationError])
+
     const removeAdminFromList = async() => {
         const updatedAdminList = adminList.filter(key => key.id !== selectedAdmin.id)
         await removeAction("admins", selectedAdmin.firebaseKey
@@ -37,11 +88,17 @@ const ManageEmployer = () => {
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
         if(selectedAdmin && editableEmployerData.role !== "Admin"){
             removeAdminFromList()
         }
         else{
+            if(isUsernameChanged){
+                const isValid = validateAdminUsername(editableAdminData.username)
+                if(!isValid){
+                    return
+                }
+            }
             const checkAdminExist = adminList.find(key => key.id === employerID || key.name === employerName)
             if(editableEmployerData.role === "Admin" && !checkAdminExist){
                 const promotetoAdmin = {
@@ -99,6 +156,15 @@ const ManageEmployer = () => {
         Toast("success", "Employer deleted successfully!", 2000)
     }
 
+    useEffect(() => {
+        if(selectedAdmin){
+            if(isUsernameChanged){
+                validateAdminUsername(editableAdminData.username)
+            }
+            validateAdminPassword(editableAdminData.password)
+        }
+    }, [debouncedType, validateAdminUsername, validateAdminPassword, editableAdminData, selectedAdmin, isUsernameChanged])
+
     return (
         <form
             className="flex justify-center items-center flex-col w-full h-auto"
@@ -112,6 +178,7 @@ const ManageEmployer = () => {
                 setEmployerData = {setEditableEmployerData}
                 adminData = {editableAdminData}
                 setAdminData = {setEditableAdminData}
+                setType = {setType}
 
             />
             <div className="flex justify-around items-center w-full h-auto ">

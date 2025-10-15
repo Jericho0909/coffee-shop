@@ -1,48 +1,67 @@
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import AuthValidationContext from "../../../../../context/authvalidationContext"
-const EmployerForm = ({employerData, setEmployerData, adminData, setAdminData}) => {
+import toTitleCase from "../../../../../utils/toTitleCase"
+const EmployerForm = ({employerData, setEmployerData, adminData, setAdminData, setType}) => {
     const {
-            showPasswordValidationError,
-            isUsernameAvailable,
-            endsWithAdmin
+        showPasswordValidationError,
+        isUsernameAvailable,
     } = useContext(AuthValidationContext)
-    return(
-        <>
+    const [ activeInput, setActiveInput ] = useState(false)
+    const inputRow = (labelTitle, value, type, key) => {
+        return(
             <div className="flex justify-center items-center gap-1 mb-[1rem] px-3 w-full h-auto">
-                <label htmlFor="employerName" className="w-auto">
-                    Name:
+                <label htmlFor={key} className="w-auto">
+                    {labelTitle}
                 </label>
                 <input
-                id="employerName"
-                type="text"
-                name="name"
+                id={key}
+                type={type}
+                name={key}
                 required
                 spellCheck="false"
                 className="w-full"
-                value={employerData.name}
+                value={value}
                 onChange={(e) => {
-                    setEmployerData({ ...employerData, [e.target.name]: e.target.value });
-                    setAdminData({ ...adminData, [e.target.name]: e.target.value })
+                    const formatted = toTitleCase(value)
+                    setEmployerData({ ...employerData, [e.target.name]: type === "type" ? formatted : e.target.value });
+                    setAdminData({ ...adminData, [e.target.name]: type === "type" ? formatted : e.target.value })
                 }}
                 />
             </div>
+        )
+    }
+    const inputAdminRow = (labelTitle, value, type, key, holder) => {
+        return(
             <div className="flex justify-center items-center gap-1 mb-[1rem] px-3 w-full h-auto">
-                <label htmlFor="emailEmployer" className="w-auto">
-                Email:
+                <label htmlFor={`admin-${key}`} className="w-auto">
+                    {labelTitle}
                 </label>
                 <input
-                id="emailEmployer"
-                type="email"
-                name="email"
-                required
-                spellCheck="false"
-                className="w-full"
-                value={employerData.email}
-                onChange={(e) =>
-                    setEmployerData({ ...employerData, [e.target.name]: e.target.value })
-                }
+                    id={`admin-${key}`}
+                    type={type}
+                    name={key}
+                    spellCheck="false"
+                    placeholder={holder}
+                    required
+                    value={value}
+                    onChange={(e) =>{
+                        setAdminData({ ...adminData, [e.target.name]: e.target.value });
+                        setType(e.target.value)
+                    }}
+                    onFocus={() => setActiveInput(true)}
+                    onBlur={() => {
+                        setActiveInput(false);
+                    }}
+                    style={(!isUsernameAvailable && key === "username") ? { borderColor: "red" } : {}}
                 />
             </div>
+        )
+    }
+    return(
+        <>
+            {inputRow("Name:", employerData.name, "text", "name")}
+            {inputRow("Email:", employerData.email, "email", "email")}
+            {inputRow("Location:", employerData.location, "text", "location")}
             <div className="text-center">
                 <label htmlFor="phone" className="w-full">
                     Phone Number
@@ -118,39 +137,20 @@ const EmployerForm = ({employerData, setEmployerData, adminData, setAdminData}) 
                         <option value="Staff">Staff</option>
                     </select>
                 </div>
-        </div>
-
+            </div>
             {employerData.role === "Admin" && (
                 <>
-                    {(!endsWithAdmin || !isUsernameAvailable
-                    ) && (
-                        <p className="text-red-600 text-[0.75rem] w-full mt-1 px-3">
-                            {!isUsernameAvailable
+                    {(activeInput) &&
+                        (
+                        <p className={`text-[0.75rem] w-full mt-1 px-3 ${!isUsernameAvailable ?         "text-red-600" : " italic text-[#8c6244]"}
+                        `}>
+                            {(!isUsernameAvailable)
                                 ? "Username already exists."
-                                : "Username must end with .admin"
+                                : "Reminder: Username must end with .admin!"
                             }
                         </p>
                     )}
-
-
-                    <div className="flex justify-center items-center gap-1 mb-[1rem] px-3 w-full h-auto">
-                        <label htmlFor="usernameAdmin" className="w-auto">
-                            Username:
-                        </label>
-                        <input
-                            id="usernameAdmin"
-                            type="text"
-                            name="username"
-                            spellCheck="false"
-                            placeholder="example.admin"
-                            required
-                            value={adminData?.username || ""}
-                            onChange={(e) =>
-                                setAdminData({ ...adminData, [e.target.name]: e.target.value })
-                            }
-                            style={!isUsernameAvailable ? { borderColor: "red" } : {}}
-                        />
-                    </div>
+                    {inputAdminRow("Username:", adminData?.username, "text", "username", "example.admin")}
 
                     {showPasswordValidationError && (
                         <p className="text-red-600 text-[0.75rem] w-full mt-1 px-3">
@@ -158,23 +158,7 @@ const EmployerForm = ({employerData, setEmployerData, adminData, setAdminData}) 
                             letter, a number, and a special character.
                         </p>
                     )}
-
-                    <div className="flex justify-center items-center gap-1 mb-[1rem] px-3 w-full h-auto">
-                        <label htmlFor="passwordAdmin" className="w-auto">
-                            Password:
-                        </label>
-                        <input
-                            id="passwordAdmin"
-                            type="password"
-                            name="password"
-                            required
-                            value={adminData?.password || ""}
-                            onChange={(e) =>
-                                setAdminData({ ...adminData, [e.target.name]: e.target.value })
-                            }
-                            style={showPasswordValidationError ? { borderColor: "red" } : {}}
-                        />
-                    </div>
+                    {inputAdminRow("Password:", adminData?.password, "password", "password", "")}
                 </>
             )}
         </>
