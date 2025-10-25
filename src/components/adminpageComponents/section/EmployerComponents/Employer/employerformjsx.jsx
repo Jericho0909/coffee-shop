@@ -1,7 +1,9 @@
 import { useContext, useState } from "react"
+import FirebaseFetchDataContext from "../../../../../context/firebasefetchdataContext"
 import AuthValidationContext from "../../../../../context/authvalidationContext"
 import toTitleCase from "../../../../../utils/toTitleCase"
 const EmployerForm = ({employerData, setEmployerData, adminData, setAdminData, setType}) => {
+    const { adminList } = useContext(FirebaseFetchDataContext)
     const {
         showPasswordValidationError,
         isUsernameAvailable,
@@ -14,17 +16,19 @@ const EmployerForm = ({employerData, setEmployerData, adminData, setAdminData, s
                     {labelTitle}
                 </label>
                 <input
-                id={key}
-                type={type}
-                name={key}
-                required
-                spellCheck="false"
-                className="w-full"
-                value={value}
-                onChange={(e) => {
-                    const formatted = toTitleCase(value)
-                    setEmployerData({ ...employerData, [e.target.name]: type === "type" ? formatted : e.target.value });
-                    setAdminData({ ...adminData, [e.target.name]: type === "type" ? formatted : e.target.value })
+                    id={key}
+                    type={type}
+                    name={key}
+                    required
+                    spellCheck="false"
+                    className="w-full"
+                    value={value}
+                    onChange={(e) => {
+                    const formatted = toTitleCase(e.target.value)
+                    setEmployerData({ 
+                        ...employerData, 
+                        [e.target.name]: labelTitle === "Location" ? formatted : e.target.value 
+                    })
                 }}
                 />
             </div>
@@ -45,7 +49,14 @@ const EmployerForm = ({employerData, setEmployerData, adminData, setAdminData, s
                     required
                     value={value}
                     onChange={(e) =>{
-                        setAdminData({ ...adminData, [e.target.name]: e.target.value });
+                        setAdminData({ 
+                            ...adminData,
+                            [e.target.name]: e.target.value,
+                            name: employerData.name,
+                            email: employerData.email,
+                            phone: employerData.phone,
+                            location: employerData.location
+                        })
                         setType(e.target.value)
                     }}
                     onFocus={() => setActiveInput(true)}
@@ -75,9 +86,10 @@ const EmployerForm = ({employerData, setEmployerData, adminData, setAdminData, s
                     pattern="[0-9]{11}"
                     placeholder="e.g. 09123456789"
                     value={employerData.phone}
-                    onChange={(e) =>
-                    setEmployerData({ ...employerData, [e.target.name]: e.target.value })
-                    }
+                    onChange={(e) =>{
+                        const onlyNums = e.target.value.replace(/[^0-9]/g, "")
+                        setEmployerData({ ...employerData, [e.target.name]: onlyNums})
+                    }}
                 />
             </div>
             <div className="flex justify-between items-center mb-[1rem] px-3 w-full h-auto">
@@ -138,11 +150,11 @@ const EmployerForm = ({employerData, setEmployerData, adminData, setAdminData, s
                     </select>
                 </div>
             </div>
-            {employerData.role === "Admin" && (
+            {(employerData.role === "Admin" && !adminList.some(key => key.id === adminData.id)) && (
                 <>
-                    {(activeInput) &&
+                    {activeInput &&
                         (
-                        <p className={`text-[0.75rem] w-full mt-1 px-3 ${!isUsernameAvailable ?         "text-red-600" : " italic text-[#8c6244]"}
+                        <p className={`text-[0.75rem] w-full mt-1 px-3 ${!isUsernameAvailable ? "text-red-600" : " italic text-[#8c6244]"}
                         `}>
                             {(!isUsernameAvailable)
                                 ? "Username already exists."

@@ -19,8 +19,8 @@ const useFirebaseAction = () => {
             await update(dbRef, updatedData)
             return { id, ...updatedData }
         } catch (err) {
-        console.error("Update failed:", err.message);
-        return null;
+            console.error("Update failed:", err.message);
+            return null
         }
     }
 

@@ -1,4 +1,6 @@
 import { useState, useEffect, useContext } from "react"
+import { auth } from "../../../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext";
 import AuthviewContext from "../../../context/autviewContext"
@@ -11,6 +13,7 @@ const Login = () => {
         customerList,
     } = useContext(FirebaseFetchDataContext)
     const { toggleModal } = useContext(ModalContext)
+    const [ isLoading, setIsLoading ] = useState(false)
     const [ username, setUsername ] = useState("")
     const [ password, setPassword ] = useState("")
     const [ loginError, setLoginError ] = useState(false)
@@ -21,23 +24,55 @@ const Login = () => {
         setAuthView("login")
     },[setAuthView])
 
-    const admin = adminList.find(key => key.username === username && key.password === password)
-    const customer = customerList.find(key => key.username === username && key.password === password)
+    const checkEmailVefication = async(email, password) => {
+        try {
+            setIsLoading(true)
+            const userCredential =  await signInWithEmailAndPassword(auth, email, password)
+            await userCredential.user.reload()
+            return userCredential.user
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setIsLoading(false)
+        }
+    }
 
-    const handleLogin = (e) => {
+    const handleLogin = async(e) => {
         e.preventDefault()
-
+        const admin = adminList.find(key => key.username === username && key.password === password)
+        const customer = customerList.find(key => key.username === username && key.password === password)
         if(admin){
-            toggleModal(false)
-            navigate(`/Adminpage/${admin.id}/${admin.username}`)
+            if(username === "jericho.admin"){
+                toggleModal(false)
+                navigate(`/Adminpage/${admin.id}/${admin.username}`)
+            }
+            else{
+                const user = await checkEmailVefication(admin.email, admin.password)
+                if(user?.emailVerified) {
+                    toggleModal(false)
+                    navigate(`/Adminpage/${admin.id}/${admin.username}`)
+                }
+                else {
+                    Toast("error", "Please verify your email first before continuing. Check your email spam.", 5000)
+                    return
+                }
+            }
         }
         else if(customer){
             if(customer.accountStatus === "Block"){
                 Toast("error", "Your account is currently restricted because it did not follow our guidelines.", 5000)
                 return
             }
-            toggleModal(false)
-            navigate(`/Customerpage/${customer.id}/${customer.username}`);
+            const user = await checkEmailVefication(customer.email, customer.password)
+            if(user?.emailVerified){
+                toggleModal(false)
+                navigate(`/Customerpage/${customer.id}/${customer.username}`)
+            }
+            else {
+                Toast("error", "Please verify your email first before continuing. Check your email spam.", 5000);
+                return;
+            }
+            
         }
         else{
             setLoginError(true)
@@ -53,16 +88,16 @@ const Login = () => {
                 login
             </h1>
             <form 
-                className="flex justify-center items-center flex-col w-[90%] mb-4"
+                className="flex justify-center items-center flex-col w-[90%] mb-4 relative"
                 onSubmit={handleLogin}
             >
                 <label htmlFor="username">
-                    Enter your username:
+                    Username:
                 </label>
                 <input
                     id="username"
                     type="text"
-                    placeholder="Enter your username"
+                    placeholder="ex: user"
                     required
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
@@ -71,12 +106,12 @@ const Login = () => {
 
                 </div>
                 <label htmlFor="password">
-                    Enter your password:
+                    Password:
                 </label>
                 <input
                     id="password"
                     type="password"
-                    placeholder="Enter your password"
+                    placeholder="********"
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -105,6 +140,13 @@ const Login = () => {
             >
                 Forgot password?
             </button>
+            {isLoading && (
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-auto h-auto">
+                    <div className="loader-three">
+                        
+                    </div>
+                </div>
+            )}
         </>
     )
 }

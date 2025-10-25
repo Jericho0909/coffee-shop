@@ -3,9 +3,10 @@ import { ref, onChildAdded, onChildChanged } from "firebase/database";
 import { database } from "../firebase";
 
 export function useOrdersListener(onNewOrder) {
-    const [ hasNewOrder, setHasNewOrder ] = useState(false);
+    const [ hasNewOrder, setHasNewOrder ] = useState(false)
     const [ orderComplete, setOrderComplete ] = useState([])
-    const isInitialLoad = useRef(true);
+    const isInitialLoad = useRef(true)
+
     useEffect(() => {
         const ordersRef = ref(database, "orders")
 
@@ -16,7 +17,6 @@ export function useOrdersListener(onNewOrder) {
         });
 
         const changeListener = onChildChanged(ordersRef, (snapshot) => {
-            console.log("🟡 Order updated:", snapshot.val())
             const orderComplete = snapshot.val()
             setOrderComplete(orderComplete)
         })

@@ -146,7 +146,9 @@ const AddStock = () => {
                     <div className="flex justify-center items-center w-full h-auto">
                         <button
                             type="submit"
-                            className="press w-[40%]"
+                            className="press  hoverable:hover:bg-[#8b5e3c] 
+                            hoverable:hover:scale-105 
+                            hoverable:hover:shadow-[0_4px_12px_rgba(111,78,55,0.4)] w-[40%]"
                             style={{ fontVariant: "small-caps" }}
                             >
                             Confirm

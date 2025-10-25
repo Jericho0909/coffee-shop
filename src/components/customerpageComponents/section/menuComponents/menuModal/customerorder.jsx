@@ -117,7 +117,9 @@ const CustomerOrders = ({customer}) => {
                 </div>
                 <div className="container-flex justify-center p-1 mb-0">
                     <button 
-                        className={`press w-[40%] ${customerOrders.length === 0 ? "cursor-not-allowed" : ""}`}
+                        className={`press hoverable:hover:bg-[#8b5e3c] hoverable:hover:scale-105 
+                        hoverable:hover:shadow-[0_4px_12px_rgba(111,78,55,0.4)] w-[40%] 
+                        ${customerOrders.length === 0 ? "cursor-not-allowed" : ""}`}
                         onClick={() => checkOut()}
                         disabled={customerOrders.length === 0}
                     >

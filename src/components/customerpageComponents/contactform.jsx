@@ -1,42 +1,26 @@
 import { useContext, useState } from "react"
 import FirebaseActionContext from "../../context/firebaseactionContext";
 import ModalContext from "../../context/modalContext"
-import { toast } from "react-hot-toast";
 import toTitleCase from "../../utils/toTitleCase";
+import removeFireBaseKey from "../../utils/removeFirebaseKey";
+import showToast from "../../utils/showToast";
 const ContactForm = ({customer}) => {
     const { updateAction } = useContext(FirebaseActionContext)
     const { setIsOpen } = useContext(ModalContext)
     const [ phone, setPhone ] = useState("")
-    const [ email, setEmail ] = useState("")
     const [ location, setLocation ] = useState("")
+    const { Toast } = showToast()
 
-    const { firebaseKey, ...customerWithoutFirebaseKey } = customer
-
+    const safeData = removeFireBaseKey(customer)
     const handleSubmit = async(e) => {
         e.preventDefault();
         const updatedCustomerContact = {
-            ...customerWithoutFirebaseKey,
+            ...safeData,
             phone: phone,
-            email: email,
             location: location
         }
         await updateAction("customers", customer.firebaseKey, updatedCustomerContact)
-
-        toast.success(
-            <div className="Notification">
-                Success! You can now place an order.
-            </div>,
-            {
-                style: {
-                width: "100%",
-                backgroundColor: "white",
-                color: "#8c6244",
-                padding: "12px 16px",
-                borderRadius: "8px",
-                },
-                duration: 3000,
-            }
-        )
+        Toast("success", "Success! You can now place an order.", 3000)
 
         setTimeout(() => {
             setIsOpen(false)
@@ -68,23 +52,8 @@ const ContactForm = ({customer}) => {
                     required
                     onChange={(e) => {
                         const onlyNums = e.target.value.replace(/[^0-9]/g, "")
-                        setPhone(onlyNums);
+                        setPhone(onlyNums)
                     }}
-                />
-                <div>
-
-                </div>
-                <label htmlFor="email">
-                    Enter your email:
-                </label>
-                <input
-                    id="email"
-                    type="email"
-                    name="email"
-                    placeholder="Enter your email:"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
                 />
                 <label htmlFor="location">
                     Enter your location:

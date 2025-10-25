@@ -8,6 +8,7 @@ import Customers from "./components/adminpageComponents/section/customer";
 import Orders from "./components/adminpageComponents/section/order";
 import Employers from "./components/adminpageComponents/section/employers";
 import Stocks from "./components/adminpageComponents/section/stock";
+import AdminSettings from "./components/adminpageComponents/section/adminsettings";
 import Menu from "./components/customerpageComponents/section/menu";
 import CustomerOrders from "./components/customerpageComponents/section/customerorders";
 import Settings from "./components/customerpageComponents/section/settings";
@@ -108,6 +109,9 @@ function App() {
                                   </HandleKeyProvider>
                                 </SuggestionProvider>
                               </SearchProvider>
+                            }/>
+                            <Route path="Settings" element={
+                              <AdminSettings/>
                             }/>
                           </Route>
                           <Route

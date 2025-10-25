@@ -55,7 +55,7 @@ const PlaceOrder = ({customer}) => {
 
     const placeOrder = (e) => {
         e.preventDefault();
-        const isMissingContact = !customer.email || !customer.phone || !customer.location;
+        const isMissingContact = !customer.phone || !customer.location
         if(isMissingContact){
             setModalName("contactform")
             setIsOpen(true)
@@ -312,7 +312,10 @@ const PlaceOrder = ({customer}) => {
                 </div>
                 <div className="container-flex justify-center w-full h-auto p-1">
                     <button 
-                        className="press bg-[#6b4226] hover:bg-[#5a3620] w-[50%]"
+                        className="press bg-[#6b4226] 
+                        hoverable:hover:bg-[#5a3620] 
+                        hoverable:hover:scale-105 
+                        w-[50%]"
                         type="submit"
                     >
                         add to order ({subtotal})

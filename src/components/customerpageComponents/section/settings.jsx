@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext"
-import UserSettings from "./settingsComponents/settings/usersettings"
+import CustomerSettings from "./settingsComponents/settings/customersettings"
 import Loading from "../../loading"
 const Settings = () => {
     const { id } = useParams()
@@ -34,7 +34,7 @@ const Settings = () => {
                 </h1>
             </div>
             <div className="container-flex justify-center w-full flex-1 border border-[#8c6244] rounded-md">
-                <UserSettings
+                <CustomerSettings
                     user={user}
                 />
             </div>

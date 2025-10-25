@@ -1,4 +1,7 @@
 import { useState, useContext, useCallback, useEffect } from "react";
+import { auth } from "../../../../../firebase";
+import { createUserWithEmailAndPassword, sendEmailVerification,
+updateProfile } from "firebase/auth";
 import FirebaseFetchDataContext from "../../../../../context/firebasefetchdataContext";
 import FirebaseActionContext from "../../../../../context/firebaseactionContext";
 import ModalContext from "../../../../../context/modalContext";
@@ -46,6 +49,10 @@ const AddEmployer = () => {
         username: "",
         password: "",
         role: "Admin",
+        email: "",
+        phone: "",
+        location: ""
+
     };
 
     const [ adminData, setAdminData ] = useState(initialAdminData)
@@ -83,19 +90,38 @@ const AddEmployer = () => {
         }
         return runCheck()
     }, [adminList, isPasswordValid, isUsernameExists, setEndsWithAdmin, setIsUsernameAvailable, setShowPasswordValidationError, adminData])
+
+    const emailConformation = async(email, password) => {
+        const isEmailExists = adminList.some(key => key.email === email)
+        if(isEmailExists) return false
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+            const user = userCredential.user
+            await updateProfile(user, { displayName: adminData.name })
+            await sendEmailVerification(user)
+            return true
+
+        } catch (error) {
+                if (error.code === "auth/email-already-in-use") {
+                return false
+            }
+            console.error(error);
+            return false
+        }
+    }
     
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (adminData.username !== "") {
             const isAdminValid = validateAdminData(adminData.username, adminData.password)
-            if (!isAdminValid) return
+            const isEmailAvailable = emailConformation(employerData.email, adminData.password)
+            if (!isAdminValid || !isEmailAvailable) return
 
             await pushAction("admins", adminData);
         }
 
-        await pushAction("employers", employerData);
-
+        await pushAction("employers", employerData)
 
         setEmployerData(initialEmployerData);
         setAdminData(initialAdminData)
@@ -137,7 +163,9 @@ const AddEmployer = () => {
             <div className="flex justify-center items-center w-full h-auto">
                 <button
                     type="submit"
-                    className="press w-[40%]"
+                    className="press  hoverable:hover:bg-[#8b5e3c] 
+                    hoverable:hover:scale-105 
+                    hoverable:hover:shadow-[0_4px_12px_rgba(111,78,55,0.4)] w-[40%]"
                     style={{ fontVariant: "small-caps" }}
                     >
                     Confirm

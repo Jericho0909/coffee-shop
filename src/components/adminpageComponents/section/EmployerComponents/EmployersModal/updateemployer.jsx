@@ -1,4 +1,7 @@
 import { useContext, useState, useCallback, useEffect } from "react"
+import { auth } from "../../../../../firebase"
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, deleteUser,
+updateProfile } from "firebase/auth";
 import FirebaseFetchDataContext from "../../../../../context/firebasefetchdataContext"
 import FirebaseActionContext from "../../../../../context/firebaseactionContext"
 import ModalContext from "../../../../../context/modalContext"
@@ -6,7 +9,6 @@ import AddHighlightContext from "../../../../../context/addhighlightContext"
 import AuthValidationContext from "../../../../../context/authvalidationContext"
 import EmployerForm from "../Employer/employerformjsx"
 import showToast from "../../../../../utils/showToast"
-import toast from "react-hot-toast"
 import removeFireBaseKey from "../../../../../utils/removeFirebaseKey"
 import authValidation from "../../../../../utils/authValidation"
 import { useDebounce } from "@uidotdev/usehooks";
@@ -34,7 +36,6 @@ const ManageEmployer = () => {
     const debouncedType = useDebounce(type, 300)
 
     const selectedAdmin = adminList.find(key => key.name === employerName && key.role === "Admin")
- 
     const selectedEmployer = employerList.find(key => key.id === employerID)
 
     const [ editableAdminData, setEditableAdminData ] = useState(selectedAdmin)
@@ -65,6 +66,25 @@ const ManageEmployer = () => {
         return runCheck()
     }, [adminList, isUsernameExists, setEndsWithAdmin, setIsUsernameAvailable, isUsernameChanged])
 
+    const emailConformation = async(email, password) => {
+            const isEmailExists = adminList.some(key => key.email === email)
+            if(isEmailExists) return false
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+                const user = userCredential.user
+                await updateProfile(user, { displayName: editableAdminData.username })
+                await sendEmailVerification(user)
+                return true
+    
+            } catch (error) {
+                    if (error.code === "auth/email-already-in-use") {
+                    return false
+                }
+                console.error(error);
+                return false
+            }
+        }
+
     const validateAdminPassword = useCallback((password) => {
         const runCheck = () => {
 
@@ -81,16 +101,25 @@ const ManageEmployer = () => {
         return runCheck()
     }, [isPasswordValid, setShowPasswordValidationError])
 
-    const removeAdminFromList = async() => {
+    const removeAdminFromList = async(email, password, deleteOnList) => {
         const updatedAdminList = adminList.filter(key => key.id !== selectedAdmin.id)
-        await removeAction("admins", selectedAdmin.firebaseKey
-        , updatedAdminList)
+        try{
+            const userCredential = await signInWithEmailAndPassword(auth, email, password)
+            const user = userCredential.user
+            await deleteUser(user)
+            if(deleteOnList){
+                await removeAction("admins", selectedAdmin.firebaseKey
+                , updatedAdminList)
+            }
+        }catch(error) {
+            console.log(error)
+        }
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         if(selectedAdmin && editableEmployerData.role !== "Admin"){
-            removeAdminFromList()
+            removeAdminFromList(selectedAdmin.email, selectedAdmin.password, true)
         }
         else{
             if(isUsernameChanged){
@@ -101,20 +130,28 @@ const ManageEmployer = () => {
             }
             const checkAdminExist = adminList.find(key => key.id === employerID || key.name === employerName)
             if(editableEmployerData.role === "Admin" && !checkAdminExist){
+                const isEmailAvailable = emailConformation(editableAdminData.email, editableAdminData.password)
+                if(!isEmailAvailable) return
+                const { gender, status,  ...data} = editableEmployerData
                 const promotetoAdmin = {
-                    id: editableEmployerData.id,
-                    name: editableEmployerData.name,
-                    username: editableAdminData.username,
-                    password: editableAdminData.password,
-                    role: "Admin",
+                    ...data
                 }
 
                 await pushAction("admins", promotetoAdmin)
             }
             else{
                 if(selectedAdmin){
-                    const safeAdminData = removeFireBaseKey(editableAdminData)
-                    await updateAction("admins", selectedAdmin.firebaseKey, safeAdminData)
+                    if(selectedAdmin.email !== editableEmployerData.email){
+                        emailConformation(editableEmployerData.email, editableAdminData.password)
+                        removeAdminFromList(selectedAdmin.email, selectedAdmin.password, false)
+                        
+                    }
+                    const safeEmployerData = removeFireBaseKey(editableEmployerData)
+                    const { gender, status,  ...data} = safeEmployerData
+                    const updatedAdminData = {
+                        ...data
+                    }
+                    await updateAction("admins", selectedAdmin.firebaseKey, updatedAdminData)
                 }
             }
 
@@ -125,28 +162,14 @@ const ManageEmployer = () => {
         await updateAction("employers", selectedEmployer.firebaseKey
         , safeEmployerData)
         toggleModal()
-        toast.success(
-            <div className="Notification">
-                Employer updated successfully!
-            </div>,
-            {
-                style: {
-                width: "100%",
-                backgroundColor: "white",
-                color: "#8c6244",
-                padding: "12px 16px",
-                borderRadius: "8px",
-                },
-                duration: 2000,
-            }
-        )
+        Toast("success", "Employer updated successfully!", 2000)
         highlightUpdated(selectedEmployer.id)
     }
 
     const handleDelete = async (e) => {
         e.preventDefault();
         if(selectedAdmin){
-            removeAdminFromList()
+            removeAdminFromList(selectedAdmin.email, selectedAdmin.password, true)
         }
 
         const updatedEmployerList = employerList.filter(key => key.id !== selectedEmployer.id)
@@ -185,7 +208,8 @@ const ManageEmployer = () => {
                 <button
                     type="button"
                     className="bg-[#8B3A2B] text-white px-4 py-2 rounded shadow-md w-[40%] h-auto
-                    hover:bg-[#732f23] hover:scale-105
+                    hoverable:hover:bg-[#732f23] 
+                    hoverable:hover:scale-105
                     active:scale-95 active:shadow-none
                     transition-all duration-300 ease-in-out"
                     style={{ fontVariant: "small-caps" }}
@@ -196,7 +220,8 @@ const ManageEmployer = () => {
                 <button
                     type="submit"
                     className="bg-[#6F4E37] text-white px-4 py-2 rounded shadow-md w-[40%] h-auto
-                    hover:bg-[#5a3f2c] hover:scale-105
+                    hoverable:hover:bg-[#5a3f2c] 
+                    hoverable:hover:scale-105
                     active:scale-95 active:shadow-none
                     transition-all duration-300 ease-in-out"
                 >

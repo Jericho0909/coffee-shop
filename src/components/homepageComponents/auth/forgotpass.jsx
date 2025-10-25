@@ -1,53 +1,156 @@
-import {  useContext, useState } from "react"
+import {  useContext, useState, useEffect, useCallback } from "react"
+import { auth } from "../../../firebase";
+import { updatePassword, signInWithEmailAndPassword } from "firebase/auth";
 import AuthviewContext from "../../../context/autviewContext"
 import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext";
 import FirebaseActionContext from "../../../context/firebaseactionContext";
+import { generateVerificationCode } from "../../../utils/generateVerificationCode";
+import { sendVerificationCode } from "../../../utils/sendVerificationCode";
 import showToast from "../../../utils/showToast";
+import authValidation from "../../../utils/authValidation";
 import removeFireBaseKey from "../../../utils/removeFirebaseKey";
+import { useDebounce } from "@uidotdev/usehooks";
 const Forgot = () =>{
     const { setAuthView } = useContext(AuthviewContext)
-    const { updateAction } = useContext(FirebaseActionContext)
     const { customerList } = useContext(FirebaseFetchDataContext)
+    const { updateAction } = useContext(FirebaseActionContext)
+    const { isPasswordValid } = authValidation()
     const { Toast } = showToast()
-    const [ username, setUsername ] = useState("")
+    const [ email, setEmail ] = useState(sessionStorage.getItem("email") || "")
+    const [ generateCode, setGenerateCode ] = useState(sessionStorage.getItem("code") || "")
     const [ newPassword, setNewPassword] = useState("")
-    const [ userFound, setUserFound ] = useState(true)
+    const [ code, setCode ] = useState("")
+    const [ minutes, setMinutes ] =  useState(Number(sessionStorage.getItem("minutes")) || 3)
+    const [ seconds, setSeconds ] = useState(Number(sessionStorage.getItem("seconds")) || 0)
+    const [ start, setStart ] = useState(sessionStorage.getItem("start") === "true" ? true : false)
+    const [ isuserEmailFound, setIsUserEmailFound ] = useState(true)
     const [ showPasswordError, setShowPasswordError ] = useState(false)
+    const [ isCodeMismatch, setIsCodeMismatch] = useState(false)
+    const [ isLoading, setIsLoading ] = useState(false)
+    const debouncedType = useDebounce(newPassword, 300)
+
+    const validatePassword = useCallback((pass) => {
+        const valid = isPasswordValid(pass)
+        if(!valid){
+            setShowPasswordError(true)
+            return false
+        }
+        setShowPasswordError(false)
+        return true
+    },[isPasswordValid])
+
+    useEffect(() => {
+        if(start){
+            const timer = setInterval(() => {
+            if (seconds === 0) {
+                if (minutes === 0) {
+                    clearInterval(timer)
+                    setGenerateCode("")
+                    setStart(false)
+                    setMinutes(3)
+                    setSeconds(0)
+                    sessionStorage.removeItem("start")
+                    sessionStorage.removeItem("minutes");
+                    sessionStorage.removeItem("seconds");
+                    sessionStorage.removeItem("code")
+                } 
+                else{
+                    sessionStorage.setItem("email", email)
+                    sessionStorage.setItem("start", true)
+                    setMinutes((prev) => prev - 1)
+                    setSeconds(59)
+                }
+            } else {
+                setSeconds((prev) => prev - 1);
+                sessionStorage.setItem("minutes", minutes)
+                sessionStorage.setItem("seconds", seconds)
+            }
+        }, 1000)
+
+    return () => clearInterval(timer);
+        }
+    }, [start, minutes, seconds, email])
+
+    useEffect(() => {
+        if(debouncedType !== ""){
+            validatePassword(debouncedType)
+        }
+        else{
+            setShowPasswordError(false)
+        }
+    }, [debouncedType, validatePassword])
+
+    const findUser = () => {
+        return customerList.find(key => key.email === email)
+    }
     
-    const checkUsernameExists = (user) => {
-        if(user){
-            setUserFound(true)
+    const checkUserEmailExists = (email) => {
+        if(email){
+            setIsUserEmailFound(true)
             return true
 
         }
         else{
-            setUserFound(false)
+            setIsUserEmailFound(false)
             return false
         }
     }
 
-    const isPasswordValid = (newPassword) => {
-        const pattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}[\]:;<>,.?~\\/-]).{8,}$/;
-        if(pattern.test(newPassword)){
-            setShowPasswordError(false)
-            return true
+    const checkTheCode = (code) => {
+        if(code !== generateCode){
+            setIsCodeMismatch(true)
+            return false
         }
-        setShowPasswordError(true)
-        return false
+        setIsCodeMismatch(false)
+        return true
+    }
+
+    const getTheGenerateCode = async () => {
+        const user = findUser()
+        if(!user) return
+        const userEmail = checkUserEmailExists(user.email)
+        if(!userEmail) return
+        const code = generateVerificationCode()
+        const isSuccessful = await sendVerificationCode(user.email, user.username, code)
+        if(isSuccessful){
+            Toast("success", "Check your email spam to get the Code", 4000)
+            setGenerateCode(code)
+            setStart(true)
+        }
+        sessionStorage.setItem("code", code)
 
     }
 
+
     const handleForgotPass = async (e) => {
         e.preventDefault()
-        const user = customerList.find(key => key.username === username)
+        const isValid = validatePassword(debouncedType)
+        const isCodeOk = checkTheCode(code)
 
-        if(!checkUsernameExists(user) || !isPasswordValid(newPassword)) return
-
-        const safeUserData = removeFireBaseKey(user)
-
-        const updatedPass = {...safeUserData, password: newPassword}
-        await updateAction("customers", user.firebaseKey, updatedPass)
+        if(!isValid || !isCodeOk) return
+        const user = findUser()
+        try {
+            setIsLoading(true)
+            const userCredential = await signInWithEmailAndPassword(auth, user.email, user.password);
+            const firebaseUser  = userCredential.user;
+            const safeUserData = removeFireBaseKey(user)
+            const updatedPass = {...safeUserData, password: newPassword}
+            await updatePassword(firebaseUser, newPassword);
+            await updateAction("customers", user.firebaseKey, updatedPass)
+        } catch(error) {
+            console.log(error)
+        } finally{
+            setIsLoading(false)
+        }
         Toast("success", "Password updated successfully!", 2000)
+        setStart(false)
+        sessionStorage.removeItem("email")
+        sessionStorage.removeItem("start")
+        sessionStorage.removeItem("minutes");
+        sessionStorage.removeItem("seconds");
+        sessionStorage.removeItem("code")
+        setAuthView("login")
+
     }
 
     return(
@@ -56,24 +159,60 @@ const Forgot = () =>{
                 forgot password
             </h1>
             <form
-                className="flex justify-start items-center flex-col w-[90%] mb-4"
+                className="flex justify-start items-center flex-col w-[90%] mb-4 relative"
                 onSubmit={handleForgotPass}
             >
-                <label htmlFor="username">
-                    Enter your username:
+                <label htmlFor="email">
+                    Enter your email:
                 </label>
                 <input
-                    id="username"
-                    type="text"
-                    placeholder="Enter your username"
+                    id="email"
+                    type="email"
+                    placeholder="example@gmail.com"
                     required
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    style={!userFound ? {borderColor: "red"} : {}}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    style={!isuserEmailFound ? {borderColor: "red"} : {}}
                 />
-                {!userFound && (
+                {!isuserEmailFound && (
                     <p className="text-red-600 text-[0.75rem] w-full mt-1">
-                        Username not found!
+                        Email not found!
+                    </p>
+                )}
+                <div className="container-flex w-full h-auto mt-2 mb-0">
+                    <div className="container-flex w-full h-auto mb-0 gap-1">
+                        <label htmlFor="input-code" className="whitespace-nowrap w-auto">
+                            Enter the Code
+                        </label>
+                        <input
+                            id="input-code"
+                            type="number"
+                            value={code}
+                            onChange={(e) => {
+                                const value = e.target.value.slice(0, 6);
+                                setCode(value);
+                            }}
+                            onFocus={() => setIsCodeMismatch(false)}
+                            placeholder="Enter 6-digit code"
+                            required
+                            className={`w-auto ${isCodeMismatch ?"border border-red-500" : ""}`}
+                        />
+                    </div>
+                    <button
+                        type="button"
+                        className={`bg-[#88A550] text-white px-4 py-2 rounded shadow-md w-[35%] sm:w-[45%] h-auto transition-transform duration-300 ease-in-out
+                        hoverable:hover:bg-[#7a9549] hoverable:hover:scale-105 hoverable:hover:shadow-[0_4px_12px_rgba(136,165,80,0.4)] active:translate-y-1 active:shadow-none
+                            ${start ? "cursor-not-allowed" : "cursor-pointer"}
+                        `}
+                        onClick={() => getTheGenerateCode()}
+                        disabled={start}
+                    >
+                        Get The Code
+                    </button>
+                </div>
+                {isCodeMismatch && (
+                    <p className="text-red-600 text-[0.75rem] w-full mt-1">
+                        Mismatch
                     </p>
                 )}
                 <label htmlFor="new-password">
@@ -82,7 +221,7 @@ const Forgot = () =>{
                 <input
                     id="new-password"
                     type="password"
-                    placeholder="Enter your username"
+                    placeholder="********"
                     required
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
@@ -90,6 +229,11 @@ const Forgot = () =>{
                 {showPasswordError && (
                     <p className="text-red-600 text-[0.75rem] w-full mt-1">
                         "Password must be at least 8 characters and include an uppercase letter, a number, and a special character."
+                    </p>
+                )}
+                {start && (
+                    <p className="text-blue-600 text-[0.75rem] w-full mt-1 text-right">
+                        Countdown: {minutes}:{seconds.toString().padStart(2, "0")}
                     </p>
                 )}
                 <button
@@ -105,6 +249,13 @@ const Forgot = () =>{
             >
                 Back to Login
             </button>
+            {isLoading && (
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-auto h-auto">
+                <div className="loader-three">
+                    
+                </div>
+            </div>
+        )}
         </>
     )
 }

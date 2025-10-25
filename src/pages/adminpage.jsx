@@ -7,7 +7,6 @@ import ModalContext from "../context/modalContext";
 import Header from "../components/header";
 import Main from "../components/main";
 import Aside from "../components/aside";
-import CoffeGif from "../../src/assets/gif/coffee-Gif.gif";
 import Notification from "../components/notification";
 import Modal from "../components/modal";
 import ProductAdd from "../components/adminpageComponents/section/ProductComponents/product/productadd";
@@ -18,6 +17,7 @@ import AddEmployer from "../components/adminpageComponents/section/EmployerCompo
 import ManageEmployer from "../components/adminpageComponents/section/EmployerComponents/EmployersModal/updateemployer";
 import ManageCustomer from "../components/adminpageComponents/section/CustomerCompoments/cutomerModal/manageCustomer";
 import AddStock from "../components/adminpageComponents/section/StockComponents/stockModal/addstock";
+import AdminEditProfile from "../components/adminpageComponents/section/AdminSettingsCompoments/settingsModal/adminEditProfile";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import { AnimatePresence } from "framer-motion";
 import showToast from "../utils/showToast";
@@ -29,7 +29,7 @@ const Adminpage = () => {
     const { id, username } = useParams()
     const { hasNewOrder, setHasNewOrder } = useOrdersListener()
     const { Toast } = showToast()
-    const [ loading, setLoading ] = useState(true)
+    const [ isLoading, setIsLoading ] = useState(true)
     const [ opensidebar, setOpenSiderBar ] = useState(false)
     const [ active, setActive ] = useState(sessionStorage.getItem("section") || "dashboardsection")
     const sidebarRef = useRef(null)
@@ -37,8 +37,8 @@ const Adminpage = () => {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setLoading(false);
-        }, 9000)
+            setIsLoading(false)
+        }, 1000)
 
         return () => clearTimeout(timer)
     }, [])
@@ -78,7 +78,8 @@ const Adminpage = () => {
         addEmployer: <AddEmployer/>,
         manageEmployer: <ManageEmployer/>,
         manageCustomer: <ManageCustomer/>,
-        addStock: <AddStock/>
+        addStock: <AddStock/>,
+        adminEditProfile: <AdminEditProfile/>
     }
 
     const onToggleSidebar = () => {
@@ -244,6 +245,26 @@ const Adminpage = () => {
                     </NavLink>
                 </li>
                 <li>
+                    <NavLink 
+                        to={`/Adminpage/${id}/${username}/Settings`} onClick={() => {
+                            onToggleSidebar()
+                            setActive("settingssection")
+                            saveSection("settingssection")
+                            
+                        }}
+                        className={`
+                            relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
+                            after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
+                            ${active === "settingssection" 
+                                ? "after:w-full text-[#6F4E37] font-semibold" 
+                                : ""
+                            } 
+                        `}
+                    >
+                        settings
+                    </NavLink>
+                </li>
+                <li>
                     <button
                     className="bg-black text-white px-6 py-2 rounded-md mt-3 
                     hover:bg-[#734d35] hover:scale-105 
@@ -259,22 +280,7 @@ const Adminpage = () => {
         )
     }
 
-    if( loading ){
-        return (
-            <div className="flex justify-center items-center bg-[#8c6244] w-full h-[100vh]">
-                <div className="flex justify-center items-center flex-col w-auto h-auto m-1 p-1 gap-5">
-                    <img
-                        className="w-[65%] sm:w-[50%] lg:w-[45%] xl:w-[20%] h-auto rounded-[50%]"
-                        src={CoffeGif}
-                        alt="Coffee-Icon-Loading"
-                    />
-                    <p className="loader text-[2rem] font-bold font-mono w-fit">
-                        Loading...
-                    </p>
-                </div>
-            </div>
-        )
-    }
+    if(isLoading) return
 
     return(
         <div className="flex flex-col">  

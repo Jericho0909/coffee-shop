@@ -14,7 +14,7 @@ import PlaceOrder from "../components/customerpageComponents/section/menuCompone
 import CustomerOrders from "../components/customerpageComponents/section/menuComponents/menuModal/customerorder";
 import ContactForm from "../components/customerpageComponents/contactform";
 import ManageCustomerOrder from "../components/customerpageComponents/section/customerordersComponents/customerorderModal/managecustomerorder";
-import EditProfile from "../components/customerpageComponents/section/settingsComponents/settingsModal/editProfile";
+import CustomerEditProfile from "../components/customerpageComponents/section/settingsComponents/settingsModal/customerEditProfile";
 import Thankyou from "../components/customerpageComponents/thankYou";
 import { AnimatePresence } from "framer-motion";
 import { useOrdersListener } from "../hooks/useOrderListener";
@@ -35,9 +35,17 @@ const Customerpage = () => {
     const {orderComplete } = useOrdersListener()
     const [ opensidebar, setOpenSiderBar ] = useState(false)
     const [ active, setActive ] = useState(sessionStorage.getItem("customerSection") || "menusection")
+    const [ isLoading, setIsLoading ] = useState(false)
     const sidebarRef = useRef(null)
-
     const customer = customerList.find(key => key.id === id)
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsLoading(false)
+        }, 1000)
+
+        return () => clearTimeout(timer)
+    }, [])
 
     useEffect(() => {
         if(customer.username === orderComplete.customerName && orderComplete.status === "Completed"){
@@ -150,7 +158,7 @@ const Customerpage = () => {
         placeorder: <PlaceOrder customer={customer}/>,
         customerorder: <CustomerOrders customer={customer}/>,
         manageCustomerOrder: <ManageCustomerOrder customer={customer}/>,
-        editProfile: <EditProfile  customer={customer}/>,
+        editProfile: <CustomerEditProfile customer={customer}/>,
         thankYou: <Thankyou/>
     }
 
@@ -164,6 +172,7 @@ const Customerpage = () => {
     }
 
     if(!customer) return
+    if(isLoading) return
 
 
     return (

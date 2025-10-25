@@ -8,8 +8,7 @@ const OrderCard = ({orderCard, orderlength}) => {
         Processing: "bg-[#f59e0b]",
         Completed: "bg-[#10b981]",
     }
-
-
+    
     const openModal = (order) => {
         sessionStorage.setItem("customerOrder", JSON.stringify(order))
         setModalName("manageCustomerOrder")

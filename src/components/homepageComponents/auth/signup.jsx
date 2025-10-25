@@ -1,4 +1,7 @@
 import { useContext, useState, useEffect, useCallback } from "react";
+import { auth } from "../../../firebase.js";
+import { createUserWithEmailAndPassword, sendEmailVerification,
+updateProfile } from "firebase/auth";
 import AuthviewContext from "../../../context/autviewContext";
 import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext";
 import FirebaseActionContext from "../../../context/firebaseactionContext";
@@ -23,6 +26,7 @@ const Signup = () => {
     const [ confirmPassword, setConfirmPassword ] = useState("")
     const [ isPasswordMismatch, setIsPasswordMismatch ] = useState(false)
     const [ type, setType ] = useState("")
+    const [ isLoading, setIsLoading ] = useState(false)
     const [ date,  ] = useState(new Date())
     const debouncedType = useDebounce(type, 300)
 
@@ -45,10 +49,9 @@ const Signup = () => {
 
     const [ formData, setFormData ] = useState(initialFormData);
 
-    const checkUsernameAvailability = useCallback((name) => {
-        const runCheck = async() => {
-            const usernameExists = await isUsernameExists(name, customerList)
-             console.log(usernameExists)
+    const checkUsernameAvailability = useCallback((username) => {
+        const runCheck = () => {
+            const usernameExists =  isUsernameExists(username, customerList)
             if (usernameExists) {
                 setIsUsernameAvailable(false);
                 return false
@@ -61,7 +64,7 @@ const Signup = () => {
     }, [customerList, isUsernameExists, setIsUsernameAvailable])
 
     const validatePassword = useCallback((password) => {
-        const runCheck = async() =>{
+        const runCheck = () =>{
             const valid = isPasswordValid(password);
 
             if (!valid) {
@@ -79,50 +82,61 @@ const Signup = () => {
             else{
                 setIsPasswordMismatch(false)
             }
-
             return true;
         }
         return runCheck()
     },[confirmPassword, isPasswordValid, setShowPasswordValidationError])
 
+    const emailConformation = async() => {
+        const isEmailExists = customerList.some(key => key.email === formData.email)
+        if(isEmailExists) return false
+
+        try{
+            setIsLoading(true)
+            const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password)
+            const user = userCredential.user
+            await updateProfile(user, { displayName: formData.username })
+            await sendEmailVerification(user)
+            return true
+
+        } catch(error){
+            if (error.code === "auth/email-already-in-use") {
+                return false
+            }
+            console.error(error);
+        } finally{
+            setIsLoading(false)
+        }
+    }
+
     const handleSubmitSignup = async (e) => {
         e.preventDefault();
-        const isUsernameOk = await checkUsernameAvailability(formData.username)
-        const isPasswordOk = validatePassword(formData.password);
+        const isUsernameOk =  checkUsernameAvailability(formData.username)
+        const isPasswordOk = validatePassword(formData.password)
 
         if (!isUsernameOk || !isPasswordOk) return
 
-        const safeData = {
-            ...formData,
-            orders: formData.orders.length > 0 ? formData.orders : ["__empty__"]
+        try{
+            const safeData = {
+                ...formData,
+                orders: formData.orders.length > 0 ? formData.orders : ["__empty__"]
+            }
+
+            const isEmailAvailable =  await emailConformation();
+
+            if(!isEmailAvailable){
+                Toast("error", "This email is already registered.", 3000)
+                return
+            }
+            await pushAction("customers", safeData)
+            setFormData(initialFormData)
+            setConfirmPassword("")
+            Toast("success", "Successfully signed up", 2000)
+            setAuthView("login")
+
+        } catch(error) {
+            console.error(error);
         }
-
-        await pushAction("customers", safeData)
-        setFormData(initialFormData)
-        setConfirmPassword("")
-        Toast("success", "Successfully signed up", 2000)
-    }
-
-    const inputRow = (labelTitle, type, value, key) => {
-        return(
-            <div className="w-full mb-1">
-                <label htmlFor={key}>
-                    {labelTitle}
-                </label>
-                <input
-                    id={key}
-                    type={type}
-                    name={key}
-                    required
-                    value={value}
-                    onChange={(e) => {
-                        setFormData({ ...formData, [e.target.name]: e.target.value })
-                        setType(e.target.value)
-                    }}
-                    className="w-full"
-                />
-            </div>
-        )
     }
 
     useEffect(() => {
@@ -142,22 +156,46 @@ const Signup = () => {
         }
     }, [debouncedType, checkUsernameAvailability, formData, setIsUsernameAvailable, showPasswordValidationError, validatePassword, setShowPasswordValidationError])
 
+    const inputRow = (labelTitle, type, value, key, placeholder) => {
+        return(
+            <div className="w-full mb-1">
+                <label htmlFor={key}>
+                    {labelTitle}
+                </label>
+                <input
+                    id={key}
+                    type={type}
+                    name={key}
+                    required
+                    value={value}
+                    placeholder={placeholder}
+                    onChange={(e) => {
+                        setFormData({ ...formData, [e.target.name]: e.target.value })
+                        setType(e.target.value)
+                    }}
+                    className="w-full"
+                />
+            </div>
+        )
+    }
+
   return (
     <>
         <h1 className="text-[clamp(2rem,2vw,2.50rem)] font-nunito tracking-wide font-black text-center">
             sign up
         </h1>
         <form
-            className="flex justify-start items-center flex-col w-[90%] mb-4"
+            className="flex justify-start items-center flex-col w-[90%] mb-4 relative"
             onSubmit={handleSubmitSignup}
         >
-            {inputRow("Enter your Username", "type", formData.username, "username")}
+            {inputRow("Enter your Username", "type", formData.username, "username", "ex: user")}
             {!isUsernameAvailable && (
                 <p className="text-red-600 text-[0.75rem] w-full mt-1">
                     Username already exists.
                 </p>
             )}
-            {inputRow("Enter your Password", "password", formData.password, "password")}
+            {inputRow("Enter your Email", "email", formData.email, "email", "example@gmail.com")}
+            {inputRow("Enter your Password", "password", formData.password, "password", "!Example123")}
             {showPasswordValidationError && (
                 <p className="text-red-600 text-[0.75rem] w-full mt-1">
                     Password must be at least 8 characters and include an uppercase
@@ -173,6 +211,7 @@ const Signup = () => {
                     type="password"
                     required
                     value={confirmPassword}
+                    placeholder="!Example123"
                     onChange={(e) => {setConfirmPassword(e.target.value)}}
                     className="w-full"
                 />
@@ -189,13 +228,19 @@ const Signup = () => {
                 Sign Up
             </button>
         </form>
-
         <button
             onClick={() => setAuthView("login")}
             className="text-[clamp(0.78rem,2vw,1rem)] font-nunito tracking-wide text-blue-500 font-semibold underline text-sm mt-2"
         >
             Back to Login
         </button>
+        {isLoading && (
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-auto h-auto">
+                <div className="loader-three">
+                    
+                </div>
+            </div>
+        )}
     </>
   );
 };

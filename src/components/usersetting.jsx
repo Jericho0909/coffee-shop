@@ -1,30 +1,9 @@
-import { useContext, useState } from "react"
-import FirebaseFetchDataContext from "../../../../../context/firebasefetchdataContext";
-import ModalContext from "../../../../../context/modalContext"
-import showToast from "../../../../../utils/showToast";
+import { useState } from "react"
 import { Eye } from 'lucide-react';
 import { EyeClosed } from 'lucide-react';
-const UserSettings = ({user}) => {
-    const { orderList } = useContext(FirebaseFetchDataContext)
-    const { setIsOpen, setModalName } = useContext(ModalContext)
-    const { Toast } = showToast()
+const UserSettings = ({user, editProfile}) => {
     const [ showPassword, setShowPassword ] = useState(false)
-
-    const editProfile = () => {
-       const hasActiveOrder = orderList
-        .filter(order => order.customerName === user.username)
-        .some(o => o.status === "Pending" || o.status === "Processing")
-
-        if(hasActiveOrder){
-            Toast("error", "You cannot edit your profile while you have a pending order in progress.", 4000)
-            return
-        }
-        setModalName("editProfile")
-        setIsOpen(true)
-    }
-
     const password = showPassword ? user.password : "*".repeat(user.password.length)
-
     const infoRow = (title1, value1, title2, value2) => {
         return(
             <div className="container-flex flex-col w-full font-opensans tracking-wide text-[clamp(0.80rem,2vw,1rem)]p-1 mb-[0.40rem]">
@@ -55,7 +34,6 @@ const UserSettings = ({user}) => {
             </div>
         )
     }
-
     return(
         <div className="container-flex justify-start flex-col w-full h-[90%] sm:w-[80%] lg:w-[100%] xl:w-[90%] py-[2rem] xl:py-[0.50rem] px-1 ">
             <div className="container-flex justify-center w-[5rem] xl:w-[4rem] h-[5rem] xl:h-[4rem] rounded-[50%] bg-[#8c6244] border border-black mb-0">
@@ -78,16 +56,20 @@ const UserSettings = ({user}) => {
                     </span>
                 </div>
             </section>
-            <section>
+            {user?.dateJoined && (
+                <section>
                 <h1 className="text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[1rem] xl:mb-[0.50rem]">
                     activity stats
                 </h1>
                 {infoRow("Date Joined:", user.dateJoined, "Last Order Date:", user.lastOrderDate)}
                 {infoRow("Total Orders:", user.totalOrders, "Total Spent:", user.totalSpent)}
             </section>
+            )}
             <div className="container-flex justify-center w-full h-auto p-1">
                 <button
-                    className="press w-[50%]"
+                    className="press  hoverable:hover:bg-[#8b5e3c] 
+                    hoverable:hover:scale-105 
+                    hoverable:hover:shadow-[0_4px_12px_rgba(111,78,55,0.4)] w-[30%]"
                     onClick={() => editProfile()}
                 >
                     edit 

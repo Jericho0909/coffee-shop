@@ -45,7 +45,10 @@ const Products = () => {
     const AddProductBtn = () => {
         return(
             <button 
-            onClick={() => openModal()} className="press w-auto" > 
+            onClick={() => openModal()} 
+            className="press hoverable:hover:bg-[#8b5e3c] 
+            hoverable:hover:scale-105 
+            hoverable:hover:shadow-[0_4px_12px_rgba(111,78,55,0.4)] w-auto"> 
                 add product 
             </button> 
         )

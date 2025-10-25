@@ -131,7 +131,7 @@ const ManageCustomerOrder = ({customer}) => {
                         <button
                             className={`bg-red-500 text-white px-4 py-2 rounded shadow-md w-[35%] sm:w-[45%] h-auto
                             transition-transform duration-300 ease-in-out
-                            hover:bg-red-600 hover:scale-105 hover:shadow-[0_4px_12px_rgba(239,68,68,0.4)]
+                            hoverable:hover:bg-red-600 hoverable:hover:scale-105 hoverable:hover:shadow-[0_4px_12px_rgba(239,68,68,0.4)]
                             active:translate-y-1 active:shadow-none
                                 ${customerOrder.status === "Processing" ? "cursor-not-allowed" : ""}
                             `}
@@ -146,7 +146,8 @@ const ManageCustomerOrder = ({customer}) => {
                             {!isReOrder
                                 ? (
                                     <button 
-                                        className="press w-[35%] sm:w-[45%]"
+                                        className="press hoverable:hover:bg-[#8b5e3c] hoverable:hover:scale-105 
+                                        hoverable:hover:shadow-[0_4px_12px_rgba(111,78,55,0.4)]  w-[35%] sm:w-[45%]"
                                         style={{ fontVariant: "small-caps" }}
                                         onClick={() => orderAgain()}
                                     >

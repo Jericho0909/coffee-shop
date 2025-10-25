@@ -13,15 +13,21 @@ const authValidation = () => {
         if(pattern.test(password)){
             return true
         }
-        else{
-            return false
-        }
+        return false
+    }
 
+    const isEmailExits = (email, list) => {
+        const checker = list.some(key => key.email === email)
+        if(checker){
+            return true
+        }
+        return false
     }
 
     return{
         isUsernameExists,
-        isPasswordValid
+        isPasswordValid,
+        isEmailExits
     }
 }
 
