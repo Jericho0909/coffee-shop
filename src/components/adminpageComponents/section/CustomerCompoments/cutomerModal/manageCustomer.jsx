@@ -4,6 +4,7 @@ import FirebaseActionContext from "../../../../../context/firebaseactionContext"
 import ModalContext from "../../../../../context/modalContext"
 import ContainerContext from "../../../../../context/containerContext"
 import AddHighlightContext from "../../../../../context/addhighlightContext"
+import CoffeeTooltip from "../../../../tooltip"
 import { motion, AnimatePresence } from "framer-motion"
 import showToast from "../../../../../utils/showToast"
 import removeFireBaseKey from "../../../../../utils/removeFirebaseKey"
@@ -137,7 +138,8 @@ const ManageCustomer = () => {
                 >
                     Customer Details
                 </h1>
-                {infoRow("Name:", selectedCustomer.username)}
+                {infoRow("Name:", selectedCustomer.name)}
+                {infoRow("Username:", selectedCustomer.username)}
                 {infoRow("Contact:", selectedCustomer.phone)}
                 {infoRow("Email:", selectedCustomer.email)}
                 {infoRow("Location:", selectedCustomer.location)}
@@ -191,31 +193,37 @@ const ManageCustomer = () => {
                         </thead>
                         <tbody>
                             {selectedCustomer.orders.map((item, index) => (
-                                <tr 
-                                    key={index} 
-                                    className="cursor-pointer"
-                                    onClick={() => {
-                                        setOrderId(item.orderId);
-                                        setShowFullDetails(true);
-                                        handleScrollToTop()
-                                    }}
+                                <CoffeeTooltip
+                                    key={index}
+                                    text="click me" 
+                                    side="top" 
+                                    align="start" 
                                 >
-                                    <td>
-                                        {item.orderId}
-                                    </td>
-                                    <td>
-                                        {item.orderDate}
-                                    </td>
-                                    <td>
-                                        {item.status}
-                                    </td>
-                                    <td>
-                                        {item.paymentMethod}
-                                    </td>
-                                    <td>
-                                        {item.total}
-                                    </td>
-                                </tr>
+                                    <tr 
+                                        className="cursor-pointer border border-red-500"
+                                        onClick={() => {
+                                            setOrderId(item.orderId);
+                                            setShowFullDetails(true);
+                                            handleScrollToTop()
+                                        }}
+                                    >
+                                        <td>
+                                            {item.orderId}
+                                        </td>
+                                        <td>
+                                            {item.orderDate}
+                                        </td>
+                                        <td>
+                                            {item.status}
+                                        </td>
+                                        <td>
+                                            {item.paymentMethod}
+                                        </td>
+                                        <td>
+                                            {item.total}
+                                        </td>
+                                    </tr>
+                                </CoffeeTooltip>
                             ))}
                         </tbody>
                     </table>

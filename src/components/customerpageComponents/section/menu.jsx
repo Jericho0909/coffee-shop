@@ -73,7 +73,8 @@ const Menu = () => {
             <div className="fixed top-[12rem] right-[1.50rem] z-10">
                 <button 
                     ref={bounceRef}
-                    className="container-flex justify-center w-12 h-12 p-1 mb-0 cursor-pointer relative transition-transform duration-300  hoverable:hover:scale-125"
+                    className="container-flex justify-center w-12 h-12 p-2 mb-0 cursor-pointer relative
+                    rounded-[50%] bg-[#6F4E37] border border-black transition-transform duration-300 hoverable:hover:scale-125"
                     onClick={() => orderList()}
                     
                 >
@@ -83,7 +84,7 @@ const Menu = () => {
                         alt="CoffeeCup-Icon"
                         loading="lazy"
                     />
-                    <span className="absolute -top-2 right-1 font-opensans font-semibold border border-[#6F4E37] w-[1.45rem] rounded-[50%]">
+                    <span className="container-flex justify-center absolute -top-2 -right-2 text-[0.90rem] font-opensans font-semibold border border-black bg-[#6F4E37] w-[2rem] h-[1.80rem] rounded-[50%] text-white mb-0">
                         {customerOrders.length !== 0
                             ? customerOrders.length
                             : "0"

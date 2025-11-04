@@ -6,6 +6,8 @@ import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext"
 import AuthviewContext from "../../../context/autviewContext"
 import ModalContext from "../../../context/modalContext";
 import showToast from "../../../utils/showToast";
+import { EyeClosed } from 'lucide-react';
+import { Eye } from 'lucide-react';
 const Login = () => {
     const { setAuthView } = useContext(AuthviewContext)
     const { 
@@ -17,6 +19,7 @@ const Login = () => {
     const [ username, setUsername ] = useState("")
     const [ password, setPassword ] = useState("")
     const [ loginError, setLoginError ] = useState(false)
+    const [ showPass, setShowPass ] = useState(false)
     const { Toast } = showToast()
     const navigate = useNavigate()
 
@@ -27,7 +30,7 @@ const Login = () => {
     const checkEmailVefication = async(email, password) => {
         try {
             setIsLoading(true)
-            const userCredential =  await signInWithEmailAndPassword(auth, email, password)
+            const userCredential = await signInWithEmailAndPassword(auth, email, password)
             await userCredential.user.reload()
             return userCredential.user
         } catch (error) {
@@ -54,7 +57,8 @@ const Login = () => {
                 }
                 else {
                     Toast("error", "Please verify your email first before continuing. Check your email spam.", 5000)
-                    return
+                    setLoginError(false)
+                    return 
                 }
             }
         }
@@ -69,8 +73,8 @@ const Login = () => {
                 navigate(`/Customerpage/${customer.id}/${customer.username}`)
             }
             else {
-                Toast("error", "Please verify your email first before continuing. Check your email spam.", 5000);
-                return;
+                Toast("error", "Please verify your email first before continuing. Check your email spam.", 5000)
+                return
             }
             
         }
@@ -102,20 +106,26 @@ const Login = () => {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                 />
-                <div>
-
-                </div>
                 <label htmlFor="password">
                     Password:
                 </label>
-                <input
-                    id="password"
-                    type="password"
-                    placeholder="********"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
+                <div className="relative w-full">
+                    <input
+                        id="password"
+                        type={showPass ? "text" : "password"}
+                        placeholder="********"
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button 
+                        className="absolute top-1/2 right-2 -translate-y-1/2 p-1 bg-transparent border-none cursor-pointer"
+                        type="button"
+                        onClick={() => setShowPass((prev) => !prev)}
+                    >
+                        {showPass ? <Eye size={18} /> : <EyeClosed size={18}/>}
+                    </button>
+                </div>
                 {loginError && (
                     <p className="text-red-600 text-[0.75rem] w-full mt-1">
                         "Invalid username or password. Please try again."

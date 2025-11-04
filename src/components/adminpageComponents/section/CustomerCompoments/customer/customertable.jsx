@@ -6,7 +6,7 @@ const CustomerTable = ({getDisplayOnTable}) => {
 
     const tableHeader = [
         {label: "CustomerID", key: "id"},
-        {label: "Name", key: "username"},
+        {label: "Username", key: "username"},
         {label: "Contact", key: "phone"},
         {label: "TotalOrders", key: "totalOrders"},
         {label: "TotalSpent", key: "totalSpent"},

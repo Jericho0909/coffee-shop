@@ -1,41 +1,53 @@
 import { useEffect, useRef, useState } from "react";
-import { ref, onChildAdded, onChildChanged } from "firebase/database";
+import { ref, get, onChildAdded, onChildChanged } from "firebase/database";
 import { database } from "../firebase";
 
 export function useOrdersListener(onNewOrder) {
-    const [ hasNewOrder, setHasNewOrder ] = useState(false)
-    const [ orderComplete, setOrderComplete ] = useState([])
-    const isInitialLoad = useRef(true)
+  const [hasNewOrder, setHasNewOrder] = useState(false)
+  const [orderComplete, setOrderComplete] = useState([])
+  const existingKeys = useRef(new Set())
+  const isMounted = useRef(true)
 
-    useEffect(() => {
-        const ordersRef = ref(database, "orders")
+  useEffect(() => {
+    const ordersRef = ref(database, "orders")
+    isMounted.current = true
 
-        const addListener = onChildAdded(ordersRef, (snapshot) => {
-            if (isInitialLoad.current) return
-                setHasNewOrder(true);
-                onNewOrder?.(snapshot.val());
-        });
-
-        const changeListener = onChildChanged(ordersRef, (snapshot) => {
-            const orderComplete = snapshot.val()
-            setOrderComplete(orderComplete)
+    const init = async () => {
+      const snapshot = await get(ordersRef)
+      if (snapshot.exists()) {
+        snapshot.forEach((child) => {
+          existingKeys.current.add(child.key)
         })
+      }
 
-        const timer = setTimeout(() => {
-            isInitialLoad.current = false
-        }, 1000);
+      const unsubscribeAdd = onChildAdded(ordersRef, (snapshot) => {
+        if(!isMounted.current) return;
 
+        if(!existingKeys.current.has(snapshot.key)){
+          existingKeys.current.add(snapshot.key)
+          setHasNewOrder(true)
+          onNewOrder?.(snapshot.val())
+        }
+      })
 
-        return () => {
-        clearTimeout(timer);
-        addListener();
-        changeListener();
-        };
-    }, [onNewOrder]);
-    
-    return {
-        hasNewOrder,
-        setHasNewOrder,
-        orderComplete
+      const unsubscribeChange = onChildChanged(ordersRef, (snapshot) => {
+        if (!isMounted.current) return
+        setOrderComplete(snapshot.val())
+      })
+
+      return () => {
+        unsubscribeAdd()
+        unsubscribeChange()
+      }
     }
+
+    const cleanupPromise = init()
+
+    return () => {
+      isMounted.current = false
+      cleanupPromise.then((cleanup) => cleanup && cleanup())
+    }
+  }, [onNewOrder])
+
+  return { hasNewOrder, setHasNewOrder, orderComplete }
 }

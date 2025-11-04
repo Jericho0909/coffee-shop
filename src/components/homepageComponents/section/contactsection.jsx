@@ -4,41 +4,33 @@ import useSectionInView from "../../../hooks/useSectionInView";
 import SectionContext from "../../../context/sectionContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faInstagram } from '@fortawesome/free-brands-svg-icons';
-import { toast } from "react-hot-toast";
+import showToast from "../../../utils/showToast";
 const Contact = () => {
                 
-    const { ref, inView } = useSectionInView(0.7);
+    const { ref, entry } = useSectionInView(0.7);
     const { setActiveSection } = useContext(SectionContext)
+    const { Toast } = showToast()
+    const [ hasAnimated, setHasAnimated ] = useState(false)
     const [ Gmail, setGmail ] = useState("")
     const [ Message, setMessage ] = useState()
 
     useEffect(() => {
-        if(inView){
+        if(entry?.isIntersecting){
             setActiveSection("contact")
         }
-    },[inView, setActiveSection])
+    },[entry, setActiveSection])
+
+    useEffect(() => {
+        if(entry?.isIntersecting){
+            setHasAnimated(true)
+        }
+    }, [entry])
 
     const handleSubmit = (e) => {
         e.preventDefault()
         setGmail("")
         setMessage("")
-        
-        toast.success(
-            <div className="Notification">
-                Successfully Sent
-            </div>,
-            {
-                style: {
-                    width: '100%',
-                    backgroundColor: 'white',
-                    color: '#8c6244',
-                    padding: '12px 16px',
-                    borderRadius: '8px',
-                },
-                duration: 2000,
-            }
-        );
-        
+        Toast("success", "Successfully Sent", 2000)
     }
 
     return(
@@ -46,10 +38,14 @@ const Contact = () => {
             ref={ref}
             id="contact"
             initial={{ opacity: 0, y: 50 }}
-            animate={inView
+            animate={hasAnimated
                 ? { opacity: 1, y: 0 } 
                 : {}}
-            transition={{ duration: 0.6 }}
+            transition={{
+                duration: 0.6,
+                delay: 0.2,
+                ease: "easeInOut",
+            }}
             className="flex justify-center items-center mb-2"
         >
             <div className="container w-[95%] sm:w-[90%] md:w-[85%] lg:w-[60%] xl:w-[50%] p-[1rem]">

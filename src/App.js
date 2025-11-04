@@ -27,6 +27,7 @@ import { SuggestionProvider } from "./context/suggestionContext";
 import { HandleKeyProvider } from "./context/handlekeyContext";
 import { FirebaseFetchDataProvider } from "./context/firebasefetchdataContext";
 import { FirebaseActionProvider } from "./context/firebaseactionContext";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
                 <ModalProvider>
                   <AuthValidationProvider>
                     <AuthviewProvider>
+                      <TooltipProvider delayDuration={0}>
                         <Routes>
                           <Route 
                             path="/" 
@@ -142,6 +144,7 @@ function App() {
                             <Route path="Settings" element={<Settings/>}/>
                           </Route>
                         </Routes>
+                      </TooltipProvider>
                     </AuthviewProvider>
                   </AuthValidationProvider>
                 </ModalProvider>

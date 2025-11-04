@@ -1,20 +1,25 @@
-import {  useContext, useState, useEffect, useCallback } from "react"
+import {  useContext, useState, useEffect } from "react"
 import { auth } from "../../../firebase";
 import { updatePassword, signInWithEmailAndPassword } from "firebase/auth";
 import AuthviewContext from "../../../context/autviewContext"
 import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext";
 import FirebaseActionContext from "../../../context/firebaseactionContext";
+import AuthValidationContext from "../../../context/authvalidationContext";
 import { generateVerificationCode } from "../../../utils/generateVerificationCode";
 import { sendVerificationCode } from "../../../utils/sendVerificationCode";
 import showToast from "../../../utils/showToast";
-import authValidation from "../../../utils/authValidation";
 import removeFireBaseKey from "../../../utils/removeFirebaseKey";
 import { useDebounce } from "@uidotdev/usehooks";
+import { EyeClosed } from 'lucide-react';
+import { Eye } from 'lucide-react';
 const Forgot = () =>{
     const { setAuthView } = useContext(AuthviewContext)
     const { customerList } = useContext(FirebaseFetchDataContext)
     const { updateAction } = useContext(FirebaseActionContext)
-    const { isPasswordValid } = authValidation()
+    const { validatePassword, 
+        showPasswordValidationError,
+        setShowPasswordValidationError
+    } = useContext(AuthValidationContext)
     const { Toast } = showToast()
     const [ email, setEmail ] = useState(sessionStorage.getItem("email") || "")
     const [ generateCode, setGenerateCode ] = useState(sessionStorage.getItem("code") || "")
@@ -23,21 +28,10 @@ const Forgot = () =>{
     const [ minutes, setMinutes ] =  useState(Number(sessionStorage.getItem("minutes")) || 3)
     const [ seconds, setSeconds ] = useState(Number(sessionStorage.getItem("seconds")) || 0)
     const [ start, setStart ] = useState(sessionStorage.getItem("start") === "true" ? true : false)
-    const [ isuserEmailFound, setIsUserEmailFound ] = useState(true)
-    const [ showPasswordError, setShowPasswordError ] = useState(false)
     const [ isCodeMismatch, setIsCodeMismatch] = useState(false)
     const [ isLoading, setIsLoading ] = useState(false)
+    const [ showPass, setShowPass ] = useState(false)
     const debouncedType = useDebounce(newPassword, 300)
-
-    const validatePassword = useCallback((pass) => {
-        const valid = isPasswordValid(pass)
-        if(!valid){
-            setShowPasswordError(true)
-            return false
-        }
-        setShowPasswordError(false)
-        return true
-    },[isPasswordValid])
 
     useEffect(() => {
         if(start){
@@ -69,31 +63,19 @@ const Forgot = () =>{
 
     return () => clearInterval(timer);
         }
-    }, [start, minutes, seconds, email])
+    }, [start, email, minutes, seconds])
 
     useEffect(() => {
         if(debouncedType !== ""){
             validatePassword(debouncedType)
         }
         else{
-            setShowPasswordError(false)
+            setShowPasswordValidationError(false)
         }
-    }, [debouncedType, validatePassword])
+    }, [debouncedType, validatePassword, setShowPasswordValidationError])
 
     const findUser = () => {
         return customerList.find(key => key.email === email)
-    }
-    
-    const checkUserEmailExists = (email) => {
-        if(email){
-            setIsUserEmailFound(true)
-            return true
-
-        }
-        else{
-            setIsUserEmailFound(false)
-            return false
-        }
     }
 
     const checkTheCode = (code) => {
@@ -108,8 +90,6 @@ const Forgot = () =>{
     const getTheGenerateCode = async () => {
         const user = findUser()
         if(!user) return
-        const userEmail = checkUserEmailExists(user.email)
-        if(!userEmail) return
         const code = generateVerificationCode()
         const isSuccessful = await sendVerificationCode(user.email, user.username, code)
         if(isSuccessful){
@@ -118,7 +98,6 @@ const Forgot = () =>{
             setStart(true)
         }
         sessionStorage.setItem("code", code)
-
     }
 
 
@@ -172,14 +151,8 @@ const Forgot = () =>{
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    style={!isuserEmailFound ? {borderColor: "red"} : {}}
                 />
-                {!isuserEmailFound && (
-                    <p className="text-red-600 text-[0.75rem] w-full mt-1">
-                        Email not found!
-                    </p>
-                )}
-                <div className="container-flex w-full h-auto mt-2 mb-0">
+                <div className="container-flex w-full h-auto mt-2 mb-0 gap-1">
                     <div className="container-flex w-full h-auto mb-0 gap-1">
                         <label htmlFor="input-code" className="whitespace-nowrap w-auto">
                             Enter the Code
@@ -200,40 +173,51 @@ const Forgot = () =>{
                     </div>
                     <button
                         type="button"
-                        className={`bg-[#88A550] text-white px-4 py-2 rounded shadow-md w-[35%] sm:w-[45%] h-auto transition-transform duration-300 ease-in-out
+                        className={`bg-[#88A550] text-white px-4 py-2 rounded shadow-md w-[35%] sm:w-[45%] h-auto transition-transform duration-300 ease-in-out text-[0.80rem] whitespace-nowrap
                         hoverable:hover:bg-[#7a9549] hoverable:hover:scale-105 hoverable:hover:shadow-[0_4px_12px_rgba(136,165,80,0.4)] active:translate-y-1 active:shadow-none
                             ${start ? "cursor-not-allowed" : "cursor-pointer"}
                         `}
                         onClick={() => getTheGenerateCode()}
                         disabled={start}
                     >
-                        Get The Code
+                        Send Code
                     </button>
                 </div>
-                {isCodeMismatch && (
-                    <p className="text-red-600 text-[0.75rem] w-full mt-1">
-                        Mismatch
-                    </p>
-                )}
+                <div className="container-flex justify-between w-full h-auto p-1 mb-0">
+                    {isCodeMismatch && (
+                        <p className="text-red-600 text-[0.75rem] w-full">
+                            Incorrect code. Check your email and try again.
+                        </p>
+                    )}
+                    {start && (
+                        <p className="text-blue-600 text-[0.75rem] w-full text-right">
+                            Resend in: {minutes}:{seconds.toString().padStart(2, "0")}
+                        </p>
+                    )}
+                </div>
                 <label htmlFor="new-password">
                     Enter your new password:
                 </label>
-                <input
+                <div className="relative w-full">
+                    <input
                     id="new-password"
-                    type="password"
+                    type={showPass ? "text" : "password"}
                     placeholder="********"
                     required
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                />
-                {showPasswordError && (
+                    />
+                    <button 
+                        className="absolute top-1/2 right-2 -translate-y-1/2 p-1 bg-transparent border-none cursor-pointer"
+                        type="button"
+                        onClick={() => setShowPass((prev) => !prev)}
+                    >
+                        {showPass ? <Eye size={18} /> : <EyeClosed size={18}/>}
+                    </button>
+                </div>
+                {showPasswordValidationError && (
                     <p className="text-red-600 text-[0.75rem] w-full mt-1">
                         "Password must be at least 8 characters and include an uppercase letter, a number, and a special character."
-                    </p>
-                )}
-                {start && (
-                    <p className="text-blue-600 text-[0.75rem] w-full mt-1 text-right">
-                        Countdown: {minutes}:{seconds.toString().padStart(2, "0")}
                     </p>
                 )}
                 <button

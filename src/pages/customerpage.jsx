@@ -12,7 +12,7 @@ import { Bars3Icon } from "@heroicons/react/24/outline";
 import Modal from "../components/modal";
 import PlaceOrder from "../components/customerpageComponents/section/menuComponents/menuModal/placeorder";
 import CustomerOrders from "../components/customerpageComponents/section/menuComponents/menuModal/customerorder";
-import ContactForm from "../components/customerpageComponents/contactform";
+import CompleteInfo from "../components/customerpageComponents/completeinfo";
 import ManageCustomerOrder from "../components/customerpageComponents/section/customerordersComponents/customerorderModal/managecustomerorder";
 import CustomerEditProfile from "../components/customerpageComponents/section/settingsComponents/settingsModal/customerEditProfile";
 import Thankyou from "../components/customerpageComponents/thankYou";
@@ -34,10 +34,18 @@ const Customerpage = () => {
     } = useContext(ModalContext)
     const {orderComplete } = useOrdersListener()
     const [ opensidebar, setOpenSiderBar ] = useState(false)
-    const [ active, setActive ] = useState(sessionStorage.getItem("customerSection") || "menusection")
     const [ isLoading, setIsLoading ] = useState(false)
     const sidebarRef = useRef(null)
     const customer = customerList.find(key => key.id === id)
+
+    const modalComponents = {
+        completeinfo: <CompleteInfo customer={customer}/>,
+        placeorder: <PlaceOrder customer={customer}/>,
+        customerorder: <CustomerOrders customer={customer}/>,
+        manageCustomerOrder: <ManageCustomerOrder customer={customer}/>,
+        editProfile: <CustomerEditProfile customer={customer}/>,
+        thankYou: <Thankyou/>
+    }
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -48,6 +56,7 @@ const Customerpage = () => {
     }, [])
 
     useEffect(() => {
+        if(!customer) return
         if(customer.username === orderComplete.customerName && orderComplete.status === "Completed"){
             setIsOpen(true)
             setModalName("thankYou")
@@ -80,16 +89,12 @@ const Customerpage = () => {
                         to={`/Customerpage/${id}/${username}/Menu`} 
                         onClick={() => {
                             onToggleSidebar();
-                            setActive("menusection")
-                            saveSection("menusection")
                         }}
-                        className={`
-                            relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
-                            after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
-                            ${active === "menusection" 
-                                ? "after:w-full text-[#6F4E37] font-semibold" 
-                                : ""
-                            } 
+                        className={({ isActive }) =>`
+                        relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23]
+                        after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px]
+                        after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
+                        ${isActive ? "after:w-full text-[#6F4E37] font-semibold" : ""}
                         `}
                     >
                     
@@ -101,16 +106,12 @@ const Customerpage = () => {
                         to={`/Customerpage/${id}/${username}/CustomerOrders`} 
                         onClick={() => {
                             onToggleSidebar();
-                            setActive("customerordersection");
-                            saveSection("customerordersection")
                         }}
-                        className={`
-                            relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
-                            after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
-                            ${active === "customerordersection" 
-                                ? "after:w-full text-[#6F4E37] font-semibold" 
-                                : ""
-                            } 
+                        className={({ isActive }) =>`
+                        relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23]
+                        after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px]
+                        after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
+                        ${isActive ? "after:w-full text-[#6F4E37] font-semibold" : ""}
                         `}
                     >
                     
@@ -122,16 +123,12 @@ const Customerpage = () => {
                         to={`/Customerpage/${id}/${username}/Settings`} 
                         onClick={() => {
                             onToggleSidebar();
-                            setActive("settingsection")
-                            saveSection("settingsection")
                         }}
-                        className={`
-                            relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
-                            after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
-                            ${active === "settingsection" 
-                                ? "after:w-full text-[#6F4E37] font-semibold" 
-                                : ""
-                            } 
+                        className={({ isActive }) =>`
+                        relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23]
+                        after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px]
+                        after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
+                        ${isActive ? "after:w-full text-[#6F4E37] font-semibold" : ""}
                         `}
                     >
                         setting
@@ -153,25 +150,11 @@ const Customerpage = () => {
         )
     }
 
-    const modalComponents = {
-        contactform: <ContactForm customer={customer}/>,
-        placeorder: <PlaceOrder customer={customer}/>,
-        customerorder: <CustomerOrders customer={customer}/>,
-        manageCustomerOrder: <ManageCustomerOrder customer={customer}/>,
-        editProfile: <CustomerEditProfile customer={customer}/>,
-        thankYou: <Thankyou/>
-    }
-
-    const saveSection = (section) => {
-        sessionStorage.setItem("customerSection", section)
-    }
-
     const Logout = () => {
         sessionStorage.clear()
         navigate("/");
     }
 
-    if(!customer) return
     if(isLoading) return
 
 

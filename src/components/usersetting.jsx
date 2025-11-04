@@ -4,30 +4,22 @@ import { EyeClosed } from 'lucide-react';
 const UserSettings = ({user, editProfile}) => {
     const [ showPassword, setShowPassword ] = useState(false)
     const password = showPassword ? user.password : "*".repeat(user.password.length)
-    const infoRow = (title1, value1, title2, value2) => {
+    const infoRow = (label, value) => {
         return(
             <div className="container-flex flex-col w-full font-opensans tracking-wide text-[clamp(0.80rem,2vw,1rem)]p-1 mb-[0.40rem]">
                 <div className="container-flex w-full mb-[0.40rem] xl:mb-[0.30rem] gap-1">
                     <span className="font-bold">
-                        {title1}
+                        {label}
                     </span>
                     <span className="text-[#D4A373] italic">
-                        {value1}
+                        {value}
                     </span>
-                </div>
-                <div className="container-flex w-full mb-[0.40rem] xl:mb-[0.30rem] gap-1">
-                    <span className="font-bold">
-                        {title2}
-                    </span>
-                    <span className="text-[#D4A373] italic">
-                        {value2}
-                    </span>
-                    {title2 === "Password:" && (
+                    {label === "Password:" && (
                         <button
                             className="w-auto h-auto"
                             onClick={() => setShowPassword((prev) => !prev)}
                         >
-                            {showPassword ? <EyeClosed size={16}/> : <Eye size={16}/>}
+                            {showPassword ? <Eye size={16}/> : <EyeClosed size={16}/>}
                         </button>
                     )}
                 </div>
@@ -45,24 +37,22 @@ const UserSettings = ({user, editProfile}) => {
                 <h1 className="text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[1rem] xl:mb-[0.50rem]">
                     account info
                 </h1>
-                {infoRow("Username:", user.username, "Password:", password)}
-                {infoRow("Phone:", user.phone, "Email:", user.email)}
-                <div className="container-flex w-full font-opensans tracking-wide text-[clamp(0.80rem,2vw,1rem)]p-1 mb-[0.40rem] gap-1">
-                    <span className="font-bold">
-                        Location:
-                    </span>
-                    <span className="text-[#D4A373] italic">
-                        {user.location}
-                    </span>
-                </div>
+                {infoRow("Name:", user.name)}
+                {infoRow("Username:", user.username)}
+                {infoRow("Password:", password)}
+                {infoRow("Phone:", user.phone)}
+                {infoRow("Email:", user.email)}
+                {infoRow("Location:", user.location)}
             </section>
             {user?.dateJoined && (
-                <section>
+            <section>
                 <h1 className="text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[1rem] xl:mb-[0.50rem]">
                     activity stats
                 </h1>
-                {infoRow("Date Joined:", user.dateJoined, "Last Order Date:", user.lastOrderDate)}
-                {infoRow("Total Orders:", user.totalOrders, "Total Spent:", user.totalSpent)}
+                {infoRow("Date Joined:", user.dateJoined)}
+                {infoRow("Last Order Date:", user.lastOrderDate)}
+                {infoRow("Total Orders:", user.totalOrders)}
+                {infoRow("Total Spent:", user.totalSpent)}
             </section>
             )}
             <div className="container-flex justify-center w-full h-auto p-1">

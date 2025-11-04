@@ -1,139 +1,52 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { motion } from "framer-motion"
 import useSectionInView from "../../../hooks/useSectionInView"
 import SectionContext from "../../../context/sectionContext";
-import CoffeeBean from "../../../assets/images/coffee-bean9.png"
-import CoffeeCherry from "../../../assets/images/coffee-cherry1.png"
-import CoffeePowder from "../../../assets/images/coffee-powder-no-bg.png"
-import Coffee from "../../../assets/images/coffee-2_-no-bg.png"
+import CoffeeShop from "../../../assets/images/bg-coffee-shop.jpg"
 const Home = () => {
-    const { ref, inView } = useSectionInView(0.7);
+    const { ref, entry } = useSectionInView(0.7)
     const { setActiveSection } = useContext(SectionContext)
+    const [ hasAnimated, setHasAnimated ] = useState(false)
 
     useEffect(() => {
-        if(inView){
+        if(entry?.isIntersecting){
             setActiveSection("home")
         }
-    },[inView, setActiveSection])
+    },[entry, setActiveSection])
 
-    const animationForCoffeeBean = {
-        container: {
-            initial: { x: "-50vw", y: "-100vh", rotate: 0},
-            animate: { x: 0, y: 0, rotate: 720 },
-            transition: { duration: 2, ease: "easeOut" }
-        },
-        img: {
-            initial: { rotate: 0 },
-            animate: { rotate: 50 },
-            transition: { delay: 1, duration: 1, ease: "easeOut" }
+    useEffect(() => {
+        if(entry?.isIntersecting){
+            setHasAnimated(true)
         }
-    }
-
-    const animationForCoffeCherry = {
-        container: {
-            initial: { scale: 0.5 },
-            animate: { scale: 1 },
-            transition: { duration: 2, ease: "easeOut" }
-        },
-        img: {
-            initial: { scale: 1 },
-            animate: { scale: 1 },
-            transition: { delay: 2, duration: 1, ease: "easeOut" }
-        }
-    }
-
-    const animationForCoffeePowder = {
-        container: {
-            initial: { rotate: 0 },
-            animate: { rotate: -720 },
-            transition: { duration: 2, ease: "easeOut" }
-        },
-        img: {
-            initial: { rotate: 0 },
-            animate: { rotate: -50},
-            transition: { delay: 2, duration: 1, ease: "easeOut" }
-        }
-    }
-
-    const animationForCoffee = {
-        container: {
-            initial: { x: "50vw", y: "100vh", opacity: 0},
-            animate: { x: 0, y: 0, opacity: 1 },
-            transition: { duration: 2, ease: "easeOut" }
-        },
-        img: {
-            initial: { opacity: 1},
-            animate: { opacity: 1},
-            transition: { delay: 1, duration: 1, ease: "easeOut" }
-        }
-    }
-
-    const imgAnimationContext = (img, animation, position) => {
-        return(
-            <motion.div
-                className={`container-flex justify-center w-[12rem] h-[12rem] mb-0 absolute ${position}`}
-                initial={animation.container.initial}
-                animate={inView ? animation.container.animate : animation.container.initial}
-                transition={animation.container.transition}
-                >
-                <motion.img
-                    src={img}
-                    alt="CoffeeBean"
-                    initial={animation.img.initial}
-                    animate={animation.img.animate}
-                    transition={animation.img.transition}
-                />
-            </motion.div>
-        )
-    }
+    }, [entry])
 
     return(
         <motion.section
             ref={ref}
             id="home"
             initial={{ opacity: 0, y: 0 }}
-            animate={inView
+            animate={hasAnimated
                 ? { opacity: 1, y: 0 } 
                 : {}}
-            transition={{ duration: 0.6 }}
-            className="flex justify-center items-center scroll-mt-20 mb-[4rem] h-[90dvh]"
+            transition={{
+                duration: 0.6,
+                delay: 0.2,
+                ease: "easeInOut",
+            }}
+            className="flex justify-center items-center scroll-mt-20 mb-[2rem] h-[90dvh]"
         >
-            <div className="container relative p-2">
-                <div className="flex justify-center items-center w-full h-[80dvh]">
-                   {imgAnimationContext
-                        (
-                            CoffeeBean, 
-                            animationForCoffeeBean, 
-                            "bottom-0 left-[1rem] sm:bottom-[7rem] sm:left-[8rem]"
-                        )
-                    }
-                    {imgAnimationContext
-                        (
-                            CoffeeCherry, 
-                            animationForCoffeCherry, 
-                            "top-[3rem] left-[2rem] sm:top-[4rem] sm:left-[6rem]"
-                        )
-                    }
-                    {imgAnimationContext
-                        (
-                            CoffeePowder, 
-                            animationForCoffeePowder, 
-                            "top-[5rem] right-[1rem] xl:top-[8rem] xl:right-[10rem]"
-                        )
-                    }
-                    {imgAnimationContext
-                        (
-                            Coffee, 
-                            animationForCoffee, 
-                            "bottom-[3rem] right-[0rem] xl:bottom-[6rem] xl:right-[8rem]"
-                        )
-                    }
+            <div className="container relative p-2 w-screen h-[80vh] overflow-hidden">
+                <div
+                    className="absolute inset-0 bg-cover bg-center filter blur-[3px] scale-110"
+                    style={{ backgroundImage: `url(${CoffeeShop})` }}
+                >
+
                 </div>
                 <span 
                     className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[2.90rem] font-nunito tracking-wide font-black text-[#8c6244]"
                     style={{ 
-                        textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)",
-                        fontVariant: "small-caps"
+                    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)",
+                    fontVariant: "small-caps"
                     }}
                 >
                     KAPE?

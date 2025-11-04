@@ -1,4 +1,4 @@
-import { useState, useContext, useCallback, useEffect } from "react";
+import { useState, useContext,  useEffect } from "react";
 import { auth } from "../../../../../firebase";
 import { createUserWithEmailAndPassword, sendEmailVerification,
 updateProfile } from "firebase/auth";
@@ -10,21 +10,23 @@ import AuthValidationContext from "../../../../../context/authvalidationContext"
 import EmployerForm from "../Employer/employerformjsx";
 import { v4 as uuidv4 } from "uuid";
 import showToast from "../../../../../utils/showToast";
-import authValidation from "../../../../../utils/authValidation";
 import { useDebounce } from "@uidotdev/usehooks";
 
 const AddEmployer = () => {
-    const { adminList} = useContext(FirebaseFetchDataContext)
+    const { adminList } = useContext(FirebaseFetchDataContext)
     const { pushAction } = useContext(FirebaseActionContext)
     const { toggleModal } = useContext(ModalContext)
-    const {setShowPasswordValidationError,
-            setIsUsernameAvailable,
-            setEndsWithAdmin
+    const { checkUsernameAvailability,
+        validatePassword,
+        checkEmailAvailability,
+        setIsUsernameAvailable,
+        setIsEmailAvailable,
+        setShowPasswordValidationError
     } = useContext(AuthValidationContext)
     const { container } = useContext(ContainerContext)
     const [ type, setType ] = useState("")
+    const [ isLoading, setIsLoading ] = useState(false)
     const { Toast } = showToast()
-    const { isUsernameExists, isPasswordValid } = authValidation()
     const debouncedType = useDebounce(type, 300)
 
     const shortAdminId = "A-" + uuidv4().slice(0, 5)
@@ -58,43 +60,11 @@ const AddEmployer = () => {
     const [ adminData, setAdminData ] = useState(initialAdminData)
 
 
-    const validateAdminData = useCallback((username, password) => {
-        const runCheck = () => {
-            const isValidPassword = isPasswordValid(password);
-            const usernameExists = isUsernameExists(username, adminList)
-
-            if (usernameExists && adminData.username !== "") {
-                setIsUsernameAvailable(false)
-                return false;
-            }
-            else{
-                setIsUsernameAvailable(true);
-            }
-
-            if (!isValidPassword && adminData.password !== "") {
-                setShowPasswordValidationError(true)
-                return false;
-            }
-            else{
-                setShowPasswordValidationError(false)
-            }
-
-            if(!username.endsWith(".admin")){
-                setEndsWithAdmin(false)
-                return false
-            }
-            else{
-                setEndsWithAdmin(true)
-            }
-            return true;
-        }
-        return runCheck()
-    }, [adminList, isPasswordValid, isUsernameExists, setEndsWithAdmin, setIsUsernameAvailable, setShowPasswordValidationError, adminData])
-
     const emailConformation = async(email, password) => {
-        const isEmailExists = adminList.some(key => key.email === email)
-        if(isEmailExists) return false
+        const EmailExists = checkEmailAvailability(employerData.email)
+        if(!EmailExists) return false
         try {
+            setIsLoading(true)
             const userCredential = await createUserWithEmailAndPassword(auth, email, password)
             const user = userCredential.user
             await updateProfile(user, { displayName: adminData.name })
@@ -105,18 +75,23 @@ const AddEmployer = () => {
                 if (error.code === "auth/email-already-in-use") {
                 return false
             }
-            console.error(error);
+            console.error(error)
             return false
+        } finally {
+
+            setIsLoading(false)
         }
     }
     
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (adminData.username !== "") {
-            const isAdminValid = validateAdminData(adminData.username, adminData.password)
-            const isEmailAvailable = emailConformation(employerData.email, adminData.password)
-            if (!isAdminValid || !isEmailAvailable) return
+        if (adminData.username !== ""){
+            if(!adminData.username.endsWith(".admin")) return
+            const isEmailAvailable = await emailConformation(employerData.email, adminData.password)
+            const isAdminUsernameOk = checkUsernameAvailability(adminData.username, adminList)
+            const isPasswordOk = validatePassword(adminData.password)
+            if (!isEmailAvailable || !isAdminUsernameOk || !isPasswordOk) return
 
             await pushAction("admins", adminData);
         }
@@ -138,40 +113,69 @@ const AddEmployer = () => {
     }
 
     useEffect(() => {
-        validateAdminData(adminData.username, adminData.password)
-    }, [debouncedType, adminData, validateAdminData])
+        if(adminData.username !== ""){
+            checkUsernameAvailability(adminData.username, adminList)
+        }
+        else{
+            setIsUsernameAvailable(true)
+        }
+
+        if(adminData.password !== ""){
+            validatePassword(adminData.password)
+        }
+        else{
+            setShowPasswordValidationError(false)
+        }
+
+        if(employerData.email !== "" && employerData.role === "Admin"){
+            checkEmailAvailability(employerData.email)
+        }
+        else{
+            setIsEmailAvailable(true)
+        }
+
+    }, [debouncedType, adminData, adminList, employerData, checkEmailAvailability, checkUsernameAvailability, validatePassword, setIsEmailAvailable, setIsUsernameAvailable, setShowPasswordValidationError])
 
 
 
     return (
-        <form
-        className="flex justify-center items-center flex-col w-full h-auto"
-        onSubmit={handleSubmit}
-        >
-            <h1 className="text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[1rem]">
-                Add Employer
-            </h1>
-            <EmployerForm
-                employerData = {employerData}
-                setEmployerData = {setEmployerData}
-                adminData = {adminData}
-                setAdminData = {setAdminData}
-                setType = {setType}
+        <>
+            <form
+            className="flex justify-center items-center flex-col w-full h-auto relative"
+            onSubmit={handleSubmit}
+            >
+                <h1 className="text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[1rem]">
+                    Add Employer
+                </h1>
+                <EmployerForm
+                    employerData = {employerData}
+                    setEmployerData = {setEmployerData}
+                    adminData = {adminData}
+                    setAdminData = {setAdminData}
+                    setType = {setType}
 
-            />
+                />
 
-            <div className="flex justify-center items-center w-full h-auto">
-                <button
-                    type="submit"
-                    className="press  hoverable:hover:bg-[#8b5e3c] 
-                    hoverable:hover:scale-105 
-                    hoverable:hover:shadow-[0_4px_12px_rgba(111,78,55,0.4)] w-[40%]"
-                    style={{ fontVariant: "small-caps" }}
-                    >
-                    Confirm
-                </button>
-            </div>
-        </form>
+                <div className="flex justify-center items-center w-full h-auto">
+                    <button
+                        type="submit"
+                        className="press  hoverable:hover:bg-[#8b5e3c] 
+                        hoverable:hover:scale-105 
+                        hoverable:hover:shadow-[0_4px_12px_rgba(111,78,55,0.4)] w-[40%]"
+                        style={{ fontVariant: "small-caps" }}
+                        >
+                        Confirm
+                    </button>
+                </div>
+            </form>
+            {isLoading && (
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-auto h-auto">
+                    <div className="loader-three">
+                        
+                    </div>
+                </div>
+            )}
+        </>
     )
 };
 

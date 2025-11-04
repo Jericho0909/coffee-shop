@@ -4,9 +4,10 @@ import ModalContext from "../../context/modalContext"
 import toTitleCase from "../../utils/toTitleCase";
 import removeFireBaseKey from "../../utils/removeFirebaseKey";
 import showToast from "../../utils/showToast";
-const ContactForm = ({customer}) => {
+const CompleteInfo = ({customer}) => {
     const { updateAction } = useContext(FirebaseActionContext)
     const { setIsOpen } = useContext(ModalContext)
+    const [ name, setName ] = useState("")
     const [ phone, setPhone ] = useState("")
     const [ location, setLocation ] = useState("")
     const { Toast } = showToast()
@@ -16,6 +17,7 @@ const ContactForm = ({customer}) => {
         e.preventDefault();
         const updatedCustomerContact = {
             ...safeData,
+            name: name,
             phone: phone,
             location: location
         }
@@ -38,7 +40,21 @@ const ContactForm = ({customer}) => {
             <form 
                 className="flex justify-center items-center flex-col w-[90%] mb-4"
                 onSubmit={(e) => handleSubmit(e)}
-            >
+            >   
+                <label htmlFor="full-name">
+                    Enter your Full Name
+                </label>
+                <input
+                    id="full-name"
+                    type="text"
+                    placeholder="ex: Juan Magtibay"
+                    required
+                    value={name}
+                    onChange={(e) => {
+                        const formatted = toTitleCase(e.target.value)
+                        setName(formatted)
+                    }}
+                />
                 <label htmlFor="phone">
                     Enter your phone number:
                 </label>
@@ -60,9 +76,8 @@ const ContactForm = ({customer}) => {
                 </label>
                 <input
                     id="location"
-                    type="location"
-                    name="location"
-                    placeholder="Enter your location:"
+                    type="text"
+                    placeholder="Bagong Pook Rosario Batangas"
                     required
                     value={location}
                     onChange={(e) => {
@@ -81,4 +96,4 @@ const ContactForm = ({customer}) => {
     )
 }
 
-export default ContactForm
+export default CompleteInfo

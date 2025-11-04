@@ -4,6 +4,7 @@ import FirebaseActionContext from "../../../../../context/firebaseactionContext"
 import ModalContext from "../../../../../context/modalContext"
 import ContainerContext from "../../../../../context/containerContext"
 import AddHighlightContext from "../../../../../context/addhighlightContext"
+import CoffeeTooltip from "../../../../tooltip"
 import { format } from "date-fns";
 import showToast from "../../../../../utils/showToast"
 import removeFireBaseKey from "../../../../../utils/removeFirebaseKey"
@@ -30,8 +31,6 @@ const ManageOrder = () => {
     const selectedOrderItemQuantity = selectedOrder.items.map(key => key.quantity)
 
     const [ currentOrderData, setCurrentOrderData ] = useState(selectedOrder)
-
-    console.log(currentOrderData.type)
 
     const toggleDetails = (id) => {
         if (openItemId === id) {
@@ -206,7 +205,7 @@ const ManageOrder = () => {
                 </div>
             </div>
             <div className="container-flex justify-start items-start flex-col w-full h-auto mb-[1rem] p-2">
-                <h1 className="w-full text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[1rem]"
+                <h1 className="w-full text-stroke text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center mb-[1rem] "
                 >
                     Order Details
                 </h1>
@@ -226,34 +225,40 @@ const ManageOrder = () => {
                 </h1>
                 <div className="w-full h-auto mb-[2rem]">
                     {currentOrderData.items.map(item => (
-                        <div 
-                            key={item.productId}
-                            className="container-flex justify-between flex-col w-full cursor-pointer gap-1 mb-0 px-[2rem] select-none"
-                            onClick={() => toggleDetails(item.productId)}
+                        <CoffeeTooltip
+                            key={item.productId} 
+                            text="click me" 
+                            side="top" 
+                            align="start"
                         >
-                            <>
-                            <div className="container-flex justify-between w-full mb-[0rem]">
-                                <p className="flex gap-2 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]">
-                                <span>{item.name}</span>
-                                <span>{item.quantity}</span>
-                                </p>
-                                <p className="flex gap-2 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]">
-                                <span>{item.subtotal}</span>
-                                </p>
-                            </div>
                             <div 
-                                className={`w-full text-center overflow-hidden transition-all duration-500 ease-out 
-                                ${openItemId === item.productId 
-                                    ? "opacity-100 translate-y-0 mb-[0.50rem]" 
-                                    : "max-h-0 opacity-0 -translate-y-2 mb-[0rem]"
-                                }`}
+                                className="container-flex justify-between flex-col w-full cursor-pointer gap-1 mb-0 px-[2rem] select-none"
+                                onClick={() => toggleDetails(item.productId)}
                             >
-                                {orderDetailsRow("Size:", item.size)}
-                                {orderDetailsRow("Price:", item.price)}
-                                {orderDetailsRow("Type:", item.type)}
+                                <>
+                                    <div className="container-flex justify-between w-full mb-[0rem]">
+                                        <p className="flex gap-2 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]">
+                                        <span>{item.name}</span>
+                                        <span>{item.quantity}</span>
+                                        </p>
+                                        <p className="flex gap-2 font-opensans tracking-wide text-[clamp(0.85rem,2vw,1.05rem)]">
+                                        <span>{item.subtotal}</span>
+                                        </p>
+                                    </div>
+                                    <div 
+                                        className={`w-full text-center overflow-hidden transition-all duration-500 ease-out 
+                                        ${openItemId === item.productId 
+                                            ? "opacity-100 translate-y-0 mb-[0.50rem]" 
+                                            : "max-h-0 opacity-0 -translate-y-2 mb-[0rem]"
+                                        }`}
+                                    >
+                                        {orderDetailsRow("Size:", item.size)}
+                                        {orderDetailsRow("Price:", item.price)}
+                                        {orderDetailsRow("Type:", item.type)}
+                                    </div>
+                                </>
                             </div>
-                            </>
-                        </div>
+                        </CoffeeTooltip>
                     ))}
 
                 </div>

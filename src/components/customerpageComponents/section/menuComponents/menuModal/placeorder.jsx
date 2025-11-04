@@ -55,11 +55,11 @@ const PlaceOrder = ({customer}) => {
 
     const placeOrder = (e) => {
         e.preventDefault();
-        const isMissingContact = !customer.phone || !customer.location
+        const isMissingContact = !customer.name || !customer.phone || !customer.location
         if(isMissingContact){
-            setModalName("contactform")
+            setModalName("completeinfo")
             setIsOpen(true)
-            Toast("error", "We need your contact details before we can process your order.",2000)
+            Toast("error", "We need your full information before we can process your order.",3000)
             return
         }
         showToast("success", "Your order has been placed successfully.",2000)

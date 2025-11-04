@@ -1,6 +1,7 @@
 import { useContext } from "react"
 import MediaQueryContext from "../context/mediaqueryContext";
 import ModalContext from "../context/modalContext";
+import CoffeeTooltip from "./tooltip";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser }  from '@fortawesome/free-solid-svg-icons';
 const Navbar = ({ activeSection, toggleNavbar }) => {
@@ -17,15 +18,17 @@ const Navbar = ({ activeSection, toggleNavbar }) => {
         <nav className="container-flex justify-center mb-0">
             <ul className={`container-flex justify-center w-full h-auto mb-0 gap-1 ${isMobile ? "flex-col" : " flex-row"}`}>
                 <li>
-                    <button 
+                    <CoffeeTooltip text="login" side="bottom" align="center">
+                        <button 
                         className="flex justify-center items-center w-10 h-10 rounded-full border border-white p-2"
                         onClick={() => toggleModal()}
-                    >
-                        <FontAwesomeIcon 
-                            icon={faUser}
-                            className="w-4 h-4 text-white"
-                        /> 
-                    </button>
+                        >
+                            <FontAwesomeIcon 
+                                icon={faUser}
+                                className="w-4 h-4 text-white"
+                            /> 
+                        </button>
+                    </CoffeeTooltip>
                 </li>
                 <li 
                     className={`cursor-pointer px-2 py-1 rounded-full transition duration-300 

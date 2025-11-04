@@ -5,12 +5,12 @@ import { database } from "../firebase";
 const FirebaseFetchDataContext = createContext();
 
 export const FirebaseFetchDataProvider = ({ children }) => {
-  const [adminList, setAdminList] = useState([]);
-  const [productList, setProductList] = useState([]);
-  const [employerList, setEmployerList] = useState([]);
-  const [customerList, setCustomerList] = useState([]);
-  const [orderList, setOrderList] = useState([]);
-  const [stockList, setStockList] = useState([]);
+  const [ adminList, setAdminList ] = useState([]);
+  const [ productList, setProductList ] = useState([]);
+  const [ employerList, setEmployerList ] = useState([]);
+  const [ customerList, setCustomerList ] = useState([]);
+  const [ orderList, setOrderList ] = useState([]);
+  const [ stockList, setStockList ] = useState([]);
 
   const subscribeNode = useCallback((nodeName, setter) => {
     const dbRef = ref(database, nodeName);

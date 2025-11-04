@@ -92,15 +92,17 @@ const Homepage = () => {
             <AnimatePresence>
                 { isOpen && (
                     <Modal>
-                        <div className="w-[20%] h-auto">
-                            <img 
-                                src={Modalicon}
-                                alt="Coffe"
-                                className="w-full h-full m-1 p1"
-                                loading="lazy"
-                            />
+                        <div className="container-flex justify-start flex-col overflow-y-scroll scrollbar-hide">
+                            <div className="w-[20%] h-auto">
+                                <img 
+                                    src={Modalicon}
+                                    alt="Coffe"
+                                    className="w-full h-full m-1 p1"
+                                    loading="lazy"
+                                />
+                            </div>
+                            {setView[authView]}
                         </div>
-                        {setView[authView]}
                     </Modal>
                 )}
             </AnimatePresence>

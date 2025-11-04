@@ -31,7 +31,6 @@ const Adminpage = () => {
     const { Toast } = showToast()
     const [ isLoading, setIsLoading ] = useState(true)
     const [ opensidebar, setOpenSiderBar ] = useState(false)
-    const [ active, setActive ] = useState(sessionStorage.getItem("section") || "dashboardsection")
     const sidebarRef = useRef(null)
     const orderPendingAndProccessing = orderList.filter(key => key.status.includes("Processing") || key.status.includes("Pending"))
 
@@ -86,11 +85,6 @@ const Adminpage = () => {
         setTimeout(() => setOpenSiderBar(prev => !prev))
     }
 
-    const saveSection = (section) => {
-        sessionStorage.setItem("section", section)
-        
-    }
-
     const Logout = () => {
         sessionStorage.clear()
         navigate("/");
@@ -124,16 +118,12 @@ const Adminpage = () => {
                         to={`/Adminpage/${id}/${username}/Dashboard`} 
                         onClick={() => {
                             onToggleSidebar();
-                            setActive("dashboardsection");
-                            saveSection("dashboardsection")
                         }}
-                        className={`
-                            relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
-                            after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
-                            ${active === "dashboardsection" 
-                                ? "after:w-full text-[#6F4E37] font-semibold" 
-                                : ""
-                            } 
+                        className={({ isActive }) =>`
+                        relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23]
+                        after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px]
+                        after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
+                        ${isActive ? "after:w-full text-[#6F4E37] font-semibold" : ""}
                         `}
                     >
                     
@@ -145,16 +135,12 @@ const Adminpage = () => {
                         to={`/Adminpage/${id}/${username}/Products`} 
                         onClick={() => {
                             onToggleSidebar();
-                            setActive("productsection")
-                            saveSection("productsection")
                         }}
-                        className={`
-                            relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
-                            after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
-                            ${active === "productsection" 
-                                ? "after:w-full text-[#6F4E37] font-semibold" 
-                                : ""
-                            } 
+                        className={({ isActive }) =>`
+                        relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23]
+                        after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px]
+                        after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
+                        ${isActive ? "after:w-full text-[#6F4E37] font-semibold" : ""}
                         `}
                     >
                         products
@@ -163,22 +149,17 @@ const Adminpage = () => {
                 <li>
                     <NavLink 
                         to={`/Adminpage/${id}/${username}/Orders`} onClick={() => {
-                            onToggleSidebar();
-                            setActive("ordersection");
-                            saveSection("ordersection");
-                            
+                            onToggleSidebar();               
                         }}
-                        className={`
-                            relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
-                            after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
-                            ${active === "ordersection" 
-                                ? "after:w-full text-[#6F4E37] font-semibold" 
-                                : ""
-                            } 
+                        className={({ isActive }) =>`
+                        relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23]
+                        after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px]
+                        after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
+                        ${isActive ? "after:w-full text-[#6F4E37] font-semibold" : ""}
                         `}
                     >
                         orders
-                        <div className="container-flex justify-center mb-0 absolute -top-2 -right-4 w-6 h-6 rounded-[50%] text-[0.85rem] border border-red-500">
+                        <div className="container-flex justify-center mb-0 absolute -top-2 -right-4 w-6 h-6 rounded-[50%] text-[0.85rem] text-white bg-[#6F4E37] border border-black">
                             {orderPendingAndProccessing.length}
                         </div>
                     </NavLink>
@@ -188,17 +169,13 @@ const Adminpage = () => {
                         to={`/Adminpage/${id}/${username}/Customers`} 
                         onClick={() => {
                             onToggleSidebar()
-                            setActive("customersection")
-                            saveSection("customersection")
                             
                         }}
-                        className={`
-                            relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
-                            after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
-                            ${active === "customersection" 
-                                ? "after:w-full text-[#6F4E37] font-semibold" 
-                                : ""
-                            } 
+                        className={({ isActive }) =>`
+                        relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23]
+                        after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px]
+                        after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
+                        ${isActive ? "after:w-full text-[#6F4E37] font-semibold" : ""}
                         `}
                     >
                         customers
@@ -209,16 +186,12 @@ const Adminpage = () => {
                         to={`/Adminpage/${id}/${username}/Employers`} 
                         onClick={() => {
                             onToggleSidebar()
-                            setActive("employersection")
-                            saveSection("employersection")
                         }}
-                        className={`
-                            relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
-                            after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
-                            ${active === "employersection" 
-                                ? "after:w-full text-[#6F4E37] font-semibold" 
-                                : ""
-                            } 
+                        className={({ isActive }) =>`
+                        relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23]
+                        after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px]
+                        after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
+                        ${isActive ? "after:w-full text-[#6F4E37] font-semibold" : ""}
                         `}
                     >
                         employers
@@ -228,17 +201,13 @@ const Adminpage = () => {
                     <NavLink 
                         to={`/Adminpage/${id}/${username}/Stocks`} onClick={() => {
                             onToggleSidebar()
-                            setActive("stocksection")
-                            saveSection("stocksection")
                             
                         }}
-                        className={`
-                            relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
-                            after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
-                            ${active === "stocksection" 
-                                ? "after:w-full text-[#6F4E37] font-semibold" 
-                                : ""
-                            } 
+                        className={({ isActive }) =>`
+                        relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23]
+                        after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px]
+                        after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
+                        ${isActive ? "after:w-full text-[#6F4E37] font-semibold" : ""}
                         `}
                     >
                         stocks
@@ -248,17 +217,13 @@ const Adminpage = () => {
                     <NavLink 
                         to={`/Adminpage/${id}/${username}/Settings`} onClick={() => {
                             onToggleSidebar()
-                            setActive("settingssection")
-                            saveSection("settingssection")
                             
                         }}
-                        className={`
-                            relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23] 
-                            after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
-                            ${active === "settingssection" 
-                                ? "after:w-full text-[#6F4E37] font-semibold" 
-                                : ""
-                            } 
+                        className={({ isActive }) =>`
+                        relative text-[clamp(1.30rem,2vw,1.45rem)] text-[#3e2f23]
+                        after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px]
+                        after:bg-[#6F4E37] after:transition-all after:duration-300 hover:after:w-full
+                        ${isActive ? "after:w-full text-[#6F4E37] font-semibold" : ""}
                         `}
                     >
                         settings
