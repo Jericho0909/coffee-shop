@@ -35,7 +35,7 @@ const Home = () => {
             }}
             className="flex justify-center items-center scroll-mt-20 mb-[2rem] h-[90dvh]"
         >
-            <div className="container relative p-2 w-screen h-[80vh] overflow-hidden">
+            <div className="container relative p-2 w-full sm:w-[90%] md:w-[88%] lg:w-[84] xl:w-[80%] h-[80vh] overflow-hidden">
                 <div
                     className="absolute inset-0 bg-cover bg-center filter blur-[3px] scale-110"
                     style={{ backgroundImage: `url(${CoffeeShop})` }}

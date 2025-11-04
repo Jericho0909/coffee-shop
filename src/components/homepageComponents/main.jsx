@@ -41,7 +41,7 @@ const Main = () => {
                 }}
                 className="flex justify-center items-center mb-[2rem]"
             >
-                <div className="flex justify-start items-center flex-col h-auto w-full p-2">
+                <div className="flex justify-start items-center flex-col h-auto p-2 w-full sm:w-[90%] md:w-[88%] lg:w-[84] xl:w-[80%]">
                     <img
                         src={Ownerpic}
                         alt="Ownerpic"

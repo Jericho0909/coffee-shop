@@ -37,7 +37,7 @@ const About = () => {
             }}
             className="flex justify-center items-center mb-[2rem] p-[1rem] "
         >   
-            <div className="container grid grid-cols-1 lg:grid-cols-2 w-full p-[1rem] sm:p-[2rem] lg:p-[4rem]">
+            <div className="container grid grid-cols-1 lg:grid-cols-2 w-full sm:w-[90%] md:w-[88%] lg:w-[84] xl:w-[80%] p-[1rem] sm:p-[2rem] lg:p-[4rem]">
                 <div className="flex justify-center items-center flex-col">
                      <h1 className="text-[clamp(1rem,2vw,1.50rem)] font-nunito tracking-wide font-black text-center">
                         ABOUT
