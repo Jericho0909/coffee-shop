@@ -32,8 +32,14 @@ const AddStock = () => {
         e.preventDefault()
 
         await pushAction("stocks", stock)
-        Toast("success", "New stock has been added successfully.", 2000)
         toggleModal()
+        setTimeout(() => {
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: "smooth",
+            })
+        }, 0)
+        Toast("success", "New stock has been added successfully.", 2000)
     }
     return(
         <form 

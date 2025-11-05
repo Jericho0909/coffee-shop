@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import toTitleCase from "../../../../../utils/toTitleCase";
 const CoffeeAddOns = ({formData, setFormData, formType}) => {
     const [ addOns, setAddOns ] = useState("")
     const ref = useRef(null);
@@ -102,7 +103,10 @@ const CoffeeAddOns = ({formData, setFormData, formType}) => {
                         name="addOns"
                         onFocus={handleFocus}
                         value={addOns}
-                        onChange={(e) => setAddOns(e.target.value)}
+                        onChange={(e) => {
+                            const titleCase = toTitleCase(e.target.value)
+                            setAddOns(titleCase)
+                        }}
                         className="w-full"
                     />
                     <button

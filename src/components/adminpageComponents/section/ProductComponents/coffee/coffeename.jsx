@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+import toTitleCase from "../../../../../utils/toTitleCase";
 const CoffeeName = ({formData, setFormData, formType}) => {
     
     useEffect(() => {
@@ -32,7 +33,8 @@ const CoffeeName = ({formData, setFormData, formType}) => {
                 spellCheck="false"
                 value={formData.name || ""}
                 onChange={(e) => {
-                    setFormData({ ...formData, [e.target.name]: e.target.value });
+                    const titleCase = toTitleCase(e.target.value )
+                    setFormData({ ...formData, [e.target.name]: titleCase});
                     handleSaved(e)
                 }}
                 className="w-[100%]"

@@ -87,13 +87,6 @@ const Form = ({defaultFormData, formData, setFormData, formType}) => {
                     }
                 `}
             >
-                <button
-                    type="submit"
-                    className="press w-[35%] sm:w-[45%] "
-                    style={{ fontVariant: "small-caps" }}
-                >
-                    conforim
-                </button>
                {formType === "AddProduct" && (
                     <button
                         type="button"
@@ -107,6 +100,13 @@ const Form = ({defaultFormData, formData, setFormData, formType}) => {
                         cancel
                 </button>
                )}
+                <button
+                    type="submit"
+                    className="press w-[35%] sm:w-[45%] "
+                    style={{ fontVariant: "small-caps" }}
+                >
+                    conforim
+                </button>
             </div>
         </>
     )

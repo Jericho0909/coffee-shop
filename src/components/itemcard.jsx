@@ -158,6 +158,7 @@ const ItemCard = ({ item }) => {
                             : "blur-[2px]"
                         }
                     `}
+                    loading="lazy"
                     initial={{ opacity: 0 }}
                     animate={isVisible
                                 ? { opacity: 1 } 

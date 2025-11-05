@@ -1,6 +1,5 @@
 import { useContext, useState, useEffect } from "react"
 import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext"
-import ContainerContext from "../../../context/containerContext"
 import SearchContext from "../../../context/searchContext"
 import SuggestionContext from "../../../context/suggestionContext"
 import SectionHeder from "../../sectionheader"
@@ -9,7 +8,6 @@ import OrderTable from "./OrderComponents/order/ordertable"
 
 const Orders = () => {
     const { orderList } = useContext(FirebaseFetchDataContext)
-    const { container } = useContext(ContainerContext)
     const { setKey,
         setSetter,
         setValue,
@@ -78,7 +76,7 @@ const Orders = () => {
     }
 
     return(
-        <section className="container-flex justify-start items-center flex-col w-full p-2 mb-0 min-h-screen">
+        <section className="container-flex justify-start items-center flex-col w-full p-2 mb-0 min-h-[70svh]">
             <SectionHeder 
                 title="orders" 
                 haveExtraBtn={true}
@@ -87,7 +85,6 @@ const Orders = () => {
             {(hasResult && orderList.length !== 0) 
                 ? (
                     <div 
-                        ref={container}
                         className="w-full flex-1"
                     >
                         <OrderTable 

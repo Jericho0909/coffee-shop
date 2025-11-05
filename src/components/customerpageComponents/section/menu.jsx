@@ -65,7 +65,7 @@ const Menu = () => {
         )
     }
     return (
-        <section className="container-flex justify-start items-center flex-col w-full p-2 mb-0 min-h-screen">
+        <section className="container-flex justify-start items-center flex-col w-full p-2 mb-0 min-h-[70svh]">
             <SectionHeder 
                 title="products" 
                 haveExtraBtn={false}

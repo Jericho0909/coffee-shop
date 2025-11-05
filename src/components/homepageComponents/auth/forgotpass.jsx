@@ -14,7 +14,7 @@ import { EyeClosed } from 'lucide-react';
 import { Eye } from 'lucide-react';
 const Forgot = () =>{
     const { setAuthView } = useContext(AuthviewContext)
-    const { customerList } = useContext(FirebaseFetchDataContext)
+    const { adminList, customerList } = useContext(FirebaseFetchDataContext)
     const { updateAction } = useContext(FirebaseActionContext)
     const { validatePassword, 
         showPasswordValidationError,
@@ -74,8 +74,8 @@ const Forgot = () =>{
         }
     }, [debouncedType, validatePassword, setShowPasswordValidationError])
 
-    const findUser = () => {
-        return customerList.find(key => key.email === email)
+    const findUser = (list) => {
+        return list.find(key => key.email === email)
     }
 
     const checkTheCode = (code) => {
@@ -88,8 +88,12 @@ const Forgot = () =>{
     }
 
     const getTheGenerateCode = async () => {
-        const user = findUser()
-        if(!user) return
+        const admin = findUser(adminList)
+        const customer = findUser(customerList)
+        console.log(admin)
+        console.log(customer)
+        if(!admin && !customer) return
+        const user = admin || customer
         const code = generateVerificationCode()
         const isSuccessful = await sendVerificationCode(user.email, user.username, code)
         if(isSuccessful){
@@ -107,15 +111,23 @@ const Forgot = () =>{
         const isCodeOk = checkTheCode(code)
 
         if(!isValid || !isCodeOk) return
-        const user = findUser()
+        const admin = findUser(adminList)
+        const customer = findUser(customerList)
+        const user = admin || customer
         try {
             setIsLoading(true)
             const userCredential = await signInWithEmailAndPassword(auth, user.email, user.password);
             const firebaseUser  = userCredential.user;
             const safeUserData = removeFireBaseKey(user)
             const updatedPass = {...safeUserData, password: newPassword}
-            await updatePassword(firebaseUser, newPassword);
-            await updateAction("customers", user.firebaseKey, updatedPass)
+            if(admin){
+                await updatePassword(firebaseUser, newPassword)
+                await updateAction("admins", user.firebaseKey, updatedPass)
+            }
+            if(customer){
+                await updatePassword(firebaseUser, newPassword)
+                await updateAction("customers", user.firebaseKey, updatedPass)
+            }
         } catch(error) {
             console.log(error)
         } finally{
@@ -153,9 +165,10 @@ const Forgot = () =>{
                     onChange={(e) => setEmail(e.target.value)}
                 />
                 <div className="container-flex w-full h-auto mt-2 mb-0 gap-1">
-                    <div className="container-flex w-full h-auto mb-0 gap-1">
-                        <label htmlFor="input-code" className="whitespace-nowrap w-auto">
-                            Enter the Code
+                    <div className="container-flex w-full h-auto mb-0">
+                        <label htmlFor="input-code" 
+                        className="whitespace-nowrap w-auto">
+                            Enter the Code:
                         </label>
                         <input
                             id="input-code"
@@ -168,12 +181,12 @@ const Forgot = () =>{
                             onFocus={() => setIsCodeMismatch(false)}
                             placeholder="Enter 6-digit code"
                             required
-                            className={`w-auto ${isCodeMismatch ?"border border-red-500" : ""}`}
+                            className={`w-auto px-1 ${isCodeMismatch ?"border border-red-500" : ""}`}
                         />
                     </div>
                     <button
                         type="button"
-                        className={`bg-[#88A550] text-white px-4 py-2 rounded shadow-md w-[35%] sm:w-[45%] h-auto transition-transform duration-300 ease-in-out text-[0.80rem] whitespace-nowrap
+                        className={`bg-[#88A550] text-white px-4 py-2 rounded shadow-md w-[28%] sm:w-[45%] h-auto transition-transform duration-300 ease-in-out text-[0.80rem] whitespace-nowrap
                         hoverable:hover:bg-[#7a9549] hoverable:hover:scale-105 hoverable:hover:shadow-[0_4px_12px_rgba(136,165,80,0.4)] active:translate-y-1 active:shadow-none
                             ${start ? "cursor-not-allowed" : "cursor-pointer"}
                         `}

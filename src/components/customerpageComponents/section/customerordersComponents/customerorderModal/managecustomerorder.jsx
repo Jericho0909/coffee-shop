@@ -4,18 +4,19 @@ import FirebaseActionContext from "../../../../../context/firebaseactionContext"
 import Cart from "../../../../cart"
 import ModalContext from "../../../../../context/modalContext"
 import PaymentMethod from "../../../../paymentmethod"
-import ShowToastContext from "../../../../../context/showtoastContext"
 import { v4 as uuidv4 } from "uuid";
 import { format } from "date-fns";
+import showToast from "../../../../../utils/showToast"
+
 const ManageCustomerOrder = ({customer}) => {
     const { orderList } = useContext(FirebaseFetchDataContext)
     const { pushAction, updateAction } = useContext(FirebaseActionContext)
     const { toggleModal } = useContext(ModalContext)
-    const { showToast } = useContext(ShowToastContext)
     const [ customerOrder, ] = useState( JSON.parse(sessionStorage.getItem("customerOrder")))
     const [ method, setMethod ] = useState("")
     const [ isPaymentSelected, setIsPaymentSelected ] = useState(true)
     const [ isReOrder, setIsOrder ] = useState(false)
+    const { Toast } = showToast()
     const orderID = "ORD-" + uuidv4().slice(0, 5)
 
     const removeFirebasekey = (arr) => {
@@ -43,7 +44,7 @@ const ManageCustomerOrder = ({customer}) => {
 
         await updateAction("customers", customer.firebaseKey, updatedCustomerOrderList)
 
-        showToast("success", "Your order has been successfully cancelled.", 2000)
+        Toast("success", "Your order has been successfully cancelled.", 2000)
         toggleModal()
     }
 
@@ -74,7 +75,7 @@ const ManageCustomerOrder = ({customer}) => {
         }
 
         if(method === ""){
-            showToast("error", "Please select payment method.", 2000)
+            Toast("error", "Please select payment method.", 2000)
             setIsPaymentSelected(false)
             return
         }
@@ -91,7 +92,7 @@ const ManageCustomerOrder = ({customer}) => {
         await updateAction("customers", customer.firebaseKey, customerNewOrder)
 
 
-        showToast("success", "Order placed successfully", 2000)
+        Toast("success", "Order placed successfully", 2000)
     }
 
     return(

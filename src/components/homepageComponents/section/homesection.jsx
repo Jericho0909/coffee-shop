@@ -33,7 +33,7 @@ const Home = () => {
                 delay: 0.2,
                 ease: "easeInOut",
             }}
-            className="flex justify-center items-center scroll-mt-20 mb-[2rem] h-[90dvh]"
+            className="flex justify-center items-center scroll-mt-20 mb-[2rem] min-h-[90svh]"
         >
             <div className="container relative p-2 w-full sm:w-[90%] md:w-[88%] lg:w-[84] xl:w-[80%] h-[80vh] overflow-hidden">
                 <div

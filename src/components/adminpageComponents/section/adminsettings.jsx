@@ -9,7 +9,7 @@ const AdminSettings = () => {
 
     if(!admin) return
     return(
-         <section className="container-flex justify-start items-center flex-col w-full p-2 mb-0 min-h-screen">
+         <section className="container-flex justify-start items-center flex-col w-full p-2 mb-0 min-h-[70svh]">
             <div className="w-full h-auto p-1 text-start">
                 <h1 className="text-[clamp(1.20rem,2vw,1.50rem)] font-nunito tracking-wide font-black p-1">
                     settings

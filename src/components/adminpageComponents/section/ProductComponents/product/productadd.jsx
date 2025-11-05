@@ -2,7 +2,6 @@ import { useContext, useState } from "react"
 import FirebaseActionContext from "../../../../../context/firebaseactionContext"
 import ImageContext from "../../../../../context/imageContext"
 import ModalContext from "../../../../../context/modalContext"
-import ContainerContext from "../../../../../context/containerContext"
 import Form from "./form"
 import { v4 as uuidv4 } from 'uuid'
 import showToast from "../../../../../utils/showToast"
@@ -10,7 +9,6 @@ const ProductAdd = () => {
     const { pushAction } = useContext(FirebaseActionContext)
     const { preview, setPreview } = useContext(ImageContext)
     const { toggleModal } = useContext(ModalContext)
-    const { container } = useContext(ContainerContext)
     const id = uuidv4()
     const { Toast } = showToast()
 
@@ -48,13 +46,12 @@ const ProductAdd = () => {
         setPreview(null)
         toggleModal()
         setTimeout(() => {
-            const productContainer = container.current;
-            if (productContainer) {
-                productContainer.scrollTop = productContainer.scrollHeight;
-            }
-        },0)
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: "smooth",
+            })
+        }, 0)
         Toast("success", "☕ Coffee added successfully!", 2000)
-
     }
 
 

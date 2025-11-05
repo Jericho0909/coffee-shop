@@ -4,7 +4,6 @@ import FirebaseFetchDataContext from "../../../context/firebasefetchdataContext"
 import ModalContext from "../../../context/modalContext"
 import SearchContext from "../../../context/searchContext"
 import SuggestionContext from "../../../context/suggestionContext"
-import ContainerContext from "../../../context/containerContext"
 import ProductList from "./ProductComponents/product/productlist"
 import Loading from "../../loading"
 const Products = () => {
@@ -18,7 +17,6 @@ const Products = () => {
         hasResult
     } = useContext(SearchContext)
     const { setKeyList } = useContext(SuggestionContext)
-    const { container } = useContext(ContainerContext)
     const [ loading, setLoading ] = useState(true)
 
     useEffect(() => {
@@ -61,14 +59,13 @@ const Products = () => {
     }
 
     return(
-        <section className="container-flex justify-start items-center flex-col w-full p-2 mb-0 min-h-screen">
+        <section className="container-flex justify-start items-center flex-col w-full p-2 mb-0 min-h-[70svh]">
             <SectionHeder 
                 title="products" 
                 haveExtraBtn={true}
                 btnContent={<AddProductBtn/>}
             />
             <div 
-                ref={container}
                 className="w-full flex-1"
             >
                 <ProductList 

@@ -1,4 +1,4 @@
-    import { useContext, useEffect } from "react";
+    import { useContext, useEffect, useState } from "react";
     import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
     import { faXmark } from '@fortawesome/free-solid-svg-icons';
     import { motion } from "framer-motion";
@@ -12,6 +12,15 @@
         const { setAuthView } = useContext(AuthviewContext)
         const { clearValidationErrors } = useContext(AuthValidationContext)
         const { setPreview } = useContext(ImageContext)
+        const [ isLoading, setIsLoading ] = useState(true)
+
+        useEffect(() => {
+            const timer = setTimeout(() => {
+                setIsLoading(false)
+            }, 200)
+
+            return () => clearTimeout(timer)
+        }, [])
         
         useEffect(() => {
             if(isOpen) {
@@ -28,6 +37,8 @@
                 document.body.style.overflow = ""
             }
         }, [isOpen])
+
+        if(isLoading) return
 
         return (
             <motion.div

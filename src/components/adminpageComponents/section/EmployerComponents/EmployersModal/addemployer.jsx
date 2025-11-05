@@ -5,7 +5,6 @@ updateProfile } from "firebase/auth";
 import FirebaseFetchDataContext from "../../../../../context/firebasefetchdataContext";
 import FirebaseActionContext from "../../../../../context/firebaseactionContext";
 import ModalContext from "../../../../../context/modalContext";
-import ContainerContext from "../../../../../context/containerContext";
 import AuthValidationContext from "../../../../../context/authvalidationContext";
 import EmployerForm from "../Employer/employerformjsx";
 import { v4 as uuidv4 } from "uuid";
@@ -23,7 +22,6 @@ const AddEmployer = () => {
         setIsEmailAvailable,
         setShowPasswordValidationError
     } = useContext(AuthValidationContext)
-    const { container } = useContext(ContainerContext)
     const [ type, setType ] = useState("")
     const [ isLoading, setIsLoading ] = useState(false)
     const { Toast } = showToast()
@@ -103,11 +101,11 @@ const AddEmployer = () => {
         toggleModal();
 
         setTimeout(() => {
-            const employersContainer = container.current;
-            if (employersContainer) {
-                employersContainer.scrollTop = employersContainer.scrollHeight;
-            }
-        },0)
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: "smooth",
+            })
+        }, 0)
 
         Toast("success", "New employer has been successfully added!", 2000)
     }

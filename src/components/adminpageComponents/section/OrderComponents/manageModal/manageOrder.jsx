@@ -2,7 +2,6 @@ import { useState, useContext } from "react"
 import FirebaseFetchDataContext from "../../../../../context/firebasefetchdataContext"
 import FirebaseActionContext from "../../../../../context/firebaseactionContext"
 import ModalContext from "../../../../../context/modalContext"
-import ContainerContext from "../../../../../context/containerContext"
 import AddHighlightContext from "../../../../../context/addhighlightContext"
 import CoffeeTooltip from "../../../../tooltip"
 import { format } from "date-fns";
@@ -15,7 +14,6 @@ const ManageOrder = () => {
     } = useContext(FirebaseFetchDataContext)
     const { updateAction } = useContext(FirebaseActionContext)
     const { toggleModal } = useContext(ModalContext)
-    const { container } = useContext(ContainerContext)
     const { highlightUpdated } = useContext(AddHighlightContext)
     const [ orderId, ] = useState(sessionStorage.getItem("orderID"))
     const [ openItemId, setOpenItemId ] = useState(null)
@@ -116,15 +114,7 @@ const ManageOrder = () => {
         })
 
         toggleModal()
-        setTimeout(() => {
-            const ordersContainer = container.current;
-            if (ordersContainer) {
-                ordersContainer.scrollTop = ordersContainer.scrollHeight;
-            }
-        },0)
-
         Toast("success", "Order status updated successfully!", 2000)
-
         highlightUpdated(selectedOrder.id)
     }
 

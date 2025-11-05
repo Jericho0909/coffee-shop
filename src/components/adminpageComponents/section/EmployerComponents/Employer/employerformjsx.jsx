@@ -14,7 +14,7 @@ const EmployerForm = ({employerData, setEmployerData, adminData, setAdminData, s
     const [ activeInput, setActiveInput ] = useState(false)
     const [ showPass, setShowPass ] = useState(false)
 
-    const inputRow = (labelTitle, value, type, key) => {
+    const inputRow = (labelTitle, value, type, key, holder) => {
         return(
             <div className="flex justify-center items-center gap-1 mb-[1rem] px-3 w-full h-auto">
                 <label htmlFor={key} className="w-auto">
@@ -24,6 +24,7 @@ const EmployerForm = ({employerData, setEmployerData, adminData, setAdminData, s
                     id={key}
                     type={type}
                     name={key}
+                    placeholder={holder}
                     required
                     spellCheck="false"
                     className="w-full"
@@ -32,7 +33,7 @@ const EmployerForm = ({employerData, setEmployerData, adminData, setAdminData, s
                     const formatted = toTitleCase(e.target.value)
                     setEmployerData({ 
                         ...employerData, 
-                        [e.target.name]: labelTitle === "Location:" ? formatted : e.target.value 
+                        [e.target.name]: labelTitle === "Location:" || labelTitle === "Name:" ? formatted : e.target.value 
                     })
                 }}
                 />
@@ -86,14 +87,14 @@ const EmployerForm = ({employerData, setEmployerData, adminData, setAdminData, s
     }
     return(
         <>
-            {inputRow("Name:", employerData.name, "text", "name")}
+            {inputRow("Name:", employerData.name, "text", "name" , "ex: Juan Magtinay")}
             {!isEmailAvailable && (
                 <p className="text-red-600 text-[0.75rem] w-full mt-1 px-3">
                     Email already exists.
                 </p>
             )}
-            {inputRow("Email:", employerData.email, "email", "email")}
-            {inputRow("Location:", employerData.location, "text", "location")}
+            {inputRow("Email:", employerData.email, "email", "email", "user@gmail.com")}
+            {inputRow("Location:", employerData.location, "text", "location", "Bagong Pook Rosario Batangas")}
             <div className="text-center">
                 <label htmlFor="phone" className="w-full">
                     Phone Number
