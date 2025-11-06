@@ -97,7 +97,7 @@ const Forgot = () =>{
         const code = generateVerificationCode()
         const isSuccessful = await sendVerificationCode(user.email, user.username, code)
         if(isSuccessful){
-            Toast("success", "Check your email spam to get the Code", 4000)
+            Toast("success", "Check your email to get the Code", 4000)
             setGenerateCode(code)
             setStart(true)
         }
