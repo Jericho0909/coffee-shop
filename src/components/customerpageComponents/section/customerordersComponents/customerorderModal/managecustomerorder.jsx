@@ -147,9 +147,11 @@ const ManageCustomerOrder = ({customer}) => {
                             {!isReOrder
                                 ? (
                                     <button 
-                                        className="press hoverable:hover:bg-[#8b5e3c] hoverable:hover:scale-105 
-                                        hoverable:hover:shadow-[0_4px_12px_rgba(111,78,55,0.4)]  w-[35%] sm:w-[45%]"
+                                        className={`press hoverable:hover:bg-[#8b5e3c] hoverable:hover:scale-105 
+                                        hoverable:hover:shadow-[0_4px_12px_rgba(111,78,55,0.4)]  w-[35%] sm:w-[45%]
+                                        ${customerOrder.status === "Processing" ? "cursor-not-allowed" : ""}`}
                                         style={{ fontVariant: "small-caps" }}
+                                        disabled={customerOrder.status === "Processing" && true }
                                         onClick={() => orderAgain()}
                                     >
                                         reorder
@@ -159,10 +161,10 @@ const ManageCustomerOrder = ({customer}) => {
                                     <button 
                                         className="press w-[35%] sm:w-[45%]"
                                         style={{ fontVariant: "small-caps" }}
-                                        disabled={customerOrder.status === "Processing" && true }
+                                        disabled={customerOrder.status === "Processing"}
                                         onClick={() => checkOut()}
                                     >
-                                        Check Out
+                                        check out
                                     </button>
                                 )
                             }
