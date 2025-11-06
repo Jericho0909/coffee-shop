@@ -6,7 +6,7 @@ const UserSettings = ({user, editProfile}) => {
     const password = showPassword ? user.password : "*".repeat(user.password.length)
     const infoRow = (label, value) => {
         return(
-            <div className="container-flex flex-col w-full font-opensans tracking-wide text-[clamp(0.80rem,2vw,1rem)]p-1 mb-[0.40rem]">
+            <div className="container-flex flex-col w-full font-opensans tracking-wide text-[clamp(0.78rem,2vw,1rem)] p-1 mb-[0.40rem]">
                 <div className="container-flex w-full mb-[0.40rem] xl:mb-[0.30rem] gap-1">
                     <span className="font-bold">
                         {label}

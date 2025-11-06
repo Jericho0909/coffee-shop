@@ -86,12 +86,12 @@ const PlaceOrder = ({customer}) => {
                     />
                 </div>
                 <div className="w-full h-auto p-1">
-                    <p className="font-nunito tracking-wide text-[clamp(0.85rem,2vw,1.05rem)] font-semibold"
+                    <p className="font-nunito tracking-wide 78xt-[clamp(0.85revw,1.05rem)] font-semibold"
                     >
                         {item.name}</p>
                 </div>
                 <div className="w-full h-auto p-1">
-                    <p className="container-flex justify-start mb-0 font-nunito tracking-wide text-[clamp(0.85rem,2vw,1.05rem)] font-semibold gap-1"
+                    <p className="container-flex justify-start mb-0 font-nunito tracking-wide text-[clamp(0.78rem,2vw,1rem)] font-semibold gap-1"
                     >
                         <span className="container-flex mb-0 gap-1">
                             <PhilippinePeso 
@@ -105,7 +105,7 @@ const PlaceOrder = ({customer}) => {
                     </p>
                 </div>
                 <div className="w-full h-auto p-1 mb-[1rem]">
-                    <p className="font-nunito tracking-wide text-[clamp(0.85rem,2vw,1.05rem)] font-semibold"
+                    <p className="font-nunito tracking-wide text-[clamp(0.78rem,2vw,1rem)] font-semibold"
                     >
                         {item.description}
                     </p>
@@ -163,8 +163,8 @@ const PlaceOrder = ({customer}) => {
                     <div className="container-flex justify-around w-full h-auto p-1 gap-2 mb-[0.50rem]">
                         {item.flavors[0] === "__empty__"
                             ? (
-                                <p className="font-nunito tracking-wide text-[clamp(0.85rem,2vw,1.05rem)] font-semibold">
-                                    none
+                                <p className="font-nunito tracking-wide text-[clamp(0.85rem,2vw,1785rem)] font-semibold">
+                           none
                                 </p>
                             ) 
                             : (
@@ -202,7 +202,7 @@ const PlaceOrder = ({customer}) => {
                     <div className="container-flex justify-around w-full h-auto p-1 gap-2 mb-[0.50rem]">
                         {item.addOns[0] === "__empty__" 
                             ? (
-                                <p className="font-nunito tracking-wide text-[clamp(0.85rem,2vw,1.05rem)] font-semibold">none</p>
+                                <p className="font-nunito tracking-wide text-[clamp(0.85rem,2vw,1785)] font-semibold">none</p>
                             ) 
                             : (
                             item.addOns.map((addons, index) => (

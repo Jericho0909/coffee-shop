@@ -105,7 +105,7 @@ const Form = ({defaultFormData, formData, setFormData, formType}) => {
                     className="press w-[35%] sm:w-[45%] "
                     style={{ fontVariant: "small-caps" }}
                 >
-                    conforim
+                    confrim
                 </button>
             </div>
         </>
