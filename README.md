@@ -15,19 +15,24 @@ Fully responsive design
 ## Tech Stack:
 
 Frontend:	React, Tailwind CSS, Framer Motion
+
 Backend:	JSON Server / Firebase
+
 Hosting:	Netlify
+
 Version:    Control	Git + GitHub
 
 ## Future Improvements:
 
-Add product rating and review system  
+Add product rating and review system
+
 Add discount and promo features for selected coffee items 
 
 
 ## Clone the repository:
 
 git clone https://github.com/Jericho0909/coffee-shop.git
+
 cd coffee-shop
 
 ## Install dependencies:
@@ -41,19 +46,21 @@ npm start
 ## Admin Access:
 
 username: gojo.admin
+
 password: 123Gojo!
 
 ## Customer Access:
 
 username: jelico
+
 password: 123Jelico!
 
 ## Demo:
 
 https://coffee-shop-ni-jericho.netlify.app/
 
-## Author
+## Author:
 
 Developed by **Jericho Zara**  
-📧 Email: jericho.dev@example.com  
+📧 Email: jerichozara.tmlcr@gmail.com  
 💻 GitHub: [Jericho0909](https://github.com/Jericho0909)
