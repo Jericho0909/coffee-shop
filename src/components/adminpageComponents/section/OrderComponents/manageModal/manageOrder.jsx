@@ -64,7 +64,7 @@ const ManageOrder = () => {
 
     const handleOrderCount = async () => {
         try {
-        const updatePromises = selectedOrderItemIds.map((id, i) => {
+            const updatePromises = selectedOrderItemIds.map((id, i) => {
             const product = productList.find(key => key.id === id);
 
             if (product) {

@@ -24,8 +24,6 @@ const ManageCustomerOrder = ({customer}) => {
         return safeData
     }
 
-    console.log(customerOrder)
-
     const cancelOrder = async(id) => {
         const order = orderList.find(key => key.id === id)
         const safeOrderData = removeFirebasekey(order)

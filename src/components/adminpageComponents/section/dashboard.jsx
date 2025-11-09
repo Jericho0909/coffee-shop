@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserTie } from '@fortawesome/free-solid-svg-icons'
 import { Trophy } from "lucide-react";
 import { X } from 'lucide-react';
+import getTodayDate from "../../../utils/getTodayDate"
 const Dashboard = () => {
     const { id } = useParams()
     const { adminList, 
@@ -19,18 +20,18 @@ const Dashboard = () => {
     const [ chart, setChart ] = useState("dailysales")
     const [ loading, setLoading ] = useState(true)
 
-    const today = new Date().toISOString().split("T")[0]
     const admin = adminList.find(key => key.id === id)
     const topSales = productList.sort((a, b) => b.orderCount - a.orderCount).slice(0,5)
-    const totalSalesToday = orderList
-        .filter(order => {
-            const orderDate = order.orderDate.split("T")[0]
-            return (
-                orderDate === today && 
-                (order.status === "Processing" || order.status === "Completed")
-            )
+    const totalSalesToday = orderList.filter(order => {
+        const today = getTodayDate()
+        const orderDate = order.orderDate.split("T")[0];
+        return (orderDate === today &&
+        (order.status === "Processing" || order.status === "Completed"))
     }).reduce((sum, order) => sum + order.total, 0)
-    const totalOrderToday = orderList.filter(order => order.orderDate.split("T")[0] === today).length
+    const totalOrderToday = orderList.filter(order => {
+        const today = getTodayDate()
+        return order.orderDate.split("T")[0] === today
+    }).length
 
 
     const lowStock = stockList.filter(key => key.quantity <= 10)

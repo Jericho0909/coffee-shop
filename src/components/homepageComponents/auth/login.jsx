@@ -45,21 +45,16 @@ const Login = () => {
         const admin = adminList.find(key => key.username === username && key.password === password)
         const customer = customerList.find(key => key.username === username && key.password === password)
         if(admin){
-            if(username === "jericho.admin"){
+            const user = await checkEmailVefication(admin.email, admin.password)
+            
+            if(user?.emailVerified) {
                 toggleModal(false)
                 navigate(`/Adminpage/${admin.id}/${admin.username}`)
             }
-            else{
-                const user = await checkEmailVefication(admin.email, admin.password)
-                if(user?.emailVerified) {
-                    toggleModal(false)
-                    navigate(`/Adminpage/${admin.id}/${admin.username}`)
-                }
-                else {
-                    Toast("error", "Please verify your email first before continuing. Check your email spam.", 5000)
-                    setLoginError(false)
-                    return 
-                }
+            else {
+                Toast("error", "Please verify your email first before continuing. Check your email spam.", 5000)
+                setLoginError(false)
+                return 
             }
         }
         else if(customer){

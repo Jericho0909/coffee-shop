@@ -6,27 +6,27 @@ It includes an Admin Dashboard for managing products, orders, employers, stocks,
 
 ## Features:
 
-View and order coffee items
-Firebase Authentication (Sign up, Login, Email verification)
-Admin Dashboard for managing products, orders, and employers
-JSON Server / Firebase backend
-Fully responsive design
+- View and order coffee items
+- Firebase Authentication (Sign up, Login, Email verification)
+- Admin Dashboard for managing products, orders, and employers
+- JSON Server / Firebase backend
+- Fully responsive design
 
 ## Tech Stack:
 
-Frontend:	React, Tailwind CSS, Framer Motion
+- Frontend:	React, Tailwind CSS, Framer Motion
 
-Backend:	JSON Server / Firebase
+- Backend:	JSON Server / Firebase
 
-Hosting:	Netlify
+- Hosting:	Netlify
 
-Version:    Control	Git + GitHub
+- Version:    Control	Git + GitHub
 
 ## Future Improvements:
 
-Add product rating and review system
+- Add product rating and review system
 
-Add discount and promo features for selected coffee items 
+- Add discount and promo features for selected coffee items 
 
 
 ## Clone the repository:
@@ -42,6 +42,16 @@ npm install
 ## Run the app:
 
 npm start
+
+## Admin Page
+
+- Optimized for **desktop/laptop use**
+- Not intended for **mobile view**
+
+## Customer Page
+
+- Fully responsive: optimized for **mobile phones and desktop/laptop**.
+- Recommended **portrait mode** on mobile devices for best experience.
 
 ## Admin Access:
 
