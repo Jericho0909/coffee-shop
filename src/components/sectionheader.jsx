@@ -53,6 +53,7 @@ const SectionHeder = ({title, haveExtraBtn, btnContent}) => {
                     id="search-Id-username"
                     type="text"
                     placeholder="search...."
+                    spellCheck={false}
                     value={search}
                     onChange={(e) => {
                         setSearch(e.target.value);
@@ -62,7 +63,7 @@ const SectionHeder = ({title, haveExtraBtn, btnContent}) => {
                     }}
                     onFocus={() => setShowSuggestion(true)}
                     onKeyDown={(e) => {
-                        handleKeyDown(e, filterData);
+                        handleKeyDown(e, filterData)
                         handleEnter(e)
                         if (e.key === "Enter"){
                             setShowSuggestion(false)

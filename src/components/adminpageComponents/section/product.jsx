@@ -9,8 +9,7 @@ import Loading from "../../loading"
 const Products = () => {
     const { productList } = useContext(FirebaseFetchDataContext)
     const { toggleModal, setModalName } = useContext(ModalContext)
-    const { setKey,
-        setSetter,
+    const { setSetter,
         setValue,
         itemList,
         setItemList,
@@ -29,11 +28,10 @@ const Products = () => {
 
     useEffect(() => {
         setItemList([])
-        setKey("productList")
         setSetter("products")
         setValue("name")
         setKeyList("productlist")
-    }, [setKey, setSetter, setValue, setKeyList, setItemList])
+    }, [setSetter, setValue, setKeyList, setItemList])
 
     const openModal = () => {
         setModalName("addProuct")

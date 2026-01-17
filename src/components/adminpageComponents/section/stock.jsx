@@ -9,8 +9,7 @@ import StockList from "./StockComponents/stocks/stockList"
 const Stocks = () => {
     const { stockList } = useContext(FirebaseFetchDataContext)
     const { toggleModal, setModalName } = useContext(ModalContext)
-    const { setKey,
-        setSetter,
+    const { setSetter,
         setValue,
         itemList,
         setItemList,
@@ -29,11 +28,10 @@ const Stocks = () => {
 
     useEffect(() => {
         setItemList([])
-        setKey("stockList")
         setSetter("stocks")
         setValue("name")
         setKeyList("stocklist")
-    }, [setKey, setSetter, setValue, setKeyList, setItemList])
+    }, [setSetter, setValue, setKeyList, setItemList])
 
     const openModal = () => {
         setModalName("addStock")

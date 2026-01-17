@@ -11,8 +11,7 @@ import SectionHeder from "../../sectionheader"
 const Menu = () => {
     const { productList } = useContext(FirebaseFetchDataContext)
     const { customerOrders } = useContext(CustomerorderContext)
-    const { setKey,
-        setSetter,
+    const { setSetter,
         setValue,
         itemList,
         setItemList,
@@ -33,11 +32,10 @@ const Menu = () => {
 
     useEffect(() => {
         setItemList([])
-        setKey("productList")
         setSetter("products")
         setValue("name")
         setKeyList("productlist") 
-    }, [setKey, setSetter, setValue, setKeyList, setItemList])
+    }, [setSetter, setValue, setKeyList, setItemList])
 
     useEffect(() => {
         bounce()

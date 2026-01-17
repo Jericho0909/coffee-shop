@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react"
 import {ref, onValue} from "firebase/database"
 import { database } from "../firebase";
 import { useDebounce } from "@uidotdev/usehooks";
+import normalizeText from "../utils/normalizeText";
 const useSuggestion = () => {
     const [ list, setList ] = useState([])
     const [ filterData, setFilterData ] = useState([])
@@ -57,20 +58,23 @@ const useSuggestion = () => {
     useEffect(() => {
         if (!debouncedSearch) {
             setFilterData(list)
-            return;
+            return
         }
 
-        const Data = list.filter(key =>
-            key.id.toString().includes(debouncedSearch) 
-            || key.customerName?.toLowerCase().includes(debouncedSearch.toLowerCase()) 
-            || key.username?.toLowerCase().includes(debouncedSearch.toLowerCase()) 
-            ||  key.name?.toLowerCase().includes(debouncedSearch.toLowerCase())
-        ) 
+        const normalizedSearch = normalizeText(debouncedSearch)
+
+        const Data = list.filter(item =>
+            normalizeText(item.id).includes(normalizedSearch) ||
+            normalizeText(item.customerName).includes(normalizedSearch) ||
+            normalizeText(item.username).includes(normalizedSearch) ||
+            normalizeText(item.name).includes(normalizedSearch)
+        )
 
         const uniqueData = getUniqueList(Data)
-
         setFilterData(uniqueData.slice(0, 4))
-    }, [debouncedSearch, keyList, list])
+
+    }, [debouncedSearch, list])
+
 
 
 

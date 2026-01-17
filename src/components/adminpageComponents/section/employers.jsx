@@ -10,8 +10,7 @@ const Employers = () => {
     const { employerList } = useContext(FirebaseFetchDataContext)
     const { toggleModal, setModalName } = useContext(ModalContext)
     const [ loading, setLoading ] = useState(true)
-    const { setKey,
-        setSetter,
+    const { setSetter,
         setValue,
         itemList,
         setItemList,
@@ -29,11 +28,10 @@ const Employers = () => {
 
     useEffect(() => {
         setItemList([])
-        setKey("employerList")
         setSetter("employers")
         setValue("name")
         setKeyList("employerlist")
-    }, [setKey, setSetter, setValue, setKeyList, setItemList])
+    }, [setSetter, setValue, setKeyList, setItemList])
 
     const openModal = () => {
         setModalName("addEmployer")
