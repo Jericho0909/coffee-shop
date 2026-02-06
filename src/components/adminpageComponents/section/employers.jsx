@@ -10,7 +10,10 @@ const Employers = () => {
     const { employerList } = useContext(FirebaseFetchDataContext)
     const { toggleModal, setModalName } = useContext(ModalContext)
     const [ loading, setLoading ] = useState(true)
-    const { setSetter,
+    const { 
+        search,
+        setSearch,
+        setSetter,
         setValue,
         itemList,
         setItemList,
@@ -27,11 +30,18 @@ const Employers = () => {
     },[])
 
     useEffect(() => {
+        setSearch("")
         setItemList([])
         setSetter("employers")
         setValue("name")
         setKeyList("employerlist")
-    }, [setSetter, setValue, setKeyList, setItemList])
+    }, [setSetter, setValue, setKeyList, setItemList, setSearch])
+
+    useEffect(() => {
+        if(!search){
+            setItemList([])
+        }
+    }, [search, setItemList])
 
     const openModal = () => {
         setModalName("addEmployer")

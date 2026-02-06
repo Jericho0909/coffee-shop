@@ -56,24 +56,30 @@ const useSuggestion = () => {
     }, [keyList, fetchData]);
 
     useEffect(() => {
-        if (!debouncedSearch) {
-            setFilterData(list)
-            return
-        }
+    const search = normalizeText(debouncedSearch)
 
-        const normalizedSearch = normalizeText(debouncedSearch)
+    if (search.length < 2) {
+        setFilterData([])
+        return
+    }
 
-        const Data = list.filter(item =>
-            normalizeText(item.id).includes(normalizedSearch) ||
-            normalizeText(item.customerName).includes(normalizedSearch) ||
-            normalizeText(item.username).includes(normalizedSearch) ||
-            normalizeText(item.name).includes(normalizedSearch)
-        )
+    const filtered = list.filter(item => {
+        const searchableText = [
+        item.id,
+        item.customerName,
+        item.username,
+        item.name
+        ]
+        .map(normalizeText)
+        .join(" ")
 
-        const uniqueData = getUniqueList(Data)
-        setFilterData(uniqueData.slice(0, 4))
+        return searchableText.includes(search)
+    })
+
+    setFilterData(getUniqueList(filtered))
 
     }, [debouncedSearch, list])
+
 
 
 

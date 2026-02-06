@@ -8,7 +8,9 @@ import OrderTable from "./OrderComponents/order/ordertable"
 
 const Orders = () => {
     const { orderList } = useContext(FirebaseFetchDataContext)
-    const { setSetter,
+    const { search,
+        setSearch,
+        setSetter,
         setValue,
         itemList,
         setItemList,
@@ -27,12 +29,18 @@ const Orders = () => {
     },[])
 
     useEffect(() => {
+        setSearch("")
         setItemList([])
         setSetter("orders")
         setValue("customerName")
         setKeyList("orderlist")
-    }, [setSetter, setValue, setKeyList, setItemList])
+    }, [setSetter, setValue, setKeyList, setItemList, setSearch])
 
+    useEffect(() => {
+        if(!search){
+            setItemList([])
+        }
+    }, [search, setItemList])
 
     const switchTableBTn = (table) => {
         setTable(table)

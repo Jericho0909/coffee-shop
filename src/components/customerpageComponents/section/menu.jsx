@@ -11,7 +11,9 @@ import SectionHeder from "../../sectionheader"
 const Menu = () => {
     const { productList } = useContext(FirebaseFetchDataContext)
     const { customerOrders } = useContext(CustomerorderContext)
-    const { setSetter,
+    const { search,
+        setSearch,
+        setSetter,
         setValue,
         itemList,
         setItemList,
@@ -31,15 +33,22 @@ const Menu = () => {
     }, [])
 
     useEffect(() => {
+        setSearch("")
         setItemList([])
         setSetter("products")
         setValue("name")
         setKeyList("productlist") 
-    }, [setSetter, setValue, setKeyList, setItemList])
+    }, [setSetter, setValue, setKeyList, setItemList, setSearch])
 
     useEffect(() => {
         bounce()
     }, [customerOrders])
+
+    useEffect(() => {
+        if(!search){
+            setItemList([])
+        }
+    }, [search, setItemList])
 
     const orderList = () => {
         setModalName("customerorder")

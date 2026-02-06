@@ -1,4 +1,5 @@
 import { useState, useContext, useEffect, useRef } from "react"
+import { useSearchParams } from "react-router-dom";
 import MediaQueryContext from "../context/mediaqueryContext"
 import SearchContext from "../context/searchContext"
 import SuggestionContext from "../context/suggestionContext"
@@ -6,18 +7,23 @@ import HandleKeyContext from "../context/handlekeyContext"
 import { Search } from 'lucide-react';
 import { X } from 'lucide-react';
 const SectionHeder = ({title, haveExtraBtn, btnContent}) => {
+    const [ , setSearchParams ] = useSearchParams()
     const { isMobile } = useContext(MediaQueryContext)
-    const { handleSearch, Reset } = useContext(SearchContext)
+    const { search,
+        setSearch,
+        handleSearch, 
+        Reset } = useContext(SearchContext)
     const { filterData, setKeySearch } = useContext(SuggestionContext)
     const { highlightedIndex,
         setHighlightedIndex,
         handleKeyDown 
     } = useContext(HandleKeyContext)
-    const [ search, setSearch ] = useState("")
     const [ showSearchBar, setShowSearchBar ] = useState(false)
     const [ showSuggestion, setShowSuggestion ] = useState(false)
     const [ showRestBtn, setShowResetBTn ] = useState(false)
     const searchBarRef = useRef(null)
+    const listRef = useRef(null)
+    const itemRefs = useRef([])
 
     useEffect(() => {
         const handleClickAnywhere = (event) => {
@@ -32,6 +38,25 @@ const SectionHeder = ({title, haveExtraBtn, btnContent}) => {
         return () => document.removeEventListener("click", handleClickAnywhere)
     }, [setHighlightedIndex])
 
+    useEffect(() => {
+        if (highlightedIndex < 0) return
+
+        itemRefs.current[highlightedIndex]?.scrollIntoView({
+            block: "nearest",
+            behavior: "smooth"
+        })
+    }, [highlightedIndex])
+
+    useEffect(() => {
+        if(!search){
+            setSearchParams({})
+        }
+        else{
+            return
+        }
+    }, [search, setSearchParams])
+
+
     const handleEnter = (e) => {
         if (e.key !== "Enter") return;
 
@@ -40,6 +65,7 @@ const SectionHeder = ({title, haveExtraBtn, btnContent}) => {
             const selected = filterData[highlightedIndex]
             setSearch(selected.customerName || selected.username || selected.name)
             handleSearch(selected.customerName || selected.username || selected.name)
+            setKeySearch(selected.customerName || selected.username || selected.name)
             setShowSuggestion(false)
         } else {
             handleSearch(search)
@@ -103,12 +129,18 @@ const SectionHeder = ({title, haveExtraBtn, btnContent}) => {
 
     const suggestionSearch = () => {
         return(
-            <div className="absolute top-full left-0 w-full z-50 bg-[#f9f5f1] border border-[#8c6244] rounded-xl shadow-md">
-                <ul className="container-flex justify-start flex-col w-full min-h-48 m-0 p-2 overflow-y-auto scrollbar-hide">
+            <div 
+                ref={listRef}   
+                className="absolute top-full left-0 w-full h-48 z-10 bg-[#f9f5f1] border border-[#8c6244] rounded-xl shadow-md overflow-y-auto scrollbar-hide"
+            >
+                <ul 
+                    className="container-flex justify-start flex-col w-full h-auto m-0 p-2"
+                >
                     {filterData.length !== 0
                         ? (
                             filterData.map((item, index) => (
                                 <li
+                                    ref={(el) => (itemRefs.current[index] = el)} 
                                     key={index}
                                     className={`block font-opensans text-[clamp(0.82rem,2vw,1rem)] font-medium truncate cursor-pointer transition-colors duration-300
                                     ${highlightedIndex === index ? "bg-[#8c6244] text-white" : "hover:bg-[#8c6244] hover:text-white"}

@@ -9,7 +9,9 @@ import Loading from "../../loading"
 const Products = () => {
     const { productList } = useContext(FirebaseFetchDataContext)
     const { toggleModal, setModalName } = useContext(ModalContext)
-    const { setSetter,
+    const { search,
+        setSearch,
+        setSetter,
         setValue,
         itemList,
         setItemList,
@@ -27,11 +29,18 @@ const Products = () => {
     }, [])
 
     useEffect(() => {
+        setSearch("")
         setItemList([])
         setSetter("products")
         setValue("name")
         setKeyList("productlist")
-    }, [setSetter, setValue, setKeyList, setItemList])
+    }, [setSetter, setValue, setKeyList, setItemList, setSearch])
+
+    useEffect(() => {
+        if(!search){
+            setItemList([])
+        }
+    }, [search, setItemList])
 
     const openModal = () => {
         setModalName("addProuct")

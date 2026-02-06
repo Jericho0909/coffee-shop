@@ -4,7 +4,8 @@ import { getDatabase, ref, get } from "firebase/database";
 import normalizeText from "../utils/normalizeText";
 
 const useSearch = () => {
-    const db = getDatabase();
+    const db = getDatabase()
+    const [ search, setSearch ] = useState("")
     const [ setter, setSetter ] = useState("")
     const [ value, setValue ] = useState("")
     const [ , setSearchParams ] = useSearchParams()
@@ -33,7 +34,7 @@ const useSearch = () => {
     const handleSearch = async (Query) => {
         if (!Query) {
             setItemList([])
-            resetSearchParams()
+            setSearchParams({})
             return
         }
 
@@ -45,8 +46,8 @@ const useSearch = () => {
             const listRef = ref(db, setter)
             const allItems = await getSearchResult(listRef)
             const filtered = allItems.filter(item => {
-            const fieldToCompare = item[value] 
-            return normalizeText(fieldToCompare).includes(normalizedQuery)
+                const fieldToCompare = item[value] 
+                return normalizeText(fieldToCompare).includes(normalizedQuery)
             })
 
             setItemList(filtered)
@@ -61,19 +62,17 @@ const useSearch = () => {
 
 
     const Reset = () => {
-        resetSearchParams()
+        setSearchParams({})
         setHasResult(true)
         setItemList([])
-    }
-
-    const resetSearchParams = () => {
-        setSearchParams({})
     }
 
 
     return {
         itemList,
         setItemList,
+        search,
+        setSearch,
         setSetter,
         setValue,
         handleSearch,

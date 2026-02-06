@@ -8,7 +8,9 @@ import CustomerTable from "./CustomerCompoments/customer/customertable"
 const Customers = () => {
     const { customerList } = useContext(FirebaseFetchDataContext)
     const [ loading, setLoading ] = useState(true)
-    const { setSetter,
+    const { search,
+        setSearch,
+        setSetter,
         setValue,
         itemList,
         setItemList,
@@ -25,11 +27,18 @@ const Customers = () => {
     },[])
 
     useEffect(() => {
+        setSearch("")
         setItemList([])
         setSetter("customers")
         setValue("username")
         setKeyList("customerlist")
-    }, [setSetter, setValue,  setKeyList, setItemList])
+    }, [setSetter, setValue,  setKeyList, setItemList, setSearch])
+
+    useEffect(() => {
+        if(!search){
+            setItemList([])
+        }
+    }, [search, setItemList])
 
     const getDisplayOnTable = () => itemList?.length > 0 
         ? [...itemList].reverse() 
