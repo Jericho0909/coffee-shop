@@ -54,7 +54,7 @@
                     animate={{ scale: 1, opacity: 1, y: 0 }}
                     exit={{ scale: 0.8, opacity: 0, y: -50 }}
                     transition={{ duration: 0.3, ease: "easeOut" }}
-                    className="container flex justify-center items-center flex-col w-full sm:w-[78%] md:w-[80%] lg:w-[80%] xl:w-[46%] h-[90%] sm:h-[70%] md:h-[65%] lg:h-[70%] xl:h-[85%] m-1 sm:m-[2rem] p-1 sm:p-[2rem] relative rounded-none bg-white shadow-lg"
+                    className="container flex justify-center items-center flex-col w-full sm:w-[78%] md:w-[60%] lg:w-[51%] xl:w-[46%] h-[80%] sm:h-[70%] m-1 sm:m-[2rem] p-1 sm:p-[2rem] relative rounded-none bg-white shadow-lg"
                 >
                     <button
                     className="absolute top-3 right-4"
