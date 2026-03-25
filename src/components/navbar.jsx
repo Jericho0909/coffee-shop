@@ -21,7 +21,12 @@ const Navbar = ({ activeSection, toggleNavbar }) => {
                     <CoffeeTooltip text="login" side="bottom" align="center">
                         <button 
                         className="flex justify-center items-center w-10 h-10 rounded-full border border-white p-2"
-                        onClick={() => toggleModal()}
+                        onClick={() => {
+                            toggleModal()
+                            isMobile && (
+                                toggleNavbar()
+                            )
+                        }}
                         >
                             <FontAwesomeIcon 
                                 icon={faUser}

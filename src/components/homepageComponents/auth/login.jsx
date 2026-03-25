@@ -128,7 +128,7 @@ const Login = () => {
                 )}
                 <button
                     type="submit"
-                    className="bg-[#8c6244] text-white px-6 py-2 rounded-md mt-3 hover:bg-[#734d35] transition-all duration-300"
+                    className="bg-[#8c6244] text-white px-6 py-2 rounded-md mt-3 hoverable:hover:bg-[#734d35] transition-all duration-300"
                 >
                     Login
                 </button>
@@ -145,6 +145,31 @@ const Login = () => {
             >
                 Forgot password?
             </button>
+            <p className="mt-3">
+                Use Demo Account
+            </p>
+            <div className="flex items-center justify-center w-full gap-10 mt-3">
+                <button
+                    type="button"
+                    onClick={() => {
+                        setUsername("jelico")
+                        setPassword("123Jelico!")
+                    }}
+                    className="border-y-0 border-x-2 border-[#8c6244] rounded-md py-1 px-2"
+                >
+                    Customer
+                </button>
+                <button
+                    type="button"
+                    onClick={() => {
+                        setUsername("gojo.admin")
+                        setPassword("123Gojo!")
+                    }}
+                    className="border-y-0 border-x-2 border-[#8c6244] rounded-md py-1 px-2"
+                >
+                    Admin
+                </button>
+            </div>
             {isLoading && (
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-auto h-auto">
                     <div className="loader-three">

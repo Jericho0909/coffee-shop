@@ -13,7 +13,6 @@ import Notification from "../components/notification";
 import Modal from "../components/modal";
 import ModalContext from "../context/modalContext";
 import AuthviewContext from "../context/autviewContext";
-import Modalicon from "../assets/icons/coffee-icon2.png"
 import { AnimatePresence } from "framer-motion";
 
 const Homepage = () => {
@@ -92,15 +91,7 @@ const Homepage = () => {
             <AnimatePresence>
                 { isOpen && (
                     <Modal>
-                        <div className="container-flex justify-start flex-col overflow-y-scroll scrollbar-hide">
-                            <div className="w-[20%] h-auto">
-                                <img 
-                                    src={Modalicon}
-                                    alt="Coffe"
-                                    className="w-full h-full m-1 p1"
-                                    loading="lazy"
-                                />
-                            </div>
+                        <div className="container-flex justify-start flex-col w-full overflow-y-scroll scrollbar-hide">
                             {setView[authView]}
                         </div>
                     </Modal>
